@@ -1,0 +1,44 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>UI.qml</file>
+        <file>LeftPanel.qml</file>
+        <file>RightPanel.qml</file>
+        <file>Canva.qml</file>
+        <file>Controls/Button.qml</file>
+        <file>Controls/ButtonDark.qml</file>
+        <file>Controls/ButtonWhite.qml</file>
+        <file>Controls/Controls.qml</file>
+        <file>Controls/Header.qml</file>
+        <file>Controls/InsertButton.qml</file>
+        <file>Controls/Joystick.qml</file>
+        <file>Controls/JoystickBlock.qml</file>
+        <file>Controls/Slider.qml</file>
+        <file>Controls/SliderBlock.qml</file>
+        <file>Effects/blackAndWhite.fsh</file>
+        <file>Effects/colorCurve.fsh</file>
+        <file>Effects/colorShift.fsh</file>
+        <file>Effects/grain.fsh</file>
+        <file>Effects/grid.fsh</file>
+        <file>Effects/motionBlur.fsh</file>
+        <file>Effects/overlay.fsh</file>
+        <file>Effects/saturation.fsh</file>
+        <file>Effects/toneMap.fsh</file>
+        <file>Effects/vignette.fsh</file>
+        <file>Background.qml</file>
+        <file>Menu.qml</file>
+        <file>Models/MenuModel.qml</file>
+        <file>Models/EffectsModel.qml</file>
+        <file>Models/EffectsBlockModel.qml</file>
+        <file>Controllers/leftPanelController.js</file>
+        <file>Models/LayersModel.qml</file>
+        <file>Models/LayersBlockModel.qml</file>
+        <file>Controllers/rightPanelController.js</file>
+        <file>Models/PropertiesBlockModel.qml</file>
+        <file>Models/PropertiesModel.qml</file>
+        <file>Controllers/menuController.js</file>
+        <file>Controllers/effectsController.js</file>
+        <file>EffectComponents.qml</file>
+        <file>Controls/ValueDialog.qml</file>
+    </qresource>
+</RCC>
