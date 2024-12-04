@@ -25,7 +25,7 @@ Rectangle {
         x: parent.width * 0.05
     }
     ButtonWhite {
-        w: 50
+        w: 40
         x: resetButton.x - width
         y: (slider.y - height) / 2
         text: val1.toFixed(2)
@@ -35,6 +35,7 @@ Rectangle {
     }
     ButtonWhite {
         id: resetButton
+        w: 40
         x: parent.width * 0.95 - width
         y: (slider.y - height) / 2
         text: "↺"

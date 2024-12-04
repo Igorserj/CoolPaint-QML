@@ -9,7 +9,7 @@ Window {
     visible: true
     title: qsTr("Cool Paint")
 
-    UI {}
+    UI {id: ui}
     EffectsModel {
         id: effectsModel
     }

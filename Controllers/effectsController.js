@@ -14,7 +14,7 @@ function addEffect(name) {
 }
 
 function setImage(ldr, img) {
-    ldr.grabReady = ldr.grabToImage(result => img.source = result.url)
+    ldr.grabToImage(result => img.source = result.url)
     console.log("set image")
 }
 

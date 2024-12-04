@@ -25,25 +25,19 @@ Item {
         id: saveDialog
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.SaveFile
-        // onAccepted: saveFile(currentFile)
     }
 
     FileDialog {
         id: openProjDialog
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.OpenFile
-        // onAccepted: OF.openFile(currentFile, response => openedFileHandle(response.content))
     }
 
     FileDialog {
         id: openDialog
         nameFilters: ["Image file (*.jpeg *.jpg *.dng *.tif *.tiff *.png)"]
         fileMode: FileDialog.OpenFile
-        onAccepted: Controller.openDialogAccept(canva, currentFile)
-        // onAccepted: {
-        //     imagePath = currentFile
-        //     els.imagesIterator(0)
-        // }
+        onAccepted: Controller.openDialogAccept(canva, currentFile, layersModel)
     }
 
     // function saveFile(currentFile) {

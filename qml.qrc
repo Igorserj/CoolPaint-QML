@@ -40,5 +40,6 @@
         <file>Controllers/effectsController.js</file>
         <file>EffectComponents.qml</file>
         <file>Controls/ValueDialog.qml</file>
+        <file>Controls/ButtonLayers.qml</file>
     </qresource>
 </RCC>

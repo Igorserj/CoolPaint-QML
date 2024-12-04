@@ -14,12 +14,11 @@ Item {
             Loader {
                 property var itemList: items
                 property int layerIndex: index
-                property bool grabReady: false
                 asynchronous: true
                 width: parent.width
                 height: parent.height
                 visible: false
-                active: activated //&& (index === 0 || layersRepeater.itemAt(index - 1).children[0].grabReady)
+                active: activated
                 sourceComponent: Controller.addEffect(name)
                 onLoaded: Controller.setImage(this, img)
             }
@@ -27,6 +26,8 @@ Item {
                 id: img
                 width: parent.width
                 height: parent.height
+                x: (baseImage.width - width) / 2
+                y: (baseImage.height - height) / 2
                 visible: index === layersModel.count - 1
                 onSourceChanged: Controller.reActivateLoader(layersModel, index)
             }

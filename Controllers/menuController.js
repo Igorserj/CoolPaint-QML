@@ -8,6 +8,7 @@ function menuActions(index, openDialog, openProjectDialog, saveFileDialog, expor
     // openFile, openProject, saveFile, exportFile
 }
 
-function openDialogAccept(canva, source) {
+function openDialogAccept(canva, source, model) {
     canva.setImage(source)
+    if (model.count > 0) canva.layersModelUpdate('', 0, 0, 0)
 }

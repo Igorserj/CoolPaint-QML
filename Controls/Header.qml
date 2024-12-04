@@ -6,7 +6,7 @@ Rectangle {
     property alias headerText: headerText
     property alias area: area
     property int w: 240
-    height: width / w * 40
+    height: window.width / 1280 * w / 6
     width: window.width / 1280 * w
     state: "enabled"
     states: [

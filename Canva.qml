@@ -8,15 +8,8 @@ Item {
         id: baseImage
         width: parent.width
         height: parent.height
-        visible: false
+        visible: layersModel.count === 0
         fillMode: Image.PreserveAspectFit
-    }
-    Image {
-        id: finalImage
-        width: baseImage.paintedWidth
-        height: baseImage.paintedHeight
-        x: (parent.width - width) / 2
-        y: (parent.height - height) / 2
     }
     Repeater {
         model: layersModel
@@ -32,15 +25,12 @@ Item {
     function layersModelUpdate(key, value, idx, index) {
         console.log('idx', idx)
         layersModel.get(idx).items.setProperty(index, key, value)
-        let i = idx
-        for (; i < layersModel.count; ++i) {
-            console.log("i", i)
-            layersModel.setProperty(i, "activated", false)
-            effectComponents.layersRepeater.itemAt(i).children[0].grabReady = false
-        }
+        deactivateEffects(idx)
         layersModel.setProperty(idx, "activated", true)
-        // for (i = idx; i < layersModel.count; ++i) {
-        //     layersModel.setProperty(i, "activated", true)
-        // }
+    }
+    function deactivateEffects(idx) {
+        for (let i = idx; i < layersModel.count; ++i) {
+            layersModel.setProperty(i, "activated", false)
+        }
     }
 }

@@ -65,4 +65,17 @@ Rectangle {
     LayersBlockModel {
         id: layersBlockModel
     }
+    function updateLayersBlockModel() {
+        Controller.layersBlockModelGeneration(layersModel, layersBlockModel)
+    }
+    function removeLayer(index) {
+        for (let i = index + 1; i < layersModel.count; ++i) {
+            layersModel.setProperty(i, "idx", i - 1)
+        }
+        canva.deactivateEffects(index)
+        layersModel.remove(index)
+        if (layersModel.count > 0) canva.layersModelUpdate('', 0, 0, index)
+        rightPanel.resetPropertiesBlock()
+        updateLayersBlockModel()
+    }
 }

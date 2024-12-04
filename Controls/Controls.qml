@@ -4,7 +4,6 @@ Item {
     id: controls
     width: controlsLoader.width
     height: controlsLoader.height
-    // property int idx
     function controlsAction() {}
     Loader {
         id: controlsLoader
@@ -17,6 +16,7 @@ Item {
             case "insert": insertButton; break;
             case "buttonWhite": buttonWhite; break;
             case "buttonDark": buttonDark; break;
+            case "buttonLayers": buttonLayers; break;
             case "header": header; break;
             }
         }
@@ -48,6 +48,14 @@ Item {
     Component {
         id: buttonDark
         ButtonDark {
+            w: wdth
+            text: name
+            function clickAction() {controlsAction()}
+        }
+    }
+    Component {
+        id: buttonLayers
+        ButtonLayers {
             w: wdth
             text: name
             function clickAction() {controlsAction()}

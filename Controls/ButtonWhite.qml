@@ -2,9 +2,9 @@ import QtQuick 2.15
 
 Button {
     id: button
-    property int w
-    width: !!w ? window.width / 1280 * w : window.width / 1280 * 30
-    height: !!w ? width / w * 20 : width / 30 * 20
+    property int w: 30
+    width: window.width / 1280 * w
+    height: window.width / 1280 * w / 2
     state: "enabled"
     states: [
         State {

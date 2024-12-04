@@ -29,6 +29,9 @@ Rectangle {
     function propertiesBlockUpdate() {
         Controller.propertiesBlockModelGeneration(propertiesModel, propertiesBlockModel)
     }
+    function resetPropertiesBlock() {
+        Controller.flushPropertiesBlockModel(propertiesBlockModel)
+    }
 
     PropertiesModel {
         id: propertiesModel

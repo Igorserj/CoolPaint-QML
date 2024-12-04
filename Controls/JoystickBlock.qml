@@ -31,7 +31,7 @@ Rectangle {
             model: 2
             delegate: Row {
                 ButtonWhite {
-                    w: 50
+                    w: 40
                     text: index === 0 ? val1.toFixed(2) : val2.toFixed(2)
                     function clickAction() {
                         if (index === 0)
@@ -42,6 +42,7 @@ Rectangle {
                 }
                 ButtonWhite {
                     id: resetButton
+                    w: 40
                     text: "↺"
                     function clickAction() {
                         console.log('reset:', bval1, bval2)
@@ -58,18 +59,18 @@ Rectangle {
     }
     ButtonWhite {
         text: "+"
-        w: 50
+        w: 40
         x: joystick.x + joystick.width
         y: joystick.y + joystick.height / 2
-        function clickAction() {
-            els.ijm.clear()
-            els.ijm.set(0, {
-                            item: joystick,
-                            min1: min1, max1: max1, val1: val1,
-                            min2: min2, max2: max2, val2: val2
-                        })
-            console.log(Object.entries(els.ijm.get(0)))
-        }
+        // function clickAction() {
+        //     els.ijm.clear()
+        //     els.ijm.set(0, {
+        //                     item: joystick,
+        //                     min1: min1, max1: max1, val1: val1,
+        //                     min2: min2, max2: max2, val2: val2
+        //                 })
+        //     console.log(Object.entries(els.ijm.get(0)))
+        // }
     }
     function updateVal1(value) {
         val1 = value

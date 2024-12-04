@@ -23,5 +23,14 @@ function propertiesBlockModelGeneration(model, blockModel) {
                                            idx: model.get(i).idx
                                        })
     }
-    // console.log('ind', Object.entries(blockModel.get(1).block.get(0)))
+}
+
+function flushPropertiesBlockModel(blockModel) {
+    blockModel.clear()
+    blockModel.append({block: []})
+    blockModel.get(0).block.append({
+                                       wdth: 240,
+                                       type: "header",
+                                       name: "Properties"
+                                   })
 }
