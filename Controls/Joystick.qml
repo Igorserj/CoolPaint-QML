@@ -1,29 +1,86 @@
 import QtQuick 2.15
 
 Rectangle {
+    id: joystick
     property alias stickArea: stickArea
-    property int w
-    color: "#E6E6E6"
-    width: !!w ? window.width / 1280 * w : window.width / 1280 * 115
-    height: width
-    radius: stick.radius
+    property int w: 115
+    width: window.width / 1280 * w
+    height: window.width / 1280 * w
     clip: true
-
+    state: "enabled"
+    states: [
+        State {
+            name: "enabled"
+            when: !stickArea.containsMouse && joystick.enabled
+            PropertyChanges {
+                target: joystick
+                color: style.pinkWhite
+                radius: width / 8
+            }
+            PropertyChanges {
+                target: stick
+                radius: stick.width / 3
+            }
+        },
+        State {
+            name: "hovered"
+            when: stickArea.containsMouse && joystick.enabled
+            PropertyChanges {
+                target: joystick
+                color: style.pinkWhiteAccent
+                radius: width / 6
+            }
+            PropertyChanges {
+                target: stick
+                radius: stick.width / 2
+            }
+        }/*,
+        State {
+            name: "disabled"
+            when: stickArea.containsMouse && joystick.enabled
+            PropertyChanges {
+                target: joystick
+                color: style.pinkWhiteAccent
+                radius: stick.radius
+            }
+        }*/
+    ]
+    Behavior on color {
+        ColorAnimation {
+            duration: 200
+        }
+    }
+    Behavior on radius {
+        PropertyAnimation {
+            target: joystick
+            property: "radius"
+            duration: 200
+        }
+    }
     Rectangle {
         id: stick
         width: 30
         height: 30
         radius: width / 3
-        color: "#1A1A1A"
+        color: style.lightDark
         x: ((val1 - min1) / (max1 - min1)) * (parent.width - stick.width)
         y: ((val2 - min2) / (max2 - min2)) * (parent.height - stick.height)
+        Behavior on radius {
+            PropertyAnimation {
+                target: stick
+                property: "radius"
+                duration: 200
+            }
+        }
     }
     MouseArea {
         id: stickArea
         anchors.fill: parent
-        onMouseXChanged: stick.x = xStick(true, stickArea.mouseX)
-        onMouseYChanged: stick.y = yStick(true, stickArea.mouseY)
+        hoverEnabled: true
+        onMouseXChanged: if (containsPress) stick.x = xStick(true, stickArea.mouseX)
+        onMouseYChanged: if (containsPress) stick.y = yStick(true, stickArea.mouseY)
     }
+    StyleSheet {id: style}
 
     function xStick(pressed, mouseX = 0) {
         if (pressed) {

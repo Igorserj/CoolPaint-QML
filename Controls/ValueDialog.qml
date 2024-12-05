@@ -5,7 +5,7 @@ Rectangle {
     property var updFunc
     width: window.width / 1280 * 300
     height: width / 30 * 30
-    color: "#E6E6E6"
+    color: style.pinkWhite
     visible: false
     enabled: false
     radius: width / 4
@@ -14,7 +14,7 @@ Rectangle {
         clip: true
         text: val.toFixed(2)
         anchors.centerIn: parent
-        color: "#242424"
+        color: style.lightDark//"#242424"
         font.pixelSize: parent.height / 30 * 12
     }
     ButtonWhite {
@@ -36,6 +36,7 @@ Rectangle {
             close()
         }
     }
+    StyleSheet {id: style}
 
     function open(value, updateFunc) {
         val = value

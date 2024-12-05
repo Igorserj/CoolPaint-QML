@@ -12,12 +12,12 @@ Button {
             when: !area.containsMouse && button.enabled
             PropertyChanges {
                 target: button
-                color: "#4C000000"
+                color: style.darkGlass
                 radius: width / 24
             }
             PropertyChanges {
                 target: buttonText
-                color: "#E6E6E6"
+                color: style.pinkWhiteAccent
                 font.pixelSize: button.height / 30 * 12
             }
         },
@@ -26,12 +26,12 @@ Button {
             when: !button.enabled
             PropertyChanges {
                 target: button
-                color: "#4C242424"
+                color: style.darkGlassDim
                 radius: width / 24
             }
             PropertyChanges {
                 target: buttonText
-                color: "#E6E6E6"
+                color: style.pinkWhite
                 font.pixelSize: button.height / 30 * 12
             }
         },
@@ -40,14 +40,15 @@ Button {
             when: area.containsMouse && button.enabled
             PropertyChanges {
                 target: button
-                color: "#4CE6E6E6"
+                color: style.darkGlassAccent
                 radius: width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: "#E6E6E6"
+                color: style.pinkWhiteAccent
                 font.pixelSize: button.height / 30 * 12
             }
         }
     ]
+    StyleSheet {id: style}
 }

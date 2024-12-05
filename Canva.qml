@@ -1,6 +1,7 @@
 import QtQuick 2.15
 
 Item {
+    property bool imageAssigned: false
     x: (window.width - width) / 2
     width: window.width / 1280 * (1280 - 2 * 260)
     height: window.height
@@ -21,6 +22,7 @@ Item {
 
     function setImage(source) {
         baseImage.source = source
+        imageAssigned = true
     }
     function layersModelUpdate(key, value, idx, index) {
         console.log('idx', idx)

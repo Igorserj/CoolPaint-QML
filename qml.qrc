@@ -41,5 +41,8 @@
         <file>EffectComponents.qml</file>
         <file>Controls/ValueDialog.qml</file>
         <file>Controls/ButtonLayers.qml</file>
+        <file>Controls/StyleSheet.qml</file>
+        <file>Controls/Scroller.qml</file>
+        <file>Block.qml</file>
     </qresource>
 </RCC>

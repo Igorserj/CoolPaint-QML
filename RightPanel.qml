@@ -9,22 +9,9 @@ Rectangle {
     width: window.width / 1280 * 260
     height: window.height
     color: "#302430"
-
-    Rectangle {
-        color: "transparent"
-        height: parent.height
-        width: parent.width
-        clip: true
-        Column {
-            anchors.horizontalCenter: parent.horizontalCenter
-            Repeater {
-                model: propertiesBlockModel
-                Repeater {
-                    model: block
-                    delegate: Controls {}
-                }
-            }
-        }
+    Block {
+        height: parent.height - window.height * 0.005
+        blockModel: propertiesBlockModel
     }
     function propertiesBlockUpdate() {
         Controller.propertiesBlockModelGeneration(propertiesModel, propertiesBlockModel)

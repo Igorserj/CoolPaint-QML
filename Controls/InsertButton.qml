@@ -2,9 +2,9 @@ import QtQuick 2.15
 
 Item {
     id: insertButton
+    property int parentIndex: index
     width: childrenRect.width
     height: childrenRect.height
-    property int parentIndex: index
     Component.onCompleted: update()
     ButtonDark {
         id: insertButtonRect

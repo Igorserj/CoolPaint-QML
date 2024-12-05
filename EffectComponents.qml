@@ -2,9 +2,9 @@ import QtQuick 2.15
 import "Controllers/effectsController.js" as Controller
 
 Item {
+    property alias layersRepeater: layersRepeater
     width: baseImage.paintedWidth
     height: baseImage.paintedHeight
-    property alias layersRepeater: layersRepeater
     Repeater {
         id: layersRepeater
         model: layersModel
@@ -41,7 +41,7 @@ Item {
             property point imageGShift: Controller.propertyPopulation("two", itemList, 1)
             property point imageBShift: Controller.propertyPopulation("two", itemList, 2)
             property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            // property bool isOverlay: Controller.propertyPopulation("overlay", overlay, -1)
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorShift.fsh"
         }

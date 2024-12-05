@@ -2,7 +2,7 @@ import QtQuick 2.15
 
 Rectangle {
     property string text: ""
-    color: "#4C000000"
+    color: style.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 80
     radius: height / 4
@@ -13,7 +13,7 @@ Rectangle {
         width: parent.width * 0.9
         font.family: "Helvetica"
         font.bold: true
-        color: "#E6E6E6"
+        color: style.pinkWhiteAccent
         font.pixelSize: parent.height / 80 * 12
         x: parent.radius / 3
         y: parent.radius / 3
@@ -43,6 +43,8 @@ Rectangle {
             updateAll(bval1)
         }
     }
+    StyleSheet {id: style}
+
     function updateAll(value) {
         val1 = value
         canva.layersModelUpdate('val1', value, idx, index)

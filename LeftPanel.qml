@@ -7,51 +7,20 @@ Rectangle {
     width: window.width / 1280 * 260
     height: window.height
     color: "#302430"
-    Rectangle {
-        color: "transparent"
-        height: 0.5 * parent.height
-        width: parent.width
-        clip: true
-        Column {
-            anchors.horizontalCenter: parent.horizontalCenter
-            Repeater {
-                model: effectsBlockModel
-                delegate: Column {
-                    Repeater {
-                        model: block
-                        delegate: Controls {
-                            function controlsAction() {
-                                Controller.addLayer(type, effectsModel, layersModel, index)
-                                Controller.layersBlockModelGeneration(layersModel, layersBlockModel)
-                            }
-                        }
-                    }
-                }
-            }
+    Block {
+        enabled: canva.imageAssigned
+        blockModel: effectsBlockModel
+        function blockAction() {
+            Controller.addLayer(type, effectsModel, layersModel, index)
+            Controller.layersBlockModelGeneration(layersModel, layersBlockModel)
         }
     }
-    Rectangle {
-        color: "transparent"
-        height: 0.5 * parent.height
-        width: parent.width
-        clip: true
-        y: height
-        Column {
-            anchors.horizontalCenter: parent.horizontalCenter
-            Repeater {
-                model: layersBlockModel
-                delegate: Column {
-                    Repeater {
-                        model: block
-                        delegate: Controls {
-                            function controlsAction() {
-                                Controller.chooseLayer(type, layersModel, rightPanel.propertiesModel, index)
-                                rightPanel.propertiesBlockUpdate()
-                            }
-                        }
-                    }
-                }
-            }
+    Block {
+        y: 0.5 * parent.height
+        blockModel: layersBlockModel
+        function blockAction() {
+            Controller.chooseLayer(type, layersModel, rightPanel.propertiesModel, index)
+            rightPanel.propertiesBlockUpdate()
         }
     }
     Component.onCompleted: {

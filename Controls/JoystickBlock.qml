@@ -3,7 +3,7 @@ import QtQuick 2.15
 Rectangle {
     id: block
     property string text: ""
-    color: "#4C000000"
+    color: style.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 160
     radius: height / 6
@@ -14,7 +14,7 @@ Rectangle {
         width: parent.width * 0.9
         font.family: "Helvetica"
         font.bold: true
-        color: "#E6E6E6"
+        color: style.pinkWhiteAccent
         font.pixelSize: parent.height / 160 * 12
         x: parent.radius / 3
         verticalAlignment: Text.AlignVCenter
@@ -59,8 +59,9 @@ Rectangle {
     }
     ButtonWhite {
         text: "+"
+        enabled: false
         w: 40
-        x: joystick.x + joystick.width
+        x: parent.width * 0.95 - width
         y: joystick.y + joystick.height / 2
         // function clickAction() {
         //     els.ijm.clear()
@@ -72,6 +73,8 @@ Rectangle {
         //     console.log(Object.entries(els.ijm.get(0)))
         // }
     }
+    StyleSheet {id: style}
+
     function updateVal1(value) {
         val1 = value
         canva.layersModelUpdate('val1', value, idx, index)
