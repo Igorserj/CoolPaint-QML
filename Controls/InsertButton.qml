@@ -8,7 +8,7 @@ Item {
     Component.onCompleted: update()
     ButtonDark {
         id: insertButtonRect
-        function clickAction() {activateInsertion()}
+        function clickAction() {activateInsertion(index)}
     }
     Column {
         anchors.top: insertButtonRect.bottom
@@ -44,20 +44,14 @@ Item {
         }
     }
 
-    function activateInsertion() {
-        if (els.state === "default") {
-            insertIndex = [controls.controlsIndex, index, this]
-            els.state = "overlay"
-        }
-        else if (els.state === "overlay") {
-            insertIndex = [-1, -1, undefined]
-            els.state = "default"
-        }
+    function activateInsertion(index) {
+        if (index === 0) leftPanel.effectsBlockState = "insertion"
+        else if (index === 1) leftPanel.effectsBlockState = "insertion2"
     }
 
     function update() {
-        const model = im.getModel(controls.controlsIndex, index)
-        if (model[0] !== -1) {
+        const model = overlayEffectsModel.getModel(leftPanel.layerIndex, index)
+        if (model.length !== 0) {
             insertButtonRect.text = model[0].name
             innerBlock.model = model[0].items
         } else {

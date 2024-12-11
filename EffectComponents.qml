@@ -14,6 +14,7 @@ Item {
             Loader {
                 property var itemList: items
                 property int layerIndex: index
+                property bool overLay: overlay
                 asynchronous: true
                 width: parent.width
                 height: parent.height
@@ -29,7 +30,36 @@ Item {
                 x: (baseImage.width - width) / 2
                 y: (baseImage.height - height) / 2
                 visible: index === layersModel.count - 1
-                onSourceChanged: Controller.reActivateLoader(layersModel, index)
+                onSourceChanged: Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
+            }
+        }
+    }
+    Repeater {
+        id: overlaysRepeater
+        model: overlayEffectsModel
+        delegate: Item {
+            width: parent.width
+            height: parent.height
+            Loader {
+                property var itemList: items
+                property int layerIndex: idx
+                property bool overLay: overlay
+                asynchronous: true
+                width: parent.width
+                height: parent.height
+                visible: false
+                active: activated
+                sourceComponent: Controller.addEffect(name)
+                onLoaded: Controller.setImage(this, img)
+            }
+            Image {
+                id: img
+                width: parent.width
+                height: parent.height
+                x: (baseImage.width - width) / 2
+                y: (baseImage.height - height) / 2
+                visible: false
+                onSourceChanged: Controller.reActivateLayer(layersModel, overlayEffectsModel, idx, iteration)
             }
         }
     }
@@ -40,8 +70,7 @@ Item {
             property point imageRShift: Controller.propertyPopulation("two", itemList, 0)
             property point imageGShift: Controller.propertyPopulation("two", itemList, 1)
             property point imageBShift: Controller.propertyPopulation("two", itemList, 2)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", overlay, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorShift.fsh"
         }
@@ -54,8 +83,7 @@ Item {
             property double lowerRange: Controller.propertyPopulation("one", itemList, 1)
             property point center: Controller.propertyPopulation("two", itemList, 2)
             property double roundness: Controller.propertyPopulation("one", itemList, 3)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/vignette.fsh"
         }
@@ -65,8 +93,7 @@ Item {
         ShaderEffect {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property point strength: Controller.propertyPopulation("two", itemList, 0)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/saturation.fsh"
         }
@@ -76,8 +103,7 @@ Item {
         ShaderEffect {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property double density: Controller.propertyPopulation("one", itemList, 0)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/grain.fsh"
         }
@@ -88,8 +114,7 @@ Item {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property double strength: Controller.propertyPopulation("one", itemList, 0)
             property double threshold: Controller.propertyPopulation("one", itemList, 1)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/blackAndWhite.fsh"
         }
@@ -100,8 +125,7 @@ Item {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property point imageShift: Controller.propertyPopulation("two", itemList, 0)
             property int density: Controller.propertyPopulation("one", itemList, 1)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/motionBlur.fsh"
         }
@@ -112,8 +136,7 @@ Item {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property double lowerRange: Controller.propertyPopulation("one", itemList, 0)
             property double upperRange: Controller.propertyPopulation("one", itemList, 1)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/toneMap.fsh"
         }
@@ -125,8 +148,7 @@ Item {
             property double rows: parseInt(Controller.propertyPopulation("one", itemList, 0))
             property double columns: parseInt(Controller.propertyPopulation("one", itemList, 1))
             property point cellPosition: Controller.propertyPopulation("two", itemList, 2)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/grid.fsh"
         }
@@ -138,8 +160,7 @@ Item {
             property double red: Controller.propertyPopulation("one", itemList, 0)
             property double green: Controller.propertyPopulation("one", itemList, 1)
             property double blue: Controller.propertyPopulation("one", itemList, 2)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorCurve.fsh"
         }
@@ -148,11 +169,10 @@ Item {
         id: overlayEffect
         ShaderEffect {
             property point u_resolution: Qt.point(parent.width, parent.height)
-            // property variant src: srcPopulation(parent, 0)
-            // property variant src2: srcPopulation(parent, 1)
-            // property variant src3: srcPopulation(parent, 2)
-            property bool isOverlay: false
-            // property bool isOverlay: Controller.propertyPopulation("overlay", itemList, -1)
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            property variant src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0] + 1)
+            property variant src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0] + 1)
+            property bool isOverlay: overLay
             fragmentShader: "qrc:/Effects/overlay.fsh"
         }
     }

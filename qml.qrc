@@ -44,5 +44,6 @@
         <file>Controls/StyleSheet.qml</file>
         <file>Controls/Scroller.qml</file>
         <file>Block.qml</file>
+        <file>Models/OverlayEffectsModel.qml</file>
     </qresource>
 </RCC>

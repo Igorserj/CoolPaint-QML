@@ -6,10 +6,32 @@ Rectangle {
     property var blockModel: []
     property int index: -1
     property string type: ''
+    property string name: ''
     color: "transparent"
     height: 0.5 * parent.height - window.height * 0.005
     width: parent.width
     clip: true
+    state: "enabled"
+    states: [
+        State {
+            name: "enabled"
+            PropertyChanges {
+                target: blockRect
+            }
+        },
+        State {
+            name: "insertion"
+            PropertyChanges {
+                target: blockRect
+            }
+        },
+        State {
+            name: "insertion2"
+            PropertyChanges {
+                target: blockRect
+            }
+        }
+    ]
     Column {
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: window.height * 0.005
@@ -17,6 +39,7 @@ Rectangle {
             id: rep
             model: blockModel
             delegate: Item {
+                property bool blockIndex: index
                 height: col.height
                 width: window.width / 1280 * 260
                 z: -index + blockModel.count
@@ -33,11 +56,9 @@ Rectangle {
                     Repeater {
                         model: block
                         delegate: Controls {
-                            enabled: blockRect.enabled
+                            enabled: type === "header" || enableByState(type, name, isOverlay)
                             function controlsAction() {
-                                blockRect.type = type
-                                blockRect.index = index
-                                blockAction()
+                                clickAction(name, type, index)
                             }
                         }
                     }
@@ -51,6 +72,22 @@ Rectangle {
                 }
             }
         }
+    }
+    function enableByState(type, name, isOverlay) {
+        if (blockRect.enabled) {
+            switch (blockRect.state) {
+            case "enabled": return true
+            case "insertion": return isOverlay
+            case "insertion2": return name !== "Overlay"
+            }
+        }
+        else return false
+    }
+    function clickAction(name, type, index) {
+        blockRect.name = name
+        blockRect.type = type
+        blockRect.index = index
+        blockAction()
     }
     function blockAction() {}
 }

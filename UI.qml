@@ -6,7 +6,7 @@ Item {
     property alias canva: canva
     Background {}
     Canva {id: canva}
-    LeftPanel {}
+    LeftPanel {id: leftPanel}
     RightPanel {id: rightPanel}
     Menu {}
     ValueDialog {

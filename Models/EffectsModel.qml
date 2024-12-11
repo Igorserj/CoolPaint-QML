@@ -3,7 +3,6 @@ import QtQuick 2.15
 ListModel {
     ListElement {
         name: "Color shift"
-
         isOverlay: false
         items: [
             ListElement {
@@ -46,8 +45,6 @@ ListModel {
     }
     ListElement {
         name: "Vignette"
-
-        overlay: false
         isOverlay: true
         items: [
             ListElement {
@@ -90,7 +87,6 @@ ListModel {
     }
     ListElement {
         name: "Saturation"
-
         isOverlay: false
         items: [
             ListElement {
@@ -109,8 +105,6 @@ ListModel {
     }
     ListElement {
         name: "Grain"
-
-        overlay: false
         isOverlay: true
         items: [
             ListElement {
@@ -125,8 +119,6 @@ ListModel {
     }
     ListElement {
         name: "Black and white"
-
-        overlay: false
         isOverlay: true
         items: [
             ListElement {
@@ -149,7 +141,6 @@ ListModel {
     }
     ListElement {
         name: "Motion blur"
-
         isOverlay: false
         items: [
             ListElement {
@@ -176,8 +167,6 @@ ListModel {
     }
     ListElement {
         name: "Tone map"
-
-        overlay: false
         isOverlay: true
         items: [
             ListElement {
@@ -200,8 +189,6 @@ ListModel {
     }
     ListElement {
         name: "Grid"
-
-        overlay: false
         isOverlay: true
         items: [
             ListElement {
@@ -236,7 +223,6 @@ ListModel {
     }
     ListElement {
         name: "Color curve"
-
         isOverlay: false
         items: [
             ListElement {
@@ -267,7 +253,6 @@ ListModel {
     }
     ListElement {
         name: "Overlay"
-
         isOverlay: false
         items: [
             ListElement {

@@ -28,11 +28,23 @@ Item {
         console.log('idx', idx)
         layersModel.get(idx).items.setProperty(index, key, value)
         deactivateEffects(idx)
-        layersModel.setProperty(idx, "activated", true)
+        if (layersModel.get(idx).name !== "Overlay") layersModel.setProperty(idx, "activated", true)
+        else {
+            const overlay = overlayEffectsModel.getModel(idx, 0)
+            if (overlay.length > 0) {
+                overlay[0].activated = true
+            }
+        }
     }
     function deactivateEffects(idx) {
-        for (let i = idx; i < layersModel.count; ++i) {
+        let i = idx
+        for (; i < layersModel.count; ++i) {
             layersModel.setProperty(i, "activated", false)
+        }
+        for (i = 0; i < overlayEffectsModel.count; ++i) {
+            if (overlayEffectsModel.get(i).idx >= idx) {
+                overlayEffectsModel.setProperty(i, "activated", false)
+            }
         }
     }
 }

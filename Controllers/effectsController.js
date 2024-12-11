@@ -18,8 +18,20 @@ function setImage(ldr, img) {
     console.log("set image")
 }
 
-function reActivateLoader(model, index) {
-    if (/*source !== "" && */index < model.count - 1) model.setProperty(index + 1, "activated", true)
+function reActivateLoader(layersModel, overlaysModel, index) {
+    if (index < layersModel.count - 1 && layersModel.get(index + 1).name !== "Overlay") layersModel.setProperty(index + 1, "activated", true)
+    else if (index < layersModel.count - 1 && layersModel.get(index + 1).name === "Overlay") {
+        const overlay = overlaysModel.getModel(index + 1, 0)
+        if (overlay.length > 0) overlay[0].activated = true
+    }
+}
+
+function reActivateLayer(layersModel, overlaysModel, idx, iteration) {
+    console.log('layer react')
+    if (iteration === 0) {
+        const overlay = overlaysModel.getModel(idx, 1)
+        if (overlay.length > 0) overlay[0].activated = true
+    } else layersModel.setProperty(idx, "activated", true)
 }
 
 function propertyPopulation(type, items, index) {
@@ -27,7 +39,7 @@ function propertyPopulation(type, items, index) {
         return items.get(index).val1
     } else if (type === "two") {
         return Qt.point(items.get(index).val1, items.get(index).val2)
-    } else if (type === "overlay") {}
+    }
 }
 
 function srcPopulation(repeater, index, baseImage) {

@@ -9,11 +9,16 @@ Window {
     visible: true
     title: qsTr("Cool Paint")
 
-    UI {id: ui}
+    UI {
+        id: ui
+    }
     EffectsModel {
         id: effectsModel
     }
     LayersModel {
         id: layersModel
+    }
+    OverlayEffectsModel {
+        id: overlayEffectsModel
     }
 }
