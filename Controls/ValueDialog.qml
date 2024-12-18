@@ -14,7 +14,7 @@ Rectangle {
         clip: true
         text: val.toFixed(2)
         anchors.centerIn: parent
-        color: style.lightDark//"#242424"
+        color: style.lightDark
         font.pixelSize: parent.height / 30 * 12
     }
     ButtonWhite {

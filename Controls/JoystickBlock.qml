@@ -45,7 +45,6 @@ Rectangle {
                     w: 40
                     text: "↺"
                     function clickAction() {
-                        console.log('reset:', bval1, bval2)
                         if (index === 0) {
                             updateVal1(bval1)
                         } else {
@@ -63,15 +62,6 @@ Rectangle {
         w: 40
         x: parent.width * 0.95 - width
         y: joystick.y + joystick.height / 2
-        // function clickAction() {
-        //     els.ijm.clear()
-        //     els.ijm.set(0, {
-        //                     item: joystick,
-        //                     min1: min1, max1: max1, val1: val1,
-        //                     min2: min2, max2: max2, val2: val2
-        //                 })
-        //     console.log(Object.entries(els.ijm.get(0)))
-        // }
     }
     StyleSheet {id: style}
 

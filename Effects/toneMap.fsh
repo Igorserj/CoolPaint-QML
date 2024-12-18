@@ -2,10 +2,10 @@
 precision lowp float;
 #endif
 uniform lowp vec2 u_resolution;
-uniform lowp float upperRange;
 uniform lowp float lowerRange;
-uniform sampler2D src;
+uniform lowp float upperRange;
 uniform lowp bool isOverlay;
+uniform sampler2D src;
 
 void main(void)
 {

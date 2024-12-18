@@ -2,6 +2,9 @@ import QtQuick 2.15
 
 Item {
     property bool imageAssigned: false
+    property Image finalImage//: baseImage
+    property bool mirroring: false
+    property double scaling: 1.
     x: (window.width - width) / 2
     width: window.width / 1280 * (1280 - 2 * 260)
     height: window.height
@@ -9,8 +12,10 @@ Item {
         id: baseImage
         width: parent.width
         height: parent.height
+        scale: scaling
         visible: layersModel.count === 0
         fillMode: Image.PreserveAspectFit
+        mirror: mirroring
     }
     Repeater {
         model: layersModel
@@ -25,7 +30,7 @@ Item {
         imageAssigned = true
     }
     function layersModelUpdate(key, value, idx, index) {
-        console.log('idx', idx)
+        console.log('idx', idx, index)
         layersModel.get(idx).items.setProperty(index, key, value)
         deactivateEffects(idx)
         if (layersModel.get(idx).name !== "Overlay") layersModel.setProperty(idx, "activated", true)

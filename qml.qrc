@@ -45,5 +45,12 @@
         <file>Controls/Scroller.qml</file>
         <file>Block.qml</file>
         <file>Models/OverlayEffectsModel.qml</file>
+        <file>Models/ViewsModel.qml</file>
+        <file>Models/ViewsBlockModel.qml</file>
+        <file>Controls/ButtonSwitch.qml</file>
+        <file>Controls/SwitchBlock.qml</file>
+        <file>Effects/mirror.fsh</file>
+        <file>Controls/OverlayControls.qml</file>
+        <file>Effects/colorHighlight.fsh</file>
     </qresource>
 </RCC>

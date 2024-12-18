@@ -23,22 +23,15 @@ Item {
                     height: item.height
                     sourceComponent: {
                         switch (type) {
-                        case "joystick": joystick; break;
-                        case "slider": slider; break;
+                        case "joystick": overlayControls.joystick; break;
+                        case "slider": overlayControls.slider; break;
+                        case "buttonSwitch": overlayControls.buttonSwitch; break;
+                        default: overlayControls.empty; break
                         }
                     }
                 }
-                Component {
-                    id: joystick
-                    JoystickBlock {
-                        text: name
-                    }
-                }
-                Component {
-                    id: slider
-                    SliderBlock {
-                        text: name
-                    }
+                OverlayControls {
+                    id: overlayControls
                 }
             }
         }

@@ -19,19 +19,10 @@ Rectangle {
         y: parent.radius / 3
         verticalAlignment: Text.AlignVCenter
     }
-    Slider {
+    ButtonSwitch {
         id: slider
         y: parent.height - height - parent.radius / 3
         x: parent.width * 0.05
-    }
-    ButtonWhite {
-        w: 40
-        x: resetButton.x - width
-        y: (slider.y - height) / 2
-        text: val1.toFixed(2)
-        function clickAction() {
-            valueDialog.open(val1, updateAll)
-        }
     }
     ButtonWhite {
         id: resetButton
@@ -54,8 +45,8 @@ Rectangle {
         if (category === "layer") {
             canva.layersModelUpdate('val1', val1, idx, index)
         } else if (category === "view") {
-            if (name === "Scale") {
-                canva.scaling = val1
+            if (name === "Mirroring") {
+                canva.mirroring = val1
             }
         }
     }

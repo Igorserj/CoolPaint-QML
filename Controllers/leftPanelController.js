@@ -4,7 +4,10 @@ function effectsBlockModelGeneration(model, blockModel) {
     blockModel.append({block: []})
     blockModel.get(0).block.append({type: "header", wdth: 240, name: "Effects"})
     for (let i = 0; i < model.count; ++i) {
-        blockModel.get(1).block.append({type: "buttonDark", wdth: 240, name: model.get(i).name, isOverlay: model.get(i).isOverlay})
+        const effect = JSON.parse(JSON.stringify(model.get(i)))
+        effect.type = "buttonDark"
+        effect.wdth = 240
+        blockModel.get(1).block.append(effect)
     }
 }
 
@@ -33,9 +36,9 @@ function chooseLayer(type, layersModel, propertiesModel, index) {
     if (type === "buttonLayers") {
         propertiesModel.clear()
         for (let i = 0; i < layersModel.get(index).items.count; ++i) {
-            const item = layersModel.get(index).items
-            item.setProperty(i,'idx', index)
-            propertiesModel.append(item.get(i))
+            const item = JSON.parse(JSON.stringify(layersModel.get(index).items.get(i)))
+            item.idx = index
+            propertiesModel.append(item)
         }
     }
 }

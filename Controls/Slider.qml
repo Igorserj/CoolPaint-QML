@@ -68,7 +68,7 @@ Rectangle {
 
     function clickAction() {
         val1 = (area.mouseX / width) * (max1 - min1) + min1
-        canva.layersModelUpdate('val1', val1, idx, index)
+        updateVal(val1)
     }
     StyleSheet {id: style}
 }

@@ -15,11 +15,9 @@ Rectangle {
         blockModel: effectsBlockModel
         function blockAction() {
             if (state === "enabled") {
-                // console.log('model', Object.entries(effectsBlockModel.get(index).block.get(0)))
                 Controller.addLayer(name, type, effectsModel, layersModel, index)
                 Controller.layersBlockModelGeneration(layersModel, layersBlockModel)
             } else {
-                console.log('li', index, layerIndex)
                 state = Controller.addOverlayLayer(state, effectsModel, overlayEffectsModel, index, layerIndex)
                 rightPanel.propertiesBlockUpdate()
             }

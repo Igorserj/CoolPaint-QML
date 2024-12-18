@@ -5,8 +5,9 @@ ListModel {
         block: ListElement {
             wdth: 240
             type: "header"
-            name: "Properties"
+            name: "View"
             view: "normal,overlay"
+            category: "view"
         }
     }
 }

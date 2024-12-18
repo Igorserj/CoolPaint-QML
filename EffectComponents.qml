@@ -29,8 +29,17 @@ Item {
                 height: parent.height
                 x: (baseImage.width - width) / 2
                 y: (baseImage.height - height) / 2
-                visible: index === layersModel.count - 1
+                visible: false
+                // visible: index === layersModel.count - 1
                 onSourceChanged: Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
+                Component.onCompleted: {
+                    if (index === layersModel.count - 1) {
+                        scale = Qt.binding(() => scaling)
+                        mirror = Qt.binding(() => mirroring)
+                        visible = true
+                        finalImage = this
+                    }
+                }
             }
         }
     }
@@ -103,6 +112,8 @@ Item {
         ShaderEffect {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property double density: Controller.propertyPopulation("one", itemList, 0)
+            property double lowerRange: Controller.propertyPopulation("one", itemList, 1)
+            property double upperRange: Controller.propertyPopulation("one", itemList, 2)
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/grain.fsh"
@@ -174,6 +185,17 @@ Item {
             property variant src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0] + 1)
             property bool isOverlay: overLay
             fragmentShader: "qrc:/Effects/overlay.fsh"
+        }
+    }
+    Component {
+        id: mirrorEffect
+        ShaderEffect {
+            property point u_resolution: Qt.point(parent.width, parent.height)
+            property int horizontalFlip: Controller.propertyPopulation("one", itemList, 0)
+            property int verticalFlip: Controller.propertyPopulation("one", itemList, 1)
+            property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/mirror.fsh"
         }
     }
 }

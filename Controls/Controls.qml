@@ -9,63 +9,27 @@ Item {
         id: controlsLoader
         width: item.width
         height: item.height
+        visible: typeof(view) !== "undefined" ? (typeof(overlay) === "undefined" || !overlay) ? view.includes("normal") : view.includes("overlay") : true
         sourceComponent: {
             switch (type) {
-            case "joystick": joystick; break;
-            case "slider": slider; break;
+            case "joystick": overlayControls.joystick; break;
+            case "slider": overlayControls.slider; break;
             case "insert": insertButton; break;
-            case "buttonWhite": buttonWhite; break;
-            case "buttonDark": buttonDark; break;
-            case "buttonLayers": buttonLayers; break;
-            case "header": header; break;
+            case "buttonWhite": overlayControls.buttonWhite; break;
+            case "buttonDark": overlayControls.buttonDark; break;
+            case "buttonLayers": overlayControls.buttonLayers; break;
+            case "buttonSwitch": overlayControls.buttonSwitch; break;
+            case "header": overlayControls.header; break;
+            default: overlayControls.empty; break;
             }
         }
     }
-    Component {
-        id: joystick
-        JoystickBlock {
-            text: name
-        }
+    OverlayControls {
+        id: overlayControls
     }
-    Component {
-        id: slider
-        SliderBlock {
-            text: name
-        }
-    }
+
     Component {
         id: insertButton
         InsertButton {}
-    }
-    Component {
-        id: buttonWhite
-        ButtonWhite {
-            w: wdth
-            text: name
-            function clickAction() {controlsAction()}
-        }
-    }
-    Component {
-        id: buttonDark
-        ButtonDark {
-            w: wdth
-            text: name
-            function clickAction() {controlsAction()}
-        }
-    }
-    Component {
-        id: buttonLayers
-        ButtonLayers {
-            w: wdth
-            text: name
-            function clickAction() {controlsAction()}
-        }
-    }
-    Component {
-        id: header
-        Header {
-            w: wdth
-            text: name
-        }
     }
 }

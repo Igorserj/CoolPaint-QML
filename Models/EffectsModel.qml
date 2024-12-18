@@ -6,8 +6,10 @@ ListModel {
         isOverlay: false
         items: [
             ListElement {
+                category: "layer"
                 type: "joystick"
                 name: "Red shift range"
+                view: "normal,overlay"
                 min1: -0.5
                 min2: -0.5
                 max1: 0.5
@@ -18,8 +20,10 @@ ListModel {
                 bval2: 0
             },
             ListElement {
+                category: "layer"
                 type: "joystick"
                 name: "Green shift range"
+                view: "normal,overlay"
                 min1: -0.5
                 min2: -0.5
                 max1: 0.5
@@ -30,8 +34,10 @@ ListModel {
                 bval2: 0
             },
             ListElement {
+                category: "layer"
                 type: "joystick"
                 name: "Blue shift range"
+                view: "normal,overlay"
                 min1: -0.5
                 min2: -0.5
                 max1: 0.5
@@ -40,6 +46,11 @@ ListModel {
                 val2: 0
                 bval1: 0
                 bval2: 0
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }
@@ -48,24 +59,30 @@ ListModel {
         isOverlay: true
         items: [
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Lower range"
+                view: "normal,overlay"
                 min1: 0
                 max1: 1
                 val1: 0
                 bval1: 0
             },
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Upper range"
+                view: "normal,overlay"
                 min1: 0
                 max1: 1
                 val1: 0
                 bval1: 0
             },
             ListElement {
+                category: "layer"
                 type: "joystick"
                 name: "Center"
+                view: "normal,overlay"
                 min1: 0
                 min2: 0
                 max1: 1
@@ -76,8 +93,10 @@ ListModel {
                 bval2: 0.5
             },
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Roundness"
+                view: "normal,overlay"
                 min1: 0
                 max1: 1
                 val1: 1
@@ -90,8 +109,10 @@ ListModel {
         isOverlay: false
         items: [
             ListElement {
+                category: "layer"
                 type: "joystick"
                 name: "Strength"
+                view: "normal,overlay"
                 min1: -1
                 min2: -1
                 max1: 1
@@ -100,6 +121,21 @@ ListModel {
                 val2: 0
                 bval1: 0
                 bval2: 0
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }
@@ -108,12 +144,39 @@ ListModel {
         isOverlay: true
         items: [
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Density"
+                view: "normal,overlay"
                 min1: 0
                 max1: 10
                 val1: 0
                 bval1: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Lower range"
+                view: "overlay"
+                min1: 0
+                max1: 1.0
+                val1: 0.9
+                bval1: 0.9
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Upper range"
+                view: "overlay"
+                min1: 0
+                max1: 1
+                val1: 1.0
+                bval1: 1.0
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }
@@ -122,20 +185,34 @@ ListModel {
         isOverlay: true
         items: [
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Strength"
+                view: "normal,overlay"
                 min1: -1
                 max1: 1
                 val1: 0
                 bval1: 0
             },
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Threshold"
+                view: "normal,overlay"
                 min1: 0
                 max1: 1
                 val1: 0
                 bval1: 0
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }
@@ -144,8 +221,10 @@ ListModel {
         isOverlay: false
         items: [
             ListElement {
+                category: "layer"
                 type: "joystick"
                 name: "Shift range"
+                view: "normal,overlay"
                 min1: -0.01
                 min2: -0.01
                 max1: 0.01
@@ -156,12 +235,24 @@ ListModel {
                 bval2: 0
             },
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Density"
+                view: "normal,overlay"
                 min1: 2
                 max1: 20
                 val1: 2
                 bval1: 2
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }
@@ -170,20 +261,34 @@ ListModel {
         isOverlay: true
         items: [
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Lower range"
+                view: "normal,overlay"
                 min1: 0
                 max1: 0.5
                 val1: 0
                 bval1: 0
             },
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Upper range"
+                view: "normal,overlay"
                 min1: 0
                 max1: 0.5
                 val1: 0
                 bval1: 0
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }
@@ -192,24 +297,30 @@ ListModel {
         isOverlay: true
         items: [
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Rows"
+                view: "normal,overlay"
                 min1: 1
                 max1: 10
                 val1: 1
                 bval1: 1
             },
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Columns"
+                view: "normal,overlay"
                 min1: 1
                 max1: 10
                 val1: 1
                 bval1: 1
             },
             ListElement {
+                category: "layer"
                 type: "joystick"
                 name: "Cell position"
+                view: "overlay"
                 min1: 1
                 min2: 1
                 max1: 11
@@ -218,6 +329,11 @@ ListModel {
                 val2: 1
                 bval1: 1
                 bval2: 1
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }
@@ -226,28 +342,39 @@ ListModel {
         isOverlay: false
         items: [
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Red level"
+                view: "normal,overlay"
                 min1: 0
                 max1: 2
                 val1: 1
                 bval1: 1
             },
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Green level"
+                view: "normal,overlay"
                 min1: 0
                 max1: 2
                 val1: 1
                 bval1: 1
             },
             ListElement {
+                category: "layer"
                 type: "slider"
                 name: "Blue level"
+                view: "normal,overlay"
                 min1: 0
                 max1: 2
                 val1: 1
                 bval1: 1
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }
@@ -256,12 +383,58 @@ ListModel {
         isOverlay: false
         items: [
             ListElement {
+                category: "layer"
                 type: "insert"
                 name: "Mask"
             },
             ListElement {
+                category: "layer"
                 type: "insert"
                 name: "Image"
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            }
+        ]
+    }
+    ListElement {
+        name: "Mirror"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "buttonSwitch"
+                name: "Horizontal flip"
+                min1: 0
+                max1: 1
+                val1: 0
+                bval1: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "buttonSwitch"
+                name: "Vertical flip"
+                min1: 0
+                max1: 1
+                val1: 0
+                bval1: 0
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
             }
         ]
     }

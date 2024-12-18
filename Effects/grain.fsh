@@ -2,9 +2,11 @@
 precision lowp float;
 #endif
 uniform lowp vec2 u_resolution;
-uniform sampler2D src;
 uniform lowp float density;
+uniform lowp float lowerRange;
+uniform lowp float upperRange;
 uniform lowp bool isOverlay;
+uniform sampler2D src;
 
 vec2 random(vec2 st){
     st = vec2( dot(st,vec2(127.1,311.7)),
@@ -33,7 +35,7 @@ void main(void)
     vec2 pos = vec2(st*max(u_resolution.x, u_resolution.y)*(density/10.));
     float color = noise(pos)*.5+1.;
     if (isOverlay) {
-        tex.rgb = vec3(normalize(color));
+        tex.rgb = vec3(1.-smoothstep(lowerRange, upperRange, color));
     } else {
         tex.rgb *= color;
     }

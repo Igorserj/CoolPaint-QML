@@ -9,9 +9,13 @@ Rectangle {
     width: window.width / 1280 * 260
     height: window.height
     color: "#302430"
+    Component.onCompleted: viewsBlockPopulate()
     Block {
-        height: parent.height - window.height * 0.005
         blockModel: propertiesBlockModel
+    }
+    Block {
+        y: parent.height / 2
+        blockModel: viewsBlockModel
     }
     function propertiesBlockUpdate() {
         Controller.propertiesBlockModelGeneration(propertiesModel, propertiesBlockModel)
@@ -19,11 +23,20 @@ Rectangle {
     function resetPropertiesBlock() {
         Controller.flushPropertiesBlockModel(propertiesBlockModel)
     }
+    function viewsBlockPopulate() {
+        Controller.viewsBlockModelGeneration(viewsModel, viewsBlockModel)
+    }
 
     PropertiesModel {
         id: propertiesModel
     }
     PropertiesBlockModel {
         id: propertiesBlockModel
+    }
+    ViewsModel {
+        id: viewsModel
+    }
+    ViewsBlockModel {
+        id: viewsBlockModel
     }
 }
