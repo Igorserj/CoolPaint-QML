@@ -77,8 +77,8 @@ Rectangle {
         id: stickArea
         anchors.fill: parent
         hoverEnabled: true
-        onMouseXChanged: if (containsPress) stick.x = xStick(true, stickArea.mouseX)
-        onMouseYChanged: if (containsPress) stick.y = yStick(true, stickArea.mouseY)
+        onMouseXChanged: if (containsPress) stick.x = xStick(true, mouseX)
+        onMouseYChanged: if (containsPress) stick.y = yStick(true, mouseY)
     }
     StyleSheet {id: style}
 
@@ -102,7 +102,7 @@ Rectangle {
             return (val2 - min2) / (max2 - min2) * height - stick.height / 2
         }
     }
-    function update() {
+    function updating() {
         stick.x = xStick(false)
         stick.y = yStick(false)
     }

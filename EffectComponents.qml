@@ -30,7 +30,6 @@ Item {
                 x: (baseImage.width - width) / 2
                 y: (baseImage.height - height) / 2
                 visible: false
-                // visible: index === layersModel.count - 1
                 onSourceChanged: Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
                 Component.onCompleted: {
                     if (index === layersModel.count - 1) {
@@ -196,6 +195,18 @@ Item {
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/mirror.fsh"
+        }
+    }
+    Component {
+        id: colorHighlight
+        ShaderEffect {
+            property point u_resolution: Qt.point(parent.width, parent.height)
+            property point coordinates: Controller.propertyPopulation("two", itemList, 0)
+            property double tolerance: Controller.propertyPopulation("one", itemList, 1)
+            // property double radius: Controller.propertyPopulation("one", itemList, 2)
+            property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/colorHighlight.fsh"
         }
     }
 }

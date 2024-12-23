@@ -1,8 +1,11 @@
 import QtQuick 2.15
+import "Controls"
+import "Models"
 
 Item {
+    property alias effectComponents: effectComponents
     property bool imageAssigned: false
-    property Image finalImage//: baseImage
+    property Image finalImage
     property bool mirroring: false
     property double scaling: 1.
     x: (window.width - width) / 2
@@ -23,6 +26,25 @@ Item {
     }
     EffectComponents {
         id: effectComponents
+    }
+    Repeater {
+        model: manipulatorModel
+        Joystick {
+            width: baseImage.paintedWidth * scaling
+            height: baseImage.paintedHeight * scaling
+            anchors.centerIn: baseImage
+            opacity: 0
+            enabled: activated
+            function xStick(pressed, mouseX = 0) {
+                return joy.xStick(stickArea.pressed, stickArea.mouseX/stickArea.width*joy.stickArea.width)
+            }
+            function yStick(pressed, mouseY = 0) {
+                return joy.yStick(stickArea.pressed, stickArea.mouseY/stickArea.height*joy.stickArea.height)
+            }
+        }
+    }
+    ManipulatorModel {
+        id: manipulatorModel
     }
 
     function setImage(source) {
@@ -51,5 +73,8 @@ Item {
                 overlayEffectsModel.setProperty(i, "activated", false)
             }
         }
+    }
+    function enableManipulator(joystick, props) {
+        manipulatorModel.set(0, props)
     }
 }

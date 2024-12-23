@@ -3,6 +3,7 @@ import Qt.labs.platform 1.1
 import "Controls"
 import "Models"
 import "Controllers/menuController.js" as Controller
+import "./Controllers/openFile.js" as OF
 
 Item {
     x: (window.width - childrenRect.width) / 2
@@ -12,7 +13,7 @@ Item {
             model: menuModel
             delegate: Controls {
                 function controlsAction() {
-                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog/*, exportFileDialog*/)
+                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog, exportFileDialog)
                 }
             }
         }
@@ -25,12 +26,14 @@ Item {
         id: saveDialog
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.SaveFile
+        onAccepted: saveProj(currentFile)
     }
 
     FileDialog {
         id: openProjDialog
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.OpenFile
+        onAccepted: OF.openFile(currentFile, response => openedFileHandle(response.content))
     }
 
     FileDialog {
@@ -40,41 +43,42 @@ Item {
         onAccepted: Controller.openDialogAccept(canva, currentFile, layersModel)
     }
 
-    // function saveFile(currentFile) {
-    //     // els.loaderUnload()
-    //     const model = { 'applied': [], 'inserts': [] }
-    //     let k = 0
-    //     for (; k < ela.count; ++k) {
-    //         model.applied.push(ela.get(k))
-    //     }
-    //     for (k = 0; k < im.count; ++k) {
-    //         model.inserts.push(im.get(k))
-    //     }
-    //     const jsonData = JSON.stringify(model, null, '\t')
-    //     const request = new XMLHttpRequest();
-    //     request.open("PUT", currentFile.toString().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2') + '.json', false);
-    //     request.send(jsonData);
-    //     // els.loaderLoad()
-    // }
+    FileDialog {
+        id: exportFileDialog
+        // nameFilters: ["Image file (*.jpeg *.jpg *.dng *.tif *.tiff *.png)"]
+        nameFilters: ["Joint Photographic Experts Group (*.jpeg)", "Digital Negative Specification (*.dng)", "Tagged Image File Format (*.tiff)", "Portable Network Graphics (*.png)"]
+        fileMode: FileDialog.SaveFile
+        selectedNameFilter.index: 0
+        onAccepted: Controller.exportDialogAccept(canva.finalImage, currentFile, selectedNameFilter.extensions)
+    }
 
-    // function openedFileHandle(response) {
-    //     const text = JSON.parse(response)
-    //     els.loaderUnload()
-    //     ela.clear()
-    //     im.clear()
-    //     let data
-    //     for (data of text.applied) {
-    //         ela.append(data)
-    //     }
-    //     for (data of text.inserts) {
-    //         im.append(data)
-    //     }
-    //     els.loaderLoad()
-    //     // els.overlaysIterator(0, 0)
-    //     els.effectsIterator(0)
-    //     // for (let i = 0; i < ela.count; ++i) {
-    //     //     els.effectsIterator(i)
-    //     //     // els.imagesIterator(i)
-    //     // }
-    // }
+    function saveProj(currentFile) {
+        const model = { 'layers': [], 'overlays': [] }
+        let k = 0
+        for (; k < layersModel.count; ++k) {
+            model.layers.push(layersModel.get(k))
+        }
+        for (k = 0; k < overlayEffectsModel.count; ++k) {
+            model.overlays.push(overlayEffectsModel.get(k))
+        }
+        const jsonData = JSON.stringify(model, null, '\t')
+        const request = new XMLHttpRequest();
+        request.open("PUT", currentFile.toString().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2') + '.json', false);
+        request.send(jsonData);
+    }
+
+    function openedFileHandle(response) {
+        const text = JSON.parse(response)
+        layersModel.clear()
+        overlayEffectsModel.clear()
+        let k = 0
+        for (; k < text.layers.length; ++k) {
+            layersModel.append(text.layers[k])
+        }
+        for (k = 0; k < text.overlays.length; ++k) {
+            overlayEffectsModel.append(text.overlays[k])
+        }
+        leftPanel.updateLayersBlockModel()
+        canva.layersModelUpdate('', -1, 0, 0)
+    }
 }

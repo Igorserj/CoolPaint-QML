@@ -21,4 +21,7 @@ Window {
     OverlayEffectsModel {
         id: overlayEffectsModel
     }
+    ViewsModel {
+        id: viewsModel
+    }
 }

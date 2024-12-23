@@ -54,3 +54,5 @@ compile_commands.json
 *_qmlcache.qrc
 /build
 iWPPB3K.png
+*.png
+*.json

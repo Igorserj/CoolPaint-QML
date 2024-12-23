@@ -39,5 +39,5 @@ void main(void)
     } else {
         tex.rgb *= color;
     }
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, 1.);
+    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
 }

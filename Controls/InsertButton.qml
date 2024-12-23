@@ -5,7 +5,7 @@ Item {
     property int parentIndex: index
     width: childrenRect.width
     height: childrenRect.height
-    Component.onCompleted: update()
+    Component.onCompleted: updating()
     ButtonDark {
         id: insertButtonRect
         function clickAction() {activateInsertion(index)}
@@ -38,11 +38,17 @@ Item {
     }
 
     function activateInsertion(index) {
-        if (index === 0) leftPanel.effectsBlockState = "insertion"
-        else if (index === 1) leftPanel.effectsBlockState = "insertion2"
+        if (index === 0) {
+            if (leftPanel.effectsBlockState !== "insertion") leftPanel.effectsBlockState = "insertion"
+            else leftPanel.effectsBlockState = "enabled"
+        }
+        else if (index === 1) {
+            if (leftPanel.effectsBlockState !== "insertion2") leftPanel.effectsBlockState = "insertion2"
+            else leftPanel.effectsBlockState = "enabled"
+        }
     }
 
-    function update() {
+    function updating() {
         const model = overlayEffectsModel.getModel(leftPanel.layerIndex, index)
         if (model.length !== 0) {
             insertButtonRect.text = model[0].name

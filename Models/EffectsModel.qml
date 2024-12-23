@@ -188,7 +188,7 @@ ListModel {
                 category: "layer"
                 type: "slider"
                 name: "Strength"
-                view: "normal,overlay"
+                view: "normal"
                 min1: -1
                 max1: 1
                 val1: 0
@@ -423,6 +423,46 @@ ListModel {
                 name: "Vertical flip"
                 min1: 0
                 max1: 1
+                val1: 0
+                bval1: 0
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            }
+        ]
+    }
+    ListElement {
+        name: "Color highlight"
+        isOverlay: true
+        items: [
+            ListElement {
+                category: "layer"
+                type: "joystick"
+                name: "Pixel chooser"
+                view: "normal,overlay"
+                min1: 0
+                min2: 0
+                max1: 1
+                max2: 1
+                val1: 0
+                val2: 0
+                bval1: 0
+                bval2: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Tolerance"
+                view: "normal,overlay"
+                min1: 0
+                max1: 0.3
                 val1: 0
                 bval1: 0
             },

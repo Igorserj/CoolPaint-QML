@@ -50,7 +50,7 @@ Rectangle {
                         } else {
                             updateVal2(bval2)
                         }
-                        joystick.update()
+                        joystick.updating()
                     }
                 }
             }
@@ -58,10 +58,13 @@ Rectangle {
     }
     ButtonWhite {
         text: "+"
-        enabled: false
         w: 40
         x: parent.width * 0.95 - width
         y: joystick.y + joystick.height / 2
+        function clickAction() {
+            const model = {min1: min1, max1: max1, val1: val1, min2: min2, max2: max2, val2: val2, idx: idx, index: index, activated: true, joy: joystick}
+            canva.enableManipulator(joystick, model)
+        }
     }
     StyleSheet {id: style}
 

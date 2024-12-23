@@ -19,6 +19,7 @@ void main(void)
         tex.r = tex.r * (1.-strength) + medium * (strength);
         tex.g = tex.g * (1.-strength) + medium * (strength);
         tex.b = tex.b * (1.-strength) + medium * (strength);
+        tex.a = tex.a * (1.-strength) + medium * (strength);
     }
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, 1.);
+    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
 }

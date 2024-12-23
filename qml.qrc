@@ -52,5 +52,8 @@
         <file>Effects/mirror.fsh</file>
         <file>Controls/OverlayControls.qml</file>
         <file>Effects/colorHighlight.fsh</file>
+        <file>Models/ManipulatorModel.qml</file>
+        <file>Controllers/openFile.js</file>
+        <file>ExportMenu.qml</file>
     </qresource>
 </RCC>

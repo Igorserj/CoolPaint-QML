@@ -17,9 +17,9 @@ void main(void)
     float dist2 = (smoothstep(lowerRange, upperRange, 1.-distance(center.x, st.x))) * (smoothstep(lowerRange, upperRange, 1.-distance(1.-center.y, st.y)));
     float dist = dist1*roundness + dist2*(1.-roundness);
     if (isOverlay) {
-        tex.rgb = vec3(dist);
+        tex.rgba = vec4(dist);
     } else {
-        tex.rgb *= dist;
+        tex.rgba *= dist;
     }
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, 1.);
+    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
 }

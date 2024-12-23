@@ -11,6 +11,7 @@ function addEffect(name) {
     case "Color curve": return colorCurve
     case "Overlay": return overlayEffect
     case "Mirror": return mirrorEffect
+    case "Color highlight": return colorHighlight
     }
 }
 

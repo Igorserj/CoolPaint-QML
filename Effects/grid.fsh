@@ -23,11 +23,11 @@ void main(void)
         rightSide = rows - leftSide;
         st.y = step(floor(rightSide) * row, st.y) * step(floor(leftSide) * row, 1.-st.y);
         // st.y = 1.0;
-        tex.rgb = vec3(st.x * st.y);
+        tex.rgba = vec4(st.x * st.y);
     } else {
         st.x = fract(st.x*columns);
         st.y = fract(st.y*rows);
         tex = texture2D(src, vec2(st.x, 1.-st.y));
     }
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, 1.);
+    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
 }

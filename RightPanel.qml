@@ -33,9 +33,6 @@ Rectangle {
     PropertiesBlockModel {
         id: propertiesBlockModel
     }
-    ViewsModel {
-        id: viewsModel
-    }
     ViewsBlockModel {
         id: viewsBlockModel
     }

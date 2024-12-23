@@ -18,5 +18,5 @@ void main(void)
         tex.rgb = mix(tex.rgb, tex1.rgb, 1./(float(i)+0.01/float(i)));
     }
     // tex.rgb += float(iter/density);
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, 1.);
+    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
 }
