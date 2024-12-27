@@ -55,5 +55,9 @@
         <file>Models/ManipulatorModel.qml</file>
         <file>Controllers/openFile.js</file>
         <file>ExportMenu.qml</file>
+        <file>Models/ExportMenuModel.qml</file>
+        <file>Effects/gaussianBlur.fsh</file>
+        <file>Controllers/exportMenuController.js</file>
+        <file>Models/ExportMenuBlockModel.qml</file>
     </qresource>
 </RCC>

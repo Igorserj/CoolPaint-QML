@@ -1,8 +1,9 @@
 import QtQuick 2.15
 
-Item {
+Column {
     id: insertButton
     property int parentIndex: index
+    spacing: window.height * 0.005
     width: childrenRect.width
     height: childrenRect.height
     Component.onCompleted: updating()
@@ -11,7 +12,7 @@ Item {
         function clickAction() {activateInsertion(index)}
     }
     Column {
-        anchors.top: insertButtonRect.bottom
+        spacing: window.height * 0.005
         Repeater {
             id: innerBlock
             Item {

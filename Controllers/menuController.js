@@ -7,14 +7,21 @@ function menuActions(index, openDialog, openProjectDialog, saveFileDialog, expor
     }
 }
 
-function openDialogAccept(canva, source, model) {
+function openDialogAccept(canva, source, layersModel, exportModel) {
     canva.setImage(source)
-    if (model.count > 0) canva.layersModelUpdate('', 0, 0, 0)
-}
+    if (layersModel.count > 0) canva.reDraw()
+    const sizes = canva.getBaseImageDims()
+    exportModel.set(0, {
+                        'bval1': sizes.aspectW,
+                        'val1': sizes.width,
+                        "max1": sizes.sourceW > sizes.aspectW * 1.5 ? sizes.sourceW : sizes.aspectW * 1.5,
+                        "min1": sizes.sourceW < sizes.aspectW / 1.5 ? sizes.sourceW : sizes.aspectW / 1.5
+                    })
 
-function exportDialogAccept(image, source, ext) {
-    const path = source.toString().slice(7)
-    const name = `${path}.${ext[0]}`
-    console.log(name)
-    image.grabToImage(result => result.saveToFile(name))
+    exportModel.set(1, {
+                        'bval1': sizes.aspectH,
+                        'val1': sizes.height,
+                        "max1": sizes.sourceH > sizes.aspectH * 1.5 ? sizes.sourceH : sizes.aspectH * 1.5,
+                        "min1": sizes.sourceH < sizes.aspectH / 1.5 ? sizes.sourceH : sizes.aspectH / 1.5
+                    })
 }

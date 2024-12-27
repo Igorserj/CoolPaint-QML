@@ -24,4 +24,7 @@ Window {
     ViewsModel {
         id: viewsModel
     }
+    ExportMenuModel {
+        id: exportMenuModel
+    }
 }

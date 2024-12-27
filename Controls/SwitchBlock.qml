@@ -47,6 +47,9 @@ Rectangle {
         } else if (category === "view") {
             if (name === "Mirroring") {
                 canva.mirroring = val1
+            } else if (name === "Smoothing") {
+                canva.smoothing = val1
+                canva.reDraw()
             }
         }
     }

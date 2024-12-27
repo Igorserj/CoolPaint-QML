@@ -9,6 +9,7 @@ Item {
     LeftPanel {id: leftPanel}
     RightPanel {id: rightPanel}
     Menu {}
+    ExportMenu {id: exportMenu}
     ValueDialog {
         id: valueDialog
         x: (window.width - width) / 2

@@ -4,7 +4,6 @@ Item {
     id: controls
     width: controlsLoader.width
     height: controlsLoader.height
-    function controlsAction() {}
     Loader {
         id: controlsLoader
         width: item.width
@@ -27,9 +26,9 @@ Item {
     OverlayControls {
         id: overlayControls
     }
-
     Component {
         id: insertButton
         InsertButton {}
     }
+    function controlsAction() {}
 }

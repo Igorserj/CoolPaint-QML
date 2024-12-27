@@ -3,6 +3,7 @@ import "Controllers/effectsController.js" as Controller
 
 Item {
     property alias layersRepeater: layersRepeater
+    property var controller: Controller
     width: baseImage.paintedWidth
     height: baseImage.paintedHeight
     Repeater {
@@ -27,8 +28,9 @@ Item {
                 id: img
                 width: parent.width
                 height: parent.height
-                x: (baseImage.width - width) / 2
-                y: (baseImage.height - height) / 2
+                smooth: smoothing
+                x: baseImage.x
+                y: baseImage.y
                 visible: false
                 onSourceChanged: Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
                 Component.onCompleted: {
@@ -58,12 +60,13 @@ Item {
                 visible: false
                 active: activated
                 sourceComponent: Controller.addEffect(name)
-                onLoaded: Controller.setImage(this, img)
+                onLoaded: Controller.setImage(this, img2)
             }
             Image {
-                id: img
+                id: img2
                 width: parent.width
                 height: parent.height
+                smooth: smoothing
                 x: (baseImage.width - width) / 2
                 y: (baseImage.height - height) / 2
                 visible: false
@@ -179,10 +182,10 @@ Item {
         id: overlayEffect
         ShaderEffect {
             property point u_resolution: Qt.point(parent.width, parent.height)
-            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             property variant src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0] + 1)
             property variant src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0] + 1)
             property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/overlay.fsh"
         }
     }
@@ -207,6 +210,17 @@ Item {
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorHighlight.fsh"
+        }
+    }
+    Component {
+        id: gaussianBlur
+        ShaderEffect {
+            property point u_resolution: Qt.point(parent.width, parent.height)
+            property double u_radius: Controller.propertyPopulation("one", itemList, 0)
+            // property double u_sigma: Controller.propertyPopulation("one", itemList, 1)
+            property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/gaussianBlur.fsh"
         }
     }
 }

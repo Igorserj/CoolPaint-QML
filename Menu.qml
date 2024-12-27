@@ -13,7 +13,7 @@ Item {
             model: menuModel
             delegate: Controls {
                 function controlsAction() {
-                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog, exportFileDialog)
+                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog, exportMenu)
                 }
             }
         }
@@ -21,35 +21,23 @@ Item {
     MenuModel {
         id: menuModel
     }
-
     FileDialog {
         id: saveDialog
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.SaveFile
         onAccepted: saveProj(currentFile)
     }
-
     FileDialog {
         id: openProjDialog
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.OpenFile
         onAccepted: OF.openFile(currentFile, response => openedFileHandle(response.content))
     }
-
     FileDialog {
         id: openDialog
         nameFilters: ["Image file (*.jpeg *.jpg *.dng *.tif *.tiff *.png)"]
         fileMode: FileDialog.OpenFile
-        onAccepted: Controller.openDialogAccept(canva, currentFile, layersModel)
-    }
-
-    FileDialog {
-        id: exportFileDialog
-        // nameFilters: ["Image file (*.jpeg *.jpg *.dng *.tif *.tiff *.png)"]
-        nameFilters: ["Joint Photographic Experts Group (*.jpeg)", "Digital Negative Specification (*.dng)", "Tagged Image File Format (*.tiff)", "Portable Network Graphics (*.png)"]
-        fileMode: FileDialog.SaveFile
-        selectedNameFilter.index: 0
-        onAccepted: Controller.exportDialogAccept(canva.finalImage, currentFile, selectedNameFilter.extensions)
+        onAccepted: Controller.openDialogAccept(canva, currentFile, layersModel, exportMenuModel)
     }
 
     function saveProj(currentFile) {
@@ -66,7 +54,6 @@ Item {
         request.open("PUT", currentFile.toString().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2') + '.json', false);
         request.send(jsonData);
     }
-
     function openedFileHandle(response) {
         const text = JSON.parse(response)
         layersModel.clear()
@@ -79,6 +66,6 @@ Item {
             overlayEffectsModel.append(text.overlays[k])
         }
         leftPanel.updateLayersBlockModel()
-        canva.layersModelUpdate('', -1, 0, 0)
+        canva.reDraw()
     }
 }

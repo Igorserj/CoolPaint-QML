@@ -35,6 +35,7 @@ function addLayer(name, type, effectsModel, layersModel, index) {
 function chooseLayer(type, layersModel, propertiesModel, index) {
     if (type === "buttonLayers") {
         propertiesModel.clear()
+        canva.disableManipulator()
         for (let i = 0; i < layersModel.get(index).items.count; ++i) {
             const item = JSON.parse(JSON.stringify(layersModel.get(index).items.get(i)))
             item.idx = index

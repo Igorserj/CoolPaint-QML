@@ -57,6 +57,12 @@ Rectangle {
             if (name === "Scale") {
                 canva.scaling = val1
             }
+        } else if (category === "export") {
+            if (name === "Width") {
+                canva.setImageSize(val1, -1)
+            } else if (name === "Height") {
+                canva.setImageSize(-1, val1)
+            }
         }
     }
 }

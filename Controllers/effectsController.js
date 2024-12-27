@@ -12,6 +12,7 @@ function addEffect(name) {
     case "Overlay": return overlayEffect
     case "Mirror": return mirrorEffect
     case "Color highlight": return colorHighlight
+    case "Gaussian blur": return gaussianBlur
     }
 }
 

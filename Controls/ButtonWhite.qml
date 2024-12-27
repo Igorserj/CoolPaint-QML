@@ -3,7 +3,7 @@ import QtQuick 2.15
 Button {
     id: button
     property int w: 30
-    width: window.width / 1280 * w
+    width: buttonText.width > window.width / 1280 * w ? buttonText.width + window.width / 1280 * 5 : window.width / 1280 * w
     height: window.width / 1280 * w / 2
     state: "enabled"
     states: [

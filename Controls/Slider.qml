@@ -17,15 +17,6 @@ Rectangle {
                 border.color: style.pinkWhite
             }
         },
-        // State {
-        //     name: "disabled"
-        //     when: !button.enabled
-        //     PropertyChanges {
-        //         target: button
-        //         color: "#D5D5D5"
-        //         radius: width / 4
-        //     }
-        // },
         State {
             name: "hovered"
             when: area.containsMouse && slider.enabled
@@ -50,14 +41,13 @@ Rectangle {
             duration: 200
         }
     }
-
     Rectangle {
         color: style.lightDark
         border.width: 1
         border.color: style.pinkWhite
         radius: parent.radius
         height: parent.height
-        width: (val1 - min1) / (max1 - min1) * parent.width < height ? height : (val1 - min1) / (max1 - min1) * parent.width
+        width: pillWidth()
     }
     MouseArea {
         id: area
@@ -65,10 +55,16 @@ Rectangle {
         hoverEnabled: true
         onMouseXChanged: if (containsPress) clickAction()
     }
+    StyleSheet {id: style}
 
     function clickAction() {
         val1 = (area.mouseX / width) * (max1 - min1) + min1
         updateVal(val1)
     }
-    StyleSheet {id: style}
+    function pillWidth() {
+        const newWidth = (val1 - min1) / (max1 - min1) * parent.width
+        if (newWidth < height) return height
+        else if (newWidth > width) return width
+        else return newWidth
+    }
 }

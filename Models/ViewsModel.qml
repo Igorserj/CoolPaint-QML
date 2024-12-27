@@ -23,4 +23,15 @@ ListModel {
         bval1: 0
         isOverlay: false
     }
+    ListElement {
+        type: "buttonSwitch"
+        wdth: 240
+        name: "Smoothing"
+        category: "view"
+        val1: 0
+        min1: 0
+        max1: 1
+        bval1: 0
+        isOverlay: false
+    }
 }

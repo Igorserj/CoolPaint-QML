@@ -478,4 +478,43 @@ ListModel {
             }
         ]
     }
+    ListElement {
+        name: "Gaussian blur"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Radius"
+                view: "normal,overlay"
+                min1: 0
+                max1: 15.
+                val1: 0
+                bval1: 0
+            },
+            ListElement {
+                // category: "layer"
+                // type: "slider"
+                // name: "Deviation"
+                // view: "normal,overlay"
+                // min1: 0.1
+                // max1: 6.
+                // val1: 0.1
+                // bval1: 0.1
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            }
+        ]
+    }
 }

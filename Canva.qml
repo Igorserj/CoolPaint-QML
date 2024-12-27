@@ -7,18 +7,25 @@ Item {
     property bool imageAssigned: false
     property Image finalImage
     property bool mirroring: false
+    property bool smoothing: false
     property double scaling: 1.
     x: (window.width - width) / 2
     width: window.width / 1280 * (1280 - 2 * 260)
     height: window.height
     Image {
         id: baseImage
-        width: parent.width
-        height: parent.height
+        readonly property double aspectW: sourceSize.width / sourceSize.height > 1 ? w : height * sourceSize.width / sourceSize.height
+        readonly property double aspectH: sourceSize.width / sourceSize.height > 1 ? width / sourceSize.width / sourceSize.height : h
+        property double w: parent.width
+        property double h: parent.height
+        width: exportMenuModel.get(2).val1 === 1 ? aspectW : w
+        height: exportMenuModel.get(2).val1 === 1 ? aspectH : h
         scale: scaling
-        visible: layersModel.count === 0
-        fillMode: Image.PreserveAspectFit
         mirror: mirroring
+        smooth: smoothing
+        visible: layersModel.count === 0
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
     }
     Repeater {
         model: layersModel
@@ -35,10 +42,10 @@ Item {
             anchors.centerIn: baseImage
             opacity: 0
             enabled: activated
-            function xStick(pressed, mouseX = 0) {
+            function xStick() {
                 return joy.xStick(stickArea.pressed, stickArea.mouseX/stickArea.width*joy.stickArea.width)
             }
-            function yStick(pressed, mouseY = 0) {
+            function yStick() {
                 return joy.yStick(stickArea.pressed, stickArea.mouseY/stickArea.height*joy.stickArea.height)
             }
         }
@@ -53,13 +60,15 @@ Item {
     }
     function layersModelUpdate(key, value, idx, index) {
         console.log('idx', idx, index)
-        layersModel.get(idx).items.setProperty(index, key, value)
-        deactivateEffects(idx)
-        if (layersModel.get(idx).name !== "Overlay") layersModel.setProperty(idx, "activated", true)
-        else {
-            const overlay = overlayEffectsModel.getModel(idx, 0)
-            if (overlay.length > 0) {
-                overlay[0].activated = true
+        if (layersModel.count > 0) {
+            layersModel.get(idx).items.setProperty(index, key, value)
+            deactivateEffects(idx)
+            if (layersModel.get(idx).name !== "Overlay") layersModel.setProperty(idx, "activated", true)
+            else {
+                const overlay = overlayEffectsModel.getModel(idx, 0)
+                if (overlay.length > 0) {
+                    overlay[0].activated = true
+                }
             }
         }
     }
@@ -76,5 +85,25 @@ Item {
     }
     function enableManipulator(joystick, props) {
         manipulatorModel.set(0, props)
+    }
+    function disableManipulator() {
+        manipulatorModel.clear()
+    }
+    function setImageSize(w, h) {
+        if (w !== -1) baseImage.w = w
+        if (h !== -1) baseImage.h = h
+    }
+    function getBaseImageDims() {
+        return {
+            width: baseImage.paintedWidth,
+            height: baseImage.paintedHeight,
+            sourceW: baseImage.sourceSize.width,
+            sourceH: baseImage.sourceSize.height,
+            aspectW: width,
+            aspectH: height
+        }
+    }
+    function reDraw() {
+        layersModelUpdate('', -1, 0, 0)
     }
 }

@@ -39,6 +39,7 @@ Rectangle {
     StyleSheet {id: style}
 
     function open(value, updateFunc) {
+        canva.disableManipulator()
         val = value
         visible = true
         enabled = true
@@ -48,5 +49,6 @@ Rectangle {
         visible = false
         enabled = false
         val = 0.0
+        updFunc = undefined
     }
 }
