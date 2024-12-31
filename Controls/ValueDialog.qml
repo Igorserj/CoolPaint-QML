@@ -3,44 +3,64 @@ import QtQuick 2.15
 Rectangle {
     property double val
     property var updFunc
-    width: window.width / 1280 * 300
-    height: width / 30 * 30
-    color: style.pinkWhite
+    property string text: ""
+    color: style.darkGlass
+    width: window.width / 1280 * 240
+    height: window.width / 1280 * 80
     visible: false
     enabled: false
-    radius: width / 4
-    TextEdit {
-        id: textEdit
-        clip: true
-        text: val.toFixed(2)
-        anchors.centerIn: parent
-        color: style.lightDark
-        font.pixelSize: parent.height / 30 * 12
+    radius: height / 4
+    Label {
+        width: valueRect.width - row.width - row.spacing
+        x: parent.width * 0.05
+        y: (valueRect.y - height) / 2
+        text: parent.text
     }
-    ButtonWhite {
-        w: 50
-        anchors.top: parent.top
-        anchors.left: parent.right
-        text: "Apply"
-        function clickAction() {
-            updFunc(parseFloat(textEdit.text))
-            close()
+    Rectangle {
+        id: valueRect
+        width: window.width / 1280 * 220
+        height: window.width / 1280 * 30
+        x: parent.width * 0.05
+        y: parent.height - height - parent.radius / 3
+        color: style.pinkWhite
+        radius: width / 4
+        TextEdit {
+            id: textEdit
+            clip: true
+            text: val.toFixed(2)
+            font.family: "Helvetica"
+            font.bold: true
+            anchors.centerIn: parent
+            color: style.lightDark
+            font.pixelSize: parent.height / 25 * 12
         }
     }
-    ButtonWhite {
-        w: 50
-        anchors.left: parent.right
-        anchors.bottom: parent.bottom
-        text: "Close"
-        function clickAction() {
-            close()
+    Row {
+        id: row
+        x: parent.width * 0.95 - width
+        y: (valueRect.y - height) / 2
+        spacing: parent.width / 40
+        ButtonWhite {
+            w: 40
+            text: "Apply"
+            function clickAction() {
+                updFunc(parseFloat(textEdit.text))
+                close()
+            }
+        }
+        ButtonWhite {
+            w: 40
+            text: "Close"
+            function clickAction() {
+                close()
+            }
         }
     }
     StyleSheet {id: style}
-
-    function open(value, updateFunc) {
+    function open(value, name, updateFunc) {
         canva.disableManipulator()
         val = value
+        text = name
         visible = true
         enabled = true
         updFunc = updateFunc

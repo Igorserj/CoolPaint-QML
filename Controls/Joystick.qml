@@ -34,16 +34,7 @@ Rectangle {
                 target: stick
                 radius: stick.width / 2
             }
-        }/*,
-        State {
-            name: "disabled"
-            when: stickArea.containsMouse && joystick.enabled
-            PropertyChanges {
-                target: joystick
-                color: style.pinkWhiteAccent
-                radius: stick.radius
-            }
-        }*/
+        }
     ]
     Behavior on color {
         ColorAnimation {
@@ -59,8 +50,8 @@ Rectangle {
     }
     Rectangle {
         id: stick
-        width: 30
-        height: 30
+        width: height
+        height: window.width / 1280 * 30
         radius: width / 3
         color: style.lightDark
         x: ((val1 - min1) / (max1 - min1)) * (parent.width - stick.width)

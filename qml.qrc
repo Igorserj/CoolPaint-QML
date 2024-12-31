@@ -59,5 +59,7 @@
         <file>Effects/gaussianBlur.fsh</file>
         <file>Controllers/exportMenuController.js</file>
         <file>Models/ExportMenuBlockModel.qml</file>
+        <file>Controls/Label.qml</file>
+        <file>Effects/rotation.fsh</file>
     </qresource>
 </RCC>

@@ -27,9 +27,17 @@ Rectangle {
         y: 0.5 * parent.height
         blockModel: layersBlockModel
         function blockAction() {
-            layerIndex = index
-            Controller.chooseLayer(type, layersModel, rightPanel.propertiesModel, index)
-            rightPanel.propertiesBlockUpdate()
+            if (state === "enabled") {
+                layerIndex = index
+                Controller.chooseLayer(type, layersModel, rightPanel.propertiesModel, index)
+                rightPanel.propertiesBlockUpdate()
+            } else if (state === "layerSwap") {
+                layerIndex = index
+                Controller.swapLayers(layersModel, layersBlockModel, 0, index)
+                rightPanel.propertiesBlockUpdate()
+                canva.layersModelUpdate('', -1, 0, 0)
+                state = "enabled"
+            }
         }
     }
     Component.onCompleted: {

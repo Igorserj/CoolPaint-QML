@@ -14,12 +14,13 @@ Item {
     height: window.height
     Image {
         id: baseImage
+        readonly property double aspect: sourceSize.width / sourceSize.height
         readonly property double aspectW: sourceSize.width / sourceSize.height > 1 ? w : height * sourceSize.width / sourceSize.height
         readonly property double aspectH: sourceSize.width / sourceSize.height > 1 ? width / sourceSize.width / sourceSize.height : h
         property double w: parent.width
         property double h: parent.height
-        width: exportMenuModel.get(2).val1 === 1 ? aspectW : w
-        height: exportMenuModel.get(2).val1 === 1 ? aspectH : h
+        width: exportMenuModel.get(2).val1 === 1 ? aspect > 1 ? w : height * aspect : w
+        height: exportMenuModel.get(2).val1 === 1 ? aspect > 1 ? width / aspect : h : h
         scale: scaling
         mirror: mirroring
         smooth: smoothing

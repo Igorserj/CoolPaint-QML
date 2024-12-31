@@ -223,4 +223,15 @@ Item {
             fragmentShader: "qrc:/Effects/gaussianBlur.fsh"
         }
     }
+    Component {
+        id: rotationEffect
+        ShaderEffect {
+            property point u_resolution: Qt.point(parent.width, parent.height)
+            property double angle: Controller.propertyPopulation("one", itemList, 0)
+            property point center: Controller.propertyPopulation("two", itemList, 1)
+            property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/rotation.fsh"
+        }
+    }
 }

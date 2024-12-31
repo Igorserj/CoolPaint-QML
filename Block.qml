@@ -15,24 +15,26 @@ Rectangle {
     states: [
         State {
             name: "enabled"
-            PropertyChanges {
-                target: blockRect
-            }
         },
         State {
             name: "insertion"
-            PropertyChanges {
-                target: blockRect
-            }
         },
         State {
             name: "insertion2"
-            PropertyChanges {
-                target: blockRect
-            }
+        },
+        State {
+            name: "layerSwap"
         }
     ]
+    Rectangle {
+        width: column.width * 0.95
+        height: column.height
+        anchors.horizontalCenter: column.horizontalCenter
+        color: "#0AFFFFFF"
+        radius: parent.width / 24
+    }
     Column {
+        id: column
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: window.height * 0.005
         Repeater {
@@ -44,6 +46,7 @@ Rectangle {
                 width: window.width / 1280 * 260
                 z: -index + blockModel.count
                 MouseArea {
+                    id: colArea
                     anchors.fill: col
                     onWheel: {
                         scroller.wheelScroll(wheel.angleDelta.y)
@@ -73,12 +76,14 @@ Rectangle {
             }
         }
     }
+    StyleSheet {id: style}
     function enableByState(type, name, isOverlay) {
         if (blockRect.enabled) {
             switch (blockRect.state) {
             case "enabled": return true
             case "insertion": return isOverlay
             case "insertion2": return name !== "Overlay"
+            case "layerSwap": return name !== "Overlay"
             }
         }
         else return false

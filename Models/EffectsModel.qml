@@ -517,4 +517,44 @@ ListModel {
             }
         ]
     }
+    ListElement {
+        name: "Rotation"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Angle"
+                view: "normal,overlay"
+                min1: 0
+                max1: 360.
+                val1: 0
+                bval1: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "joystick"
+                name: "Center"
+                view: "normal,overlay"
+                min1: 0
+                min2: 0
+                max1: 1.
+                max2: 1.
+                val1: 0.5
+                val2: 0.5
+                bval1: 0.5
+                bval2: 0.5
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: ""
+                name: ""
+            }
+        ]
+    }
 }

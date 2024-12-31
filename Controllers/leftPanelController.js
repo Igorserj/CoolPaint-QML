@@ -92,3 +92,9 @@ function addOverlayLayer(state, effectsModel, overlayModel, index, insertionInde
     }
     return "enabled"
 }
+function swapLayers(model, blockModel, index1, index2) {
+    const item = JSON.parse(JSON.stringify(model.get(index1)))
+    model.set(index1, JSON.parse(JSON.stringify(model.get(index2))))
+    model.set(index2, item)
+    layersBlockModelGeneration(model, blockModel)
+}

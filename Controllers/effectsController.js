@@ -13,6 +13,7 @@ function addEffect(name) {
     case "Mirror": return mirrorEffect
     case "Color highlight": return colorHighlight
     case "Gaussian blur": return gaussianBlur
+    case "Rotation": return rotationEffect
     }
 }
 

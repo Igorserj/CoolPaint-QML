@@ -7,63 +7,54 @@ Rectangle {
     width: window.width / 1280 * 240
     height: window.width / 1280 * 160
     radius: height / 6
-    Text {
-        id: label
+    Label {
+        width: joystick.width
+        x: parent.width * 0.05
+        y: (joystick.y - height) / 2
         text: parent.text
-        height: window.width / 1280 * 30
-        width: parent.width * 0.9
-        font.family: "Helvetica"
-        font.bold: true
-        color: style.pinkWhiteAccent
-        font.pixelSize: parent.height / 160 * 12
-        x: parent.radius / 3
-        verticalAlignment: Text.AlignVCenter
     }
     Joystick {
         id: joystick
         x: parent.width * 0.05
-        y: parent.height - height - parent.radius / 3
+        y: parent.height - height - parent.radius / 2
     }
     Column {
         x: parent.width * 0.95 - width
-        y: 30
+        y: joystick.y + (joystick.height - height) / 2
+        spacing: block.height / 40
         Repeater {
-            model: 2
+            model: 3
             delegate: Row {
+                spacing: block.width / 40
                 ButtonWhite {
                     w: 40
-                    text: index === 0 ? val1.toFixed(2) : val2.toFixed(2)
+                    text: index === 0 ? val1.toFixed(2) : index === 1 ? val2.toFixed(2) : "+"
                     function clickAction() {
                         if (index === 0)
-                            valueDialog.open(val1, updateVal1)
-                        else
-                            valueDialog.open(val2, updateVal2)
+                            valueDialog.open(val1, name, updateVal1)
+                        else if (index === 1)
+                            valueDialog.open(val2, name, updateVal2)
+                        else {
+                            const model = { min1: min1, max1: max1, val1: val1, min2: min2, max2: max2, val2: val2, idx: idx, index: index, activated: true, joy: joystick }
+                            canva.enableManipulator(joystick, model)
+                        }
                     }
                 }
                 ButtonWhite {
                     id: resetButton
                     w: 40
+                    visible: index !== 2
                     text: "↺"
                     function clickAction() {
                         if (index === 0) {
                             updateVal1(bval1)
-                        } else {
+                        } else if (index === 1) {
                             updateVal2(bval2)
                         }
                         joystick.updating()
                     }
                 }
             }
-        }
-    }
-    ButtonWhite {
-        text: "+"
-        w: 40
-        x: parent.width * 0.95 - width
-        y: joystick.y + joystick.height / 2
-        function clickAction() {
-            const model = {min1: min1, max1: max1, val1: val1, min2: min2, max2: max2, val2: val2, idx: idx, index: index, activated: true, joy: joystick}
-            canva.enableManipulator(joystick, model)
         }
     }
     StyleSheet {id: style}
