@@ -38,7 +38,7 @@ Item {
     }
     FileDialog {
         id: exportFileDialog
-        nameFilters: ["Joint Photographic Experts Group (*.jpeg)", /*"Digital Negative Specification (*.dng)", */"Tagged Image File Format (*.tiff)", "Portable Network Graphics (*.png)"]
+        nameFilters: ["Joint Photographic Experts Group (*.jpeg)", /*"Digital Negative Specification (*.dng)", */"Tagged Image File Format (*.tiff)", "Portable Network Graphics (*.png)", "Bitmap Picture (*.bmp)"]
         fileMode: FileDialog.SaveFile
         selectedNameFilter.index: 0
         onAccepted: Controller.exportDialogAccept(canva.finalImage, currentFile, selectedNameFilter.extensions)

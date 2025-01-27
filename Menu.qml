@@ -35,7 +35,7 @@ Item {
     }
     FileDialog {
         id: openDialog
-        nameFilters: ["Image file (*.jpeg *.jpg *.dng *.tif *.tiff *.png)"]
+        nameFilters: ["Image file (*.jpeg *.jpg *.dng *.tif *.tiff *.png *.webp *.svg)"]
         fileMode: FileDialog.OpenFile
         onAccepted: Controller.openDialogAccept(canva, currentFile, layersModel, exportMenuModel)
     }

@@ -8,6 +8,7 @@ Item {
     property Image finalImage
     property bool mirroring: false
     property bool smoothing: false
+    property bool preserveAspect: true
     property double scaling: 1.
     x: (window.width - width) / 2
     width: window.width / 1280 * (1280 - 2 * 260)
@@ -15,12 +16,10 @@ Item {
     Image {
         id: baseImage
         readonly property double aspect: sourceSize.width / sourceSize.height
-        readonly property double aspectW: sourceSize.width / sourceSize.height > 1 ? w : height * sourceSize.width / sourceSize.height
-        readonly property double aspectH: sourceSize.width / sourceSize.height > 1 ? width / sourceSize.width / sourceSize.height : h
         property double w: parent.width
         property double h: parent.height
-        width: exportMenuModel.get(2).val1 === 1 ? aspect > 1 ? w : height * aspect : w
-        height: exportMenuModel.get(2).val1 === 1 ? aspect > 1 ? width / aspect : h : h
+        width: preserveAspect ? aspect > 1 ? w : height * aspect : w
+        height: preserveAspect ? aspect > 1 ? width / aspect : h : h
         scale: scaling
         mirror: mirroring
         smooth: smoothing

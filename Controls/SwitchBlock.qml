@@ -47,6 +47,10 @@ Rectangle {
                 canva.smoothing = val1
                 canva.reDraw()
             }
+        } else if (category === "export") {
+            if (name === "Preserve aspect fit") {
+                canva.preserveAspect = val1
+            }
         }
     }
 }
