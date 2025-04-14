@@ -2,6 +2,8 @@ import QtQuick 2.15
 
 Rectangle {
     id: slider
+    property double prevVal: -1
+    property bool isReleased: true
     width: window.width / 1280 * 220
     height: window.width / 1280 * 30
     state: "enabled"
@@ -54,10 +56,30 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onMouseXChanged: if (containsPress) clickAction()
+        onReleased: if (!doNotLog.includes(category)) logAction()
     }
     StyleSheet {id: style}
 
+    function logAction() {
+        console.log(prevVal, val1)
+        actionsLog.trimModel(stepIndex)
+        actionsLog.append({
+                              block: category,
+                              name: `Set value of ${name} to ${val1.toFixed(2)}`,
+                              prevValue: {val: prevVal},
+                              value: {val: val1},
+                              index: leftPanel.layerIndex,//typeof(idx) !== "undefined" ? idx : -1, // layer number
+                              subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
+                              propIndex: index, // sublayer property number
+                              valIndex: 0
+                          })
+        stepIndex += 1
+        prevVal = parseFloat(val1)
+        isReleased = true
+    }
     function clickAction() {
+        if (isReleased) prevVal = parseFloat(val1)
+        isReleased = false
         val1 = (area.mouseX / width) * (max1 - min1) + min1
         updateVal(val1)
     }

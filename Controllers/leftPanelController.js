@@ -19,6 +19,7 @@ function layersBlockModelGeneration(model, blockModel) {
     for (let i = 0; i < model.count; ++i) {
         blockModel.get(1).block.append({type: "buttonLayers", wdth: 240, name: model.get(i).name})
     }
+    // if (typeof(finisher) !== "undefined") finisher()
 }
 
 function addLayer(name, type, effectsModel, layersModel, index) {
@@ -32,7 +33,7 @@ function addLayer(name, type, effectsModel, layersModel, index) {
     }
 }
 
-function chooseLayer(type, layersModel, propertiesModel, index) {
+function chooseLayer(type, layersModel, propertiesModel, index, setEffectsBlockState) {
     if (type === "buttonLayers") {
         propertiesModel.clear()
         canva.disableManipulator()
@@ -41,12 +42,14 @@ function chooseLayer(type, layersModel, propertiesModel, index) {
             item.idx = index
             propertiesModel.append(item)
         }
+        setEffectsBlockState("enabled")
     }
 }
 
 function addOverlayLayer(state, effectsModel, overlayModel, index, insertionIndex) {
     let overlayIndex = -1
     let i = 0
+    // console.log(state, effectsModel, overlayModel, index, insertionIndex)
     if (state === "insertion") {
         for (; i < overlayModel.count; ++i) {
             if (overlayModel.get(i).idx === insertionIndex && overlayModel.get(i).iteration === 0) {
@@ -92,9 +95,23 @@ function addOverlayLayer(state, effectsModel, overlayModel, index, insertionInde
     }
     return "enabled"
 }
-function swapLayers(model, blockModel, index1, index2) {
+function swapLayers(model, blockModel, overlayEffectsModel, index1, index2) {
+    rightPanel.resetPropertiesBlock()
+    canva.deactivateEffects(Math.min(index1, index2))
     const item = JSON.parse(JSON.stringify(model.get(index1)))
+    const overlayItemsIndex1 = overlayEffectsModel.getModel(index1, -1, 'index')
+    const overlayItemsIndex2 = overlayEffectsModel.getModel(index2, -1, 'index')
     model.set(index1, JSON.parse(JSON.stringify(model.get(index2))))
     model.set(index2, item)
+    let i = 0
+    console.log(overlayItemsIndex1, overlayItemsIndex2)
+    for (; i < overlayItemsIndex1.length; ++i) {
+        overlayEffectsModel.setProperty(overlayItemsIndex1[i], 'idx', index2)
+    }
+    for (i = 0; i < overlayItemsIndex2.length; ++i) {
+        overlayEffectsModel.setProperty(overlayItemsIndex2[i], 'idx', index1)
+    }
     layersBlockModelGeneration(model, blockModel)
+    if (layersModel.count > 0) canva.layersModelUpdate('', 0, 0, Math.min(index1, index2))
+    updateLayersBlockModel()
 }

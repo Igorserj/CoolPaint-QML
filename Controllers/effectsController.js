@@ -19,7 +19,6 @@ function addEffect(name) {
 
 function setImage(ldr, img) {
     ldr.grabToImage(result => img.source = result.url)
-    console.log("set image")
 }
 
 function reActivateLoader(layersModel, overlaysModel, index) {
@@ -32,7 +31,6 @@ function reActivateLoader(layersModel, overlaysModel, index) {
 }
 
 function reActivateLayer(layersModel, overlaysModel, idx, iteration) {
-    console.log('layer react')
     if (iteration === 0) {
         const overlay = overlaysModel.getModel(idx, 1)
         if (overlay.length > 0) overlay[0].activated = true
@@ -43,16 +41,15 @@ function reActivateLayer(layersModel, overlaysModel, idx, iteration) {
 
 function propertyPopulation(type, items, index) {
     if (type === "one") {
-        if (items !== null) return items.get(index).val1
+        if (items !== null && items.count > 0) return items.get(index).val1
         else return 0
     } else if (type === "two") {
-        if (items !== null) return Qt.point(items.get(index).val1, items.get(index).val2)
+        if (items !== null && items.count > 0) return Qt.point(items.get(index).val1, items.get(index).val2)
         else return Qt.point(0, 0)
     }
 }
 
 function srcPopulation(repeater, index, baseImage) {
-    console.log('src')
     if (index === 0) return baseImage
     else return repeater.itemAt(index-1).children[1]
 }

@@ -2,6 +2,15 @@ import QtQuick 2.15
 
 Item {
     id: controls
+    property alias joystick: overlayControls.joystick
+    property alias slider: overlayControls.slider
+    property alias buttonWhite: overlayControls.buttonWhite
+    property alias buttonDark: overlayControls.buttonDark
+    property alias buttonLayers: overlayControls.buttonLayers
+    property alias buttonSwitch: overlayControls.buttonSwitch
+    property alias header: overlayControls.header
+    property alias empty: overlayControls.empty
+    property alias insert: insertButton
     width: controlsLoader.width
     height: controlsLoader.height
     Loader {
@@ -9,19 +18,7 @@ Item {
         width: item.width
         height: item.height
         visible: typeof(view) !== "undefined" ? (typeof(overlay) === "undefined" || !overlay) ? view.includes("normal") : view.includes("overlay") : true
-        sourceComponent: {
-            switch (type) {
-            case "joystick": overlayControls.joystick; break;
-            case "slider": overlayControls.slider; break;
-            case "insert": insertButton; break;
-            case "buttonWhite": overlayControls.buttonWhite; break;
-            case "buttonDark": overlayControls.buttonDark; break;
-            case "buttonLayers": overlayControls.buttonLayers; break;
-            case "buttonSwitch": overlayControls.buttonSwitch; break;
-            case "header": overlayControls.header; break;
-            default: overlayControls.empty; break;
-            }
-        }
+        sourceComponent: typeof(controls[type]) !== "undefined" ? controls[type] : empty
     }
     OverlayControls {
         id: overlayControls

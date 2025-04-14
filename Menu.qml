@@ -13,7 +13,7 @@ Item {
             model: menuModel
             delegate: Controls {
                 function controlsAction() {
-                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog, exportMenu)
+                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog, leftPanel)
                 }
             }
         }

@@ -4,6 +4,8 @@ Rectangle {
     id: joystick
     property alias stickArea: stickArea
     property int w: 115
+    property var prevVal: [-1, -1]//[val1, val2]
+    property var isReleased: [true, true]
     width: window.width / 1280 * w
     height: window.width / 1280 * w
     clip: true
@@ -68,33 +70,82 @@ Rectangle {
         id: stickArea
         anchors.fill: parent
         hoverEnabled: true
-        onMouseXChanged: if (containsPress) stick.x = xStick(true, mouseX)
-        onMouseYChanged: if (containsPress) stick.y = yStick(true, mouseY)
+        onMouseXChanged: if (containsPress) stick.x = xStick(true, mouseX).coord
+        onMouseYChanged: if (containsPress) stick.y = yStick(true, mouseY).coord
+        onReleased: if (!doNotLog.includes(category)) logAction()
     }
     StyleSheet {id: style}
 
     function xStick(pressed, mouseX = 0) {
         if (pressed) {
+            if (isReleased[0]) prevVal[0] = val1
+            isReleased[0] = false
             const newVal = (mouseX / width) * (max1 - min1) + min1
             val1 = newVal > max1 ? max1 : newVal < min1 ? min1 : newVal
             canva.layersModelUpdate('val1', val1, idx, index)
-            return mouseX - stick.width / 2
+            return {
+                coord: mouseX - stick.width / 2,
+                value: val1
+            }
         } else {
-            return (val1 - min1) / (max1 - min1) * width - stick.width / 2
+            return {
+                coord: (val1 - min1) / (max1 - min1) * width - stick.width / 2,
+                value: val1
+            }
         }
     }
     function yStick(pressed, mouseY = 0) {
         if (pressed) {
+            if (isReleased[1]) prevVal[1] = val2
+            isReleased[1] = false
             const newVal = (mouseY / height) * (max2 - min2) + min2
             val2 = newVal > max2 ? max2 : newVal < min2 ? min2 : newVal
             canva.layersModelUpdate('val2', val2, idx, index)
-            return mouseY - stick.height / 2
+            return {
+                coord: mouseY - stick.height / 2,
+                value: val2
+            }
         } else {
-            return (val2 - min2) / (max2 - min2) * height - stick.height / 2
+            return {
+                coord: (val2 - min2) / (max2 - min2) * height - stick.height / 2,
+                value: val2
+            }
         }
     }
     function updating() {
-        stick.x = xStick(false)
-        stick.y = yStick(false)
+        stick.x = xStick(false).coord
+        stick.y = yStick(false).coord
+    }
+    function logAction() {
+        console.log(prevVal, [val1, val2], index)
+        actionsLog.trimModel(stepIndex)
+        if (val1 !== prevVal[0]) {
+            actionsLog.append({
+                                  block: category,
+                                  name: `Set value of ${name} X to ${val1.toFixed(2)}`,
+                                  prevValue: {val: prevVal[0]},
+                                  value: {val: val1},
+                                  index: leftPanel.layerIndex,//idx, // layer number
+                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
+                                  propIndex: index, // sublayer property number
+                                  valIndex: 0
+                              })
+            stepIndex += 1
+            isReleased[0] = true
+        }
+        if (val2 !== prevVal[1]) {
+            actionsLog.append({
+                                  block: category,
+                                  name: `Set value of ${name} Y to ${val2.toFixed(2)}`,
+                                  prevValue: {val: prevVal[1]},
+                                  value: {val: val2},
+                                  index: leftPanel.layerIndex,//idx, // layer number
+                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
+                                  propIndex: index, // sublayer property number
+                                  valIndex: 1
+                              })
+            stepIndex += 1
+            isReleased[1] = true
+        }
     }
 }

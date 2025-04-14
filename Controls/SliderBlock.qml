@@ -26,13 +26,24 @@ Rectangle {
             w: 40
             text: val1.toFixed(2)
             function clickAction() {
-                valueDialog.open(val1, name, updateAll)
+                valueDialog.open({
+                                     value: val1,
+                                     name: name,
+                                     updateFunc: updateAll,
+                                     category: category,
+                                     index: leftPanel.layerIndex,
+                                     propIndex: index,
+                                     subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
+                                     addName: "",
+                                     valIndex: 0
+                                 })
             }
         }
         ButtonWhite {
             w: 40
             text: "↺"
             function clickAction() {
+                if (!doNotLog.includes(category)) logAction(bval1)
                 updateAll(bval1)
             }
         }
@@ -56,6 +67,23 @@ Rectangle {
             } else if (name === "Height") {
                 canva.setImageSize(-1, val1)
             }
+        }
+    }
+    function logAction(val0 = -1) {
+        console.log(val0, val1)
+        if (val0 !== val1) {
+            actionsLog.trimModel(stepIndex)
+            actionsLog.append({
+                                  block: category,
+                                  name: `Reset value of ${name}`,
+                                  prevValue: {val: val1},
+                                  value: {val: val0},
+                                  index: leftPanel.layerIndex,//typeof(idx) !== "undefined" ? idx : -1, // layer number
+                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
+                                  propIndex: index, // sublayer property number
+                                  valIndex: 0
+                              })
+            stepIndex += 1
         }
     }
 }

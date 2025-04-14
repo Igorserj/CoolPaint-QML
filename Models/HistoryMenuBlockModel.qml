@@ -5,11 +5,12 @@ ListModel {
         block: ListElement {
             wdth: 240
             type: "header"
-            name: "Properties"
+            name: "History"
             view: "normal,overlay"
+            category: "history"
         }
     }
     // onRowsInserted: {
-    //     console.log("Props",Object.entries(this.get(count-1)))
+    //     console.log("History",Object.entries(this.get(count-1)))
     // }
 }

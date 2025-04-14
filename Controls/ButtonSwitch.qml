@@ -83,13 +83,29 @@ Rectangle {
         id: area
         anchors.fill: parent
         hoverEnabled: true
-        onMouseXChanged: if (containsPress) clickAction()
+        onClicked: clickAction()
     }
 
     function clickAction() {
         if (val1 === min1) val1 = max1
         else if (val1 === max1) val1 = min1
         updateVal(val1)
+        if (!doNotLog.includes(category)) logAction()
+    }
+    function logAction() {
+        actionsLog.trimModel(stepIndex)
+        actionsLog.append({
+                              block: category,
+                              name: `Set state of ${name} to ${val1 === 0 ? "Off" : "On"}`,
+                              prevValue: {val: val1 === 0 ? 1 : 0},
+                              value: {val: val1},
+                              index: leftPanel.layerIndex,//typeof(idx) !== "undefined" ? idx : -1, // layer number
+                              subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
+                              propIndex: index, // sublayer property number
+                              valIndex: 0
+                          })
+        console.log(Object.entries(actionsLog.get(actionsLog.count-1).prevValue), Object.entries(actionsLog.get(actionsLog.count-1).value))
+        stepIndex += 1
     }
     StyleSheet {id: style}
 }

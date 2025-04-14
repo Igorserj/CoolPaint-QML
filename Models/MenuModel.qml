@@ -21,4 +21,7 @@ ListModel {
         wdth: 180
         name: "Export"
     }
+    // onRowsInserted: {
+    //     console.log("Menu",Object.entries(this.get(count-1)))
+    // }
 }

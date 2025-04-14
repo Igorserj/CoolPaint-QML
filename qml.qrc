@@ -54,12 +54,20 @@
         <file>Effects/colorHighlight.fsh</file>
         <file>Models/ManipulatorModel.qml</file>
         <file>Controllers/openFile.js</file>
-        <file>ExportMenu.qml</file>
         <file>Models/ExportMenuModel.qml</file>
         <file>Effects/gaussianBlur.fsh</file>
         <file>Controllers/exportMenuController.js</file>
         <file>Models/ExportMenuBlockModel.qml</file>
         <file>Controls/Label.qml</file>
         <file>Effects/rotation.fsh</file>
+        <file>Models/ActionsBarModel.qml</file>
+        <file>ActionBar.qml</file>
+        <file>Models/ActionsLog.qml</file>
+        <file>Controls/Spacer.qml</file>
+        <file>HistoryMenu.qml</file>
+        <file>ExportMenu.qml</file>
+        <file>EffectsMenu.qml</file>
+        <file>Models/HistoryMenuBlockModel.qml</file>
+        <file>PropertiesMenu.qml</file>
     </qresource>
 </RCC>

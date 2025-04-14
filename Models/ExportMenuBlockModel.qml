@@ -10,4 +10,7 @@ ListModel {
             category: "export"
         }
     }
+    // onRowsInserted: {
+    //     console.log("Export",Object.entries(this.get(count-1)))
+    // }
 }

@@ -26,7 +26,9 @@ Rectangle {
             w: 40
             text: "↺"
             function clickAction() {
+                val1 = bval1
                 updateAll(bval1)
+                if (!doNotLog.includes(category)) logAction()
             }
         }
     }
@@ -52,5 +54,19 @@ Rectangle {
                 canva.preserveAspect = val1
             }
         }
+    }
+    function logAction() {
+        actionsLog.trimModel(stepIndex)
+        actionsLog.append({
+                              block: category,
+                              name: `Reset value of ${name}`,
+                              prevValue: {val: val1 === 0 ? 1 : 0},
+                              value: {val: val1},
+                              index: leftPanel.layerIndex,//typeof(idx) !== "undefined" ? idx : -1, // layer number
+                              subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
+                              propIndex: index, // sublayer property number
+                              valIndex: 0
+                          })
+        stepIndex += 1
     }
 }

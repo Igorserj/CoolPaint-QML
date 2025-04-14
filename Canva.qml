@@ -42,11 +42,19 @@ Item {
             anchors.centerIn: baseImage
             opacity: 0
             enabled: activated
+            Component.onCompleted: prevVal = [val1, val2]
             function xStick() {
-                return joy.xStick(stickArea.pressed, stickArea.mouseX/stickArea.width*joy.stickArea.width)
+                const vals = joy.xStick(stickArea.pressed, stickArea.mouseX/stickArea.width*joy.stickArea.width)
+                val1 = vals.value
+                return {coord: vals.coord}
             }
             function yStick() {
-                return joy.yStick(stickArea.pressed, stickArea.mouseY/stickArea.height*joy.stickArea.height)
+                const vals = joy.yStick(stickArea.pressed, stickArea.mouseY/stickArea.height*joy.stickArea.height)
+                val2 = vals.value
+                return {coord: vals.coord}
+            }
+            function logAction() {
+                logJoystick(category, index, val1, val2, prevVal, subIndex, propIndex, name)
             }
         }
     }
@@ -59,7 +67,6 @@ Item {
         imageAssigned = true
     }
     function layersModelUpdate(key, value, idx, index) {
-        console.log('idx', idx, index)
         if (layersModel.count > 0) {
             layersModel.get(idx).items.setProperty(index, key, value)
             deactivateEffects(idx)
@@ -105,5 +112,32 @@ Item {
     }
     function reDraw() {
         layersModelUpdate('', -1, 0, 0)
+    }
+    function logJoystick(category, index, val1, val2, prevVal, subIndex, propIndex, name) {
+        console.log(prevVal, [val1, val2], index)
+        actionsLog.trimModel(stepIndex)
+        actionsLog.append({
+                              block: category,
+                              name: `Set value of ${name} X to ${val1.toFixed(2)}`,
+                              prevValue: {val: prevVal[0]},
+                              value: {val: val1},
+                              index: index, // layer number
+                              subIndex: subIndex, // sublayer number
+                              propIndex: propIndex, // sublayer property number
+                              valIndex: 0
+                          })
+        stepIndex += 1
+        actionsLog.append({
+                              block: category,
+                              name: `Set value of ${name} Y to ${val2.toFixed(2)}`,
+                              prevValue: {val: prevVal[1]},
+                              value: {val: val2},
+                              index: index, // layer number
+                              subIndex: subIndex, // sublayer number
+                              propIndex: propIndex, // sublayer property number
+                              valIndex: 1
+                          })
+        stepIndex += 1
+        console.log(Object.entries(actionsLog.get(actionsLog.count-2)), Object.entries(actionsLog.get(actionsLog.count-1)))
     }
 }

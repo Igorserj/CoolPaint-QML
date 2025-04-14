@@ -29,8 +29,11 @@ Rectangle {
         anchors.fill: parent
         enabled: button.enabled
         hoverEnabled: button.enabled
-        onClicked: clickAction()
+        onClicked: clickHandler()
     }
 
+    function clickHandler() {
+        clickAction()
+    }
     function clickAction() {}
 }

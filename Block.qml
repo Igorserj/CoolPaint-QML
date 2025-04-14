@@ -83,7 +83,7 @@ Rectangle {
             case "enabled": return true
             case "insertion": return isOverlay
             case "insertion2": return name !== "Overlay"
-            case "layerSwap": return name !== "Overlay"
+            case "layerSwap": return true// name !== "Overlay"
             }
         }
         else return false
@@ -92,7 +92,7 @@ Rectangle {
         blockRect.name = name
         blockRect.type = type
         blockRect.index = index
-        blockAction()
+        blockAction(index)
     }
-    function blockAction() {}
+    function blockAction(index) {}
 }

@@ -9,6 +9,27 @@ Column {
     Component.onCompleted: updating()
     ButtonDark {
         id: insertButtonRect
+
+        SequentialAnimation {
+            loops: Animation.Infinite
+            running: leftPanel.getEffectsBlockState() === "insertion" ? index === 0 : leftPanel.getEffectsBlockState() === "insertion2" ? index === 1 : false
+            PropertyAnimation {
+                target: insertButtonRect
+                property: "color"
+                from: style.darkGlassAccent
+                to: "#5C9e619e"
+                duration: 1000
+                easing.type: "InOutQuad"
+            }
+            PropertyAnimation {
+                target: insertButtonRect
+                property: "color"
+                from: "#5C9e619e"
+                to: style.darkGlassAccent
+                duration: 1500
+                easing.type: "OutQuad"
+            }
+        }
         function clickAction() {activateInsertion(index)}
     }
     Column {
@@ -37,15 +58,18 @@ Column {
             }
         }
     }
+    StyleSheet {id: style}
 
     function activateInsertion(index) {
+        const effectsBlockState = leftPanel.getEffectsBlockState()
+        const setEffectsBlockState = leftPanel.setEffectsBlockState
         if (index === 0) {
-            if (leftPanel.effectsBlockState !== "insertion") leftPanel.effectsBlockState = "insertion"
-            else leftPanel.effectsBlockState = "enabled"
+            if (effectsBlockState !== "insertion") setEffectsBlockState("insertion")
+            else setEffectsBlockState("enabled")
         }
         else if (index === 1) {
-            if (leftPanel.effectsBlockState !== "insertion2") leftPanel.effectsBlockState = "insertion2"
-            else leftPanel.effectsBlockState = "enabled"
+            if (effectsBlockState !== "insertion2") setEffectsBlockState("insertion2")
+            else setEffectsBlockState("enabled")
         }
     }
 

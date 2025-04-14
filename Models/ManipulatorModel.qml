@@ -13,4 +13,7 @@ ListModel {
     //     activated: false
     //     joy: QtObject
     // }
+    // onRowsInserted: {
+    //     console.log("Manipulator",Object.entries(this.get(count-1)))
+    // }
 }

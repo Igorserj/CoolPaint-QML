@@ -4,6 +4,8 @@ import "Models"
 
 Window {
     id: window
+    property var doNotLog: ['view', 'export']
+    property int stepIndex: -1
     width: 1280
     height: 720
     visible: true
@@ -26,5 +28,24 @@ Window {
     }
     ExportMenuModel {
         id: exportMenuModel
+    }
+    ActionsLog {
+        id: actionsLog
+    }
+    MouseArea {
+        acceptedButtons: "NoButton"
+        focus: true
+        Keys.onPressed: {
+            console.log("pressed")
+            if (event.key === Qt.Key_Z && (event.modifiers & (Qt.ControlModifier && Qt.ShiftModifier))) {
+                ui.actionBar.redo()
+            } else if (event.key === Qt.Key_Z && (event.modifiers & Qt.ControlModifier)) {
+                ui.actionBar.undo()
+            }
+        }
+    }
+    function logAssign(historyMenuBlockModel, historyBlockModelGeneration) {
+        actionsLog.historyMenuBlockModel = historyMenuBlockModel
+        actionsLog.historyBlockModelGeneration = historyBlockModelGeneration
     }
 }
