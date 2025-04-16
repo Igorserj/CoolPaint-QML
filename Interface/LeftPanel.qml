@@ -1,9 +1,9 @@
 import QtQuick 2.15
 import Qt.labs.platform 1.1
-import "Controls"
-import "Models"
-import "Controllers/leftPanelController.js" as Controller
-import "Controllers/exportMenuController.js" as ExportController
+import "../Controls"
+import "../Models"
+import "../Controllers/leftPanelController.js" as Controller
+import "../Controllers/exportMenuController.js" as ExportController
 
 Rectangle {
     property var controller: Controller
@@ -210,14 +210,14 @@ Rectangle {
         if (typeof(effectsBlockItem) !== "undefined" && effectsBlockItem !== null) effectsBlockItem.state = state
     }
     function getEffectsBlockState() {
-        if (typeof(effectsBlockItem) !== "undefined") return effectsBlockItem.state
+        if (typeof(effectsBlockItem) !== "undefined" && effectsBlockItem !== null) return effectsBlockItem.state
         else return "enabled"
     }
     function setLayersBlockState(state = "") {
         if (typeof(layersBlockItem) !== "undefined" && layersBlockItem !== null) layersBlockItem.state = state
     }
     function getLayersBlockState() {
-        if (typeof(layersBlockItem) !== "undefined") return layersBlockItem.state
+        if (typeof(layersBlockItem) !== "undefined" && layersBlockItem !== null) return layersBlockItem.state
         else return "enabled"
     }
 }

@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import "Controls"
+import "../Controls"
 
 Item {
     property alias rightPanel: rightPanel

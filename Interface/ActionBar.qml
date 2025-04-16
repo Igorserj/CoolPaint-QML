@@ -1,6 +1,6 @@
 import QtQuick 2.15
-import "Controls"
-import "Models"
+import "../Controls"
+import "../Models"
 
 Item {
     x: (window.width - childrenRect.width) / 2

@@ -1,7 +1,7 @@
 import QtQuick 2.15
-import "Controls"
-import "Models"
-import "Controllers/rightPanelController.js" as Controller
+import "../Controls"
+import "../Models"
+import "../Controllers/rightPanelController.js" as Controller
 
 Rectangle {
     property alias propertiesModel: propertiesModel

@@ -91,4 +91,7 @@ Rectangle {
     function moveContent() {
         contentItem.y = -contentHeight * (1-height / contentHeight) / (height * (1-height / contentHeight) / bar.y)
     }
+    function resetPosition() {
+        contentItem.y = 0
+    }
 }

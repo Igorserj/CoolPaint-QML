@@ -7,6 +7,7 @@ ListModel {
     onRowsInserted: {
         console.log(Object.entries(this.get(count-1)))
         if (count > 0) historyBlockModelGeneration(this, historyMenuBlockModel)
+        autoSave()
     }
     function trimModel(index) {
         if (index + 1 < count) {

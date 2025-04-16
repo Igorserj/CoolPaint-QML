@@ -1,10 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>UI.qml</file>
-        <file>LeftPanel.qml</file>
-        <file>RightPanel.qml</file>
-        <file>Canva.qml</file>
         <file>Controls/Button.qml</file>
         <file>Controls/ButtonDark.qml</file>
         <file>Controls/ButtonWhite.qml</file>
@@ -25,8 +21,6 @@
         <file>Effects/saturation.fsh</file>
         <file>Effects/toneMap.fsh</file>
         <file>Effects/vignette.fsh</file>
-        <file>Background.qml</file>
-        <file>Menu.qml</file>
         <file>Models/MenuModel.qml</file>
         <file>Models/EffectsModel.qml</file>
         <file>Models/EffectsBlockModel.qml</file>
@@ -38,12 +32,10 @@
         <file>Models/PropertiesModel.qml</file>
         <file>Controllers/menuController.js</file>
         <file>Controllers/effectsController.js</file>
-        <file>EffectComponents.qml</file>
         <file>Controls/ValueDialog.qml</file>
         <file>Controls/ButtonLayers.qml</file>
         <file>Controls/StyleSheet.qml</file>
         <file>Controls/Scroller.qml</file>
-        <file>Block.qml</file>
         <file>Models/OverlayEffectsModel.qml</file>
         <file>Models/ViewsModel.qml</file>
         <file>Models/ViewsBlockModel.qml</file>
@@ -61,13 +53,22 @@
         <file>Controls/Label.qml</file>
         <file>Effects/rotation.fsh</file>
         <file>Models/ActionsBarModel.qml</file>
-        <file>ActionBar.qml</file>
         <file>Models/ActionsLog.qml</file>
         <file>Controls/Spacer.qml</file>
-        <file>HistoryMenu.qml</file>
-        <file>ExportMenu.qml</file>
-        <file>EffectsMenu.qml</file>
         <file>Models/HistoryMenuBlockModel.qml</file>
-        <file>PropertiesMenu.qml</file>
+        <file>Interface/ActionBar.qml</file>
+        <file>Interface/Background.qml</file>
+        <file>Interface/Canva.qml</file>
+        <file>Interface/EffectComponents.qml</file>
+        <file>Interface/EffectsMenu.qml</file>
+        <file>Interface/ExportMenu.qml</file>
+        <file>Interface/HistoryMenu.qml</file>
+        <file>Interface/LeftPanel.qml</file>
+        <file>Interface/Menu.qml</file>
+        <file>Interface/PropertiesMenu.qml</file>
+        <file>Interface/RightPanel.qml</file>
+        <file>Interface/UI.qml</file>
+        <file>Controls/Block.qml</file>
+        <file>Controls/ExitDialog.qml</file>
     </qresource>
 </RCC>

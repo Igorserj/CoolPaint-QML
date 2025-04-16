@@ -1,13 +1,14 @@
 import QtQuick 2.15
 import Qt.labs.platform 1.1
-import "Controls"
-import "Models"
-import "Controllers/menuController.js" as Controller
-import "./Controllers/openFile.js" as OF
+import "../Controls"
+import "../Models"
+import "../Controllers/menuController.js" as Controller
+import "../Controllers/openFile.js" as OF
 
 Item {
     x: (window.width - childrenRect.width) / 2
     y: window.height - childrenRect.height
+    Component.onCompleted: window.saveProj = saveProj
     Row {
         Repeater {
             model: menuModel
@@ -50,9 +51,12 @@ Item {
             model.overlays.push(overlayEffectsModel.get(k))
         }
         const jsonData = JSON.stringify(model, null, '\t')
-        const request = new XMLHttpRequest();
-        request.open("PUT", currentFile.toString().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2') + '.json', false);
-        request.send(jsonData);
+        // Write using the C++ helper
+        if (fileIO.write(currentFile, jsonData)) {
+            console.log("Save successful");
+        } else {
+            console.error("Save failed");
+        }
     }
     function openedFileHandle(response) {
         const text = JSON.parse(response)

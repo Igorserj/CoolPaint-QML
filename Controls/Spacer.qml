@@ -30,14 +30,20 @@ Rectangle {
     }
 
     function resizeBlocksV() {
-        upperBlock.height = Qt.binding(() => spacer.y - height / 2)
+        if (typeof(upperBlock) !== "undefined") {
+            upperBlock.height = Qt.binding(() => spacer.y - height / 2)
+            // upperBlock.y = 0
+        }
         if (typeof(lowerBlock) !== "undefined") {
             lowerBlock.y = Qt.binding(() => spacer.y + height / 2)
             lowerBlock.height = Qt.binding(() => parent.height - lowerBlock.y)
         }
     }
     function resizeBlocksH() {
-        if (typeof(upperBlock) !== "undefined") upperBlock.width = Qt.binding(() => spacer.x - width / 2)
+        if (typeof(upperBlock) !== "undefined") {
+            upperBlock.width = Qt.binding(() => spacer.x - width / 2)
+            // upperBlock.x = 0
+        }
         if (typeof(lowerBlock) !== "undefined") {
             lowerBlock.x = Qt.binding(() => spacer.x + width / 2)
             lowerBlock.width = Qt.binding(() => parent.width - lowerBlock.x)

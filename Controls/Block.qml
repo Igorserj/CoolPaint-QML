@@ -1,5 +1,4 @@
 import QtQuick 2.15
-import "Controls"
 
 Rectangle {
     id: blockRect
@@ -7,10 +6,12 @@ Rectangle {
     property int index: -1
     property string type: ''
     property string name: ''
+    // property bool heightChange: false
     color: "transparent"
     height: 0.5 * parent.height - window.height * 0.005
     width: parent.width
     clip: true
+    // onHeightChanged: scroller.positionReset()
     state: "enabled"
     states: [
         State {
@@ -72,6 +73,12 @@ Rectangle {
                     anchors.right: parent.right
                     height: blockRect.height - rep.itemAt(0).height - col.spacing
                     contentItem: col
+                    Connections {
+                        target: blockRect
+                        function onHeightChanged() {
+                            scroller.resetPosition()
+                        }
+                    }
                 }
             }
         }

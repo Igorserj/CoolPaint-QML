@@ -3,6 +3,7 @@ import QtQuick 2.15
 Item {
     id: label
     property string text: ""
+    property alias labelArea: labelArea
     height: window.width / 1280 * 30
     width: parent.width * 0.9
     clip: true
@@ -41,7 +42,7 @@ Item {
     MouseArea {
         id: labelArea
         hoverEnabled: true
-        anchors.fill: parent
+        anchors.fill: labelText
     }
     SequentialAnimation {
         id: textAnimation
