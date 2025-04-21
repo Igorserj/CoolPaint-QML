@@ -56,7 +56,10 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onMouseXChanged: if (containsPress) clickAction()
-        onReleased: if (!doNotLog.includes(category)) logAction()
+        onReleased: if (!doNotLog.includes(category)) {
+                        logAction()
+                        autoSave()
+                    }
     }
     StyleSheet {id: style}
 

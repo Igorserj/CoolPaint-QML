@@ -9,7 +9,7 @@ Item {
         function blockAction() {
             console.log(state)
             if (!["insertion", "insertion2"].includes(state)) {
-                controller.addLayer(name, type, effectsModel, layersModel, index)
+                controller.addLayer(name, type, effectsModel, layersModel, overlayEffectsModel, index)
                 controller.layersBlockModelGeneration(layersModel, layersBlockModel)
                 actionsLog.trimModel(stepIndex)
                 actionsLog.append({
@@ -51,9 +51,11 @@ Item {
                                   })
                 stepIndex += 1
                 state = controller.addOverlayLayer(state, effectsModel, overlayEffectsModel, index, layerIndex)
+                manualLayerChoose(layerIndex)
                 rightPanel.propertiesBlockUpdate()
                 canva.layersModelUpdate('', -1, layerIndex, 0)
             }
+            autoSave()
         }
         Component.onCompleted: {
             effectsBlockItem = this
@@ -86,6 +88,7 @@ Item {
                 rightPanel.propertiesBlockUpdate()
                 canva.layersModelUpdate('', -1, 0, 0)
                 state = "enabled"
+                autoSave()
             }
         }
         Component.onCompleted: {

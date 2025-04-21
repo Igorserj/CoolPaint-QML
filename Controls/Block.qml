@@ -6,12 +6,10 @@ Rectangle {
     property int index: -1
     property string type: ''
     property string name: ''
-    // property bool heightChange: false
     color: "transparent"
     height: 0.5 * parent.height - window.height * 0.005
     width: parent.width
     clip: true
-    // onHeightChanged: scroller.positionReset()
     state: "enabled"
     states: [
         State {
@@ -57,6 +55,9 @@ Rectangle {
                     id: col
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: window.height * 0.005
+                    Behavior on y {
+                        NumberAnimation { duration: 250 }
+                    }
                     Repeater {
                         model: block
                         delegate: Controls {
@@ -73,12 +74,6 @@ Rectangle {
                     anchors.right: parent.right
                     height: blockRect.height - rep.itemAt(0).height - col.spacing
                     contentItem: col
-                    Connections {
-                        target: blockRect
-                        function onHeightChanged() {
-                            scroller.resetPosition()
-                        }
-                    }
                 }
             }
         }
@@ -90,7 +85,7 @@ Rectangle {
             case "enabled": return true
             case "insertion": return isOverlay
             case "insertion2": return name !== "Overlay"
-            case "layerSwap": return true// name !== "Overlay"
+            case "layerSwap": return true
             }
         }
         else return false
@@ -101,5 +96,5 @@ Rectangle {
         blockRect.index = index
         blockAction(index)
     }
-    function blockAction(index) {}
+    // function blockAction(index) {}
 }

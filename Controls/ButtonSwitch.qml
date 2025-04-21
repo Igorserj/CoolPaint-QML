@@ -90,7 +90,10 @@ Rectangle {
         if (val1 === min1) val1 = max1
         else if (val1 === max1) val1 = min1
         updateVal(val1)
-        if (!doNotLog.includes(category)) logAction()
+        if (!doNotLog.includes(category)) {
+            logAction()
+            autoSave()
+        }
     }
     function logAction() {
         actionsLog.trimModel(stepIndex)
@@ -99,7 +102,7 @@ Rectangle {
                               name: `Set state of ${name} to ${val1 === 0 ? "Off" : "On"}`,
                               prevValue: {val: val1 === 0 ? 1 : 0},
                               value: {val: val1},
-                              index: leftPanel.layerIndex,//typeof(idx) !== "undefined" ? idx : -1, // layer number
+                              index: leftPanel.layerIndex, // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 0

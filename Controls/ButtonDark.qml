@@ -8,6 +8,24 @@ Button {
     state: "enabled"
     states: [
         State {
+            name: "active"
+            when: button.enabled && typeof(blockRect) !== "undefined"
+                  && ((type === "buttonLayers" && layerIndex === index)
+                  || (typeof(dropdownIndex) !== "undefined" && index === dropdownIndex)
+                      || (typeof(category) !== "undefined" && category === "history" && index === (actionsLog.count - 1) - stepIndex)
+                      )
+            PropertyChanges {
+                target: button
+                color: style.pinkWhite
+                radius: width / 4
+            }
+            PropertyChanges {
+                target: buttonText
+                color: style.lightDark
+                font.pixelSize: button.height / 30 * 12
+            }
+        },
+        State {
             name: "enabled"
             when: !area.containsMouse && button.enabled
             PropertyChanges {

@@ -71,10 +71,12 @@ Rectangle {
 
     function buttonAction(text) {
         if (text === 'Apply') {
+            const logging = !doNotLog.includes(category)
             const val0 = eval(textEdit.text)
-            if (!doNotLog.includes(category)) logAction(val0)
+            if (logging) logAction(val0)
             value = val0
             updateFunc(parseFloat(value))
+            if (logging) autoSave()
             close()
         } else if (text === 'Close') {
             close()

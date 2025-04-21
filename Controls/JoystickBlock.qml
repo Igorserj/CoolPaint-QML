@@ -38,7 +38,7 @@ Rectangle {
                                                  name: name,
                                                  updateFunc: updateVal1,
                                                  category: category,
-                                                 index: leftPanel.layerIndex,//idx,//leftPanel.layerIndex,//typeof(parentIndex) !== "undefined" ? parentIndex : -1,
+                                                 index: leftPanel.layerIndex,
                                                  propIndex: blockIndex,
                                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
                                                  addName: "X",
@@ -50,7 +50,7 @@ Rectangle {
                                                  name: name,
                                                  updateFunc: updateVal2,
                                                  category: category,
-                                                 index: leftPanel.layerIndex,//idx,//leftPanel.layerIndex,//typeof(parentIndex) !== "undefined" ? parentIndex : -1,
+                                                 index: leftPanel.layerIndex,
                                                  propIndex: blockIndex,
                                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
                                                  addName: "Y",
@@ -65,11 +65,10 @@ Rectangle {
                                 max2: max2,
                                 val2: val2,
                                 name: name,
-                                idx: leftPanel.layerIndex,//idx,
-                                index: leftPanel.layerIndex,//idx,//index,
+                                idx: leftPanel.layerIndex,
+                                index: leftPanel.layerIndex,
                                 propIndex: blockIndex,
-                                subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
-                                // parentIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
+                                parentIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
                                 activated: true,
                                 category: category,
                                 joy: joystick
@@ -84,14 +83,16 @@ Rectangle {
                     visible: index !== 2
                     text: "↺"
                     function clickAction() {
+                        const logging = !doNotLog.includes(category)
                         if (index === 0) {
-                            if (!doNotLog.includes(category)) logActionX(bval1)
+                            if (logging) logActionX(bval1)
                             updateVal1(bval1)
                         } else if (index === 1) {
-                            if (!doNotLog.includes(category)) logActionY(bval2)
+                            if (logging) logActionY(bval2)
                             updateVal2(bval2)
                         }
                         joystick.updating()
+                        if (logging) autoSave()
                     }
                 }
             }
@@ -101,11 +102,11 @@ Rectangle {
 
     function updateVal1(value) {
         val1 = value
-        canva.layersModelUpdate('val1', value, idx, index)
+        canva.layersModelUpdate('val1', value, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
     }
     function updateVal2(value) {
         val2 = value
-        canva.layersModelUpdate('val2', value, idx, index)
+        canva.layersModelUpdate('val2', value, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
     }
     function logActionX(val0) {
         console.log(val1, val0)
@@ -115,7 +116,7 @@ Rectangle {
                               name: `Reset value of ${name} X`,
                               prevValue: {val: val1},
                               value: {val: val0},
-                              index: leftPanel.layerIndex,//idx, // layer number
+                              index: leftPanel.layerIndex, // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 0
@@ -130,7 +131,7 @@ Rectangle {
                               name: `Reset value of ${name} Y`,
                               prevValue: {val: val2},
                               value: {val: val0},
-                              index: leftPanel.layerIndex,//idx, // layer number
+                              index: leftPanel.layerIndex, // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 1

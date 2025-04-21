@@ -3,7 +3,6 @@ import Qt.labs.platform 1.1
 import "../Controls"
 import "../Models"
 import "../Controllers/menuController.js" as Controller
-import "../Controllers/openFile.js" as OF
 
 Item {
     x: (window.width - childrenRect.width) / 2
@@ -32,7 +31,12 @@ Item {
         id: openProjDialog
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.OpenFile
-        onAccepted: OF.openFile(currentFile, response => openedFileHandle(response.content))
+        onAccepted: {
+            const data = fileIO.read(currentFile)
+            if (data !== "") {
+                openedFileHandle(data)
+            }
+        }
     }
     FileDialog {
         id: openDialog
@@ -42,13 +46,16 @@ Item {
     }
 
     function saveProj(currentFile) {
-        const model = { 'layers': [], 'overlays': [] }
+        const model = { 'layers': [], 'overlays': [], 'history': [] }
         let k = 0
-        for (; k < layersModel.count; ++k) {
+        for (k = 0; k < layersModel.count; ++k) {
             model.layers.push(layersModel.get(k))
         }
         for (k = 0; k < overlayEffectsModel.count; ++k) {
             model.overlays.push(overlayEffectsModel.get(k))
+        }
+        for (k = 0; k < actionsLog.count; ++k) {
+            model.history.push(actionsLog.get(k))
         }
         const jsonData = JSON.stringify(model, null, '\t')
         // Write using the C++ helper
@@ -63,11 +70,21 @@ Item {
         layersModel.clear()
         overlayEffectsModel.clear()
         let k = 0
-        for (; k < text.layers.length; ++k) {
-            layersModel.append(text.layers[k])
+        if (!!text.layers) {
+            for (k = 0; k < text.layers.length; ++k) {
+                layersModel.append(text.layers[k])
+            }
         }
-        for (k = 0; k < text.overlays.length; ++k) {
-            overlayEffectsModel.append(text.overlays[k])
+        if (!!text.overlays) {
+            for (k = 0; k < text.overlays.length; ++k) {
+                overlayEffectsModel.append(text.overlays[k])
+            }
+        }
+        if (!!text.history) {
+            for (k = 0; k < text.history.length; ++k) {
+                actionsLog.append(text.history[k])
+            }
+            stepIndex = text.history.length - 1
         }
         leftPanel.updateLayersBlockModel()
         canva.reDraw()

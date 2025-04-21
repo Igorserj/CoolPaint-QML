@@ -10,7 +10,8 @@ Item {
     property alias buttonSwitch: overlayControls.buttonSwitch
     property alias header: overlayControls.header
     property alias empty: overlayControls.empty
-    property alias insert: insertButton
+    property alias insertButton: insertButton
+    property alias insertDropdown: insertDropdown
     width: controlsLoader.width
     height: controlsLoader.height
     Loader {
@@ -26,6 +27,10 @@ Item {
     Component {
         id: insertButton
         InsertButton {}
+    }
+    Component {
+        id: insertDropdown
+        InsertDropdown {}
     }
     function controlsAction() {}
 }

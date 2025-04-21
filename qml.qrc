@@ -45,7 +45,6 @@
         <file>Controls/OverlayControls.qml</file>
         <file>Effects/colorHighlight.fsh</file>
         <file>Models/ManipulatorModel.qml</file>
-        <file>Controllers/openFile.js</file>
         <file>Models/ExportMenuModel.qml</file>
         <file>Effects/gaussianBlur.fsh</file>
         <file>Controllers/exportMenuController.js</file>
@@ -70,5 +69,10 @@
         <file>Interface/UI.qml</file>
         <file>Controls/Block.qml</file>
         <file>Controls/ExitDialog.qml</file>
+        <file>Interface/SettingsMenu.qml</file>
+        <file>Models/SettingsMenuBlockModel.qml</file>
+        <file>Models/SettingsMenuModel.qml</file>
+        <file>Controls/OverlayFolder.qml</file>
+        <file>Controls/InsertDropdown.qml</file>
     </qresource>
 </RCC>

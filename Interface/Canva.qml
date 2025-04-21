@@ -54,7 +54,7 @@ Item {
                 return {coord: vals.coord}
             }
             function logAction() {
-                logJoystick(category, index, val1, val2, prevVal, subIndex, propIndex, name)
+                logJoystick(category, index, val1, val2, prevVal, parentIndex, propIndex, name)
             }
         }
     }
@@ -66,9 +66,12 @@ Item {
         baseImage.source = source
         imageAssigned = true
     }
-    function layersModelUpdate(key, value, idx, index) {
+    function layersModelUpdate(key, value, idx, index, subIndex = -1) {
         if (layersModel.count > 0) {
-            layersModel.get(idx).items.setProperty(index, key, value)
+            if (key !== '') {
+                if (subIndex === -1) layersModel.get(idx).items.setProperty(index, key, value)
+                else overlayEffectsModel.getModel(idx, subIndex)[0].items.setProperty(index, key, value)
+            }
             deactivateEffects(idx)
             if (layersModel.get(idx).name !== "Overlay") layersModel.setProperty(idx, "activated", true)
             else {
@@ -114,7 +117,6 @@ Item {
         layersModelUpdate('', -1, 0, 0)
     }
     function logJoystick(category, index, val1, val2, prevVal, subIndex, propIndex, name) {
-        console.log(prevVal, [val1, val2], index)
         actionsLog.trimModel(stepIndex)
         actionsLog.append({
                               block: category,

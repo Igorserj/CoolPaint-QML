@@ -12,21 +12,25 @@ Rectangle {
     state: "enabled"
     states: [
         State {
+            name: "disabled"
+            when: !scrollbar.enabled || !bar.visible
+            PropertyChanges {
+                target: bar
+                color: style.pinkWhiteDim
+                radius: width / 3
+            }
+            PropertyChanges {
+                target: contentItem
+                y: 0
+            }
+        },
+        State {
             name: "enabled"
             when: !scrollerArea.containsMouse && scrollbar.enabled
             PropertyChanges {
                 target: bar
                 color: style.pinkWhite
                 radius: bar.width / 3
-            }
-        },
-        State {
-            name: "disabled"
-            when: !scrollbar.enabled
-            PropertyChanges {
-                target: bar
-                color: style.pinkWhiteDim
-                radius: width / 3
             }
         },
         State {
@@ -83,11 +87,9 @@ Rectangle {
     function wheelScroll(y) {
         scrolling(-y/4 + (bar.y + bar.height / 2))
     }
-
     function scrolling(y) {
         if (bar.visible) bar.y = y - bar.height / 2 < 0 ? 0 : y + bar.height / 2 > height ? height - bar.height : y - bar.height / 2
     }
-
     function moveContent() {
         contentItem.y = -contentHeight * (1-height / contentHeight) / (height * (1-height / contentHeight) / bar.y)
     }

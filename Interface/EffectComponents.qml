@@ -184,6 +184,7 @@ Item {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property variant src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0] + 1)
             property variant src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0] + 1)
+            property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel.get(layerIndex).items, 2))
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/overlay.fsh"

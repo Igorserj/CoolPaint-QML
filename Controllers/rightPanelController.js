@@ -10,6 +10,7 @@ function propertiesBlockModelGeneration(model, blockModel) {
                                    })
     for (let i = 0; i < model.count; ++i) {
         const newModel = JSON.parse(JSON.stringify(model.get(i)))
+        newModel.view = "normal,overlay"
         newModel.wdth = 240
         blockModel.get(1).block.append(newModel)
     }

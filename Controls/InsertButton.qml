@@ -7,53 +7,98 @@ Column {
     width: childrenRect.width
     height: childrenRect.height
     Component.onCompleted: updating()
-    ButtonDark {
-        id: insertButtonRect
-
-        SequentialAnimation {
-            loops: Animation.Infinite
-            running: leftPanel.getEffectsBlockState() === "insertion" ? index === 0 : leftPanel.getEffectsBlockState() === "insertion2" ? index === 1 : false
-            PropertyAnimation {
-                target: insertButtonRect
-                property: "color"
-                from: style.darkGlassAccent
-                to: "#5C9e619e"
-                duration: 1000
-                easing.type: "InOutQuad"
+    OverlayFolder {
+        text: name
+    }
+    Item {
+        id: foldableArea
+        width: childrenRect.width
+        height: childrenRect.height
+        clip: true
+        state: ""
+        states: [
+            State {
+                name: "default"
+                PropertyChanges {
+                    target: opening
+                    running: true
+                }
+            },
+            State {
+                name: "collapsed"
+                PropertyChanges {
+                    target: collapsing
+                    running: true
+                }
             }
+        ]
+        SequentialAnimation {
+            id: collapsing
             PropertyAnimation {
-                target: insertButtonRect
-                property: "color"
-                from: "#5C9e619e"
-                to: style.darkGlassAccent
-                duration: 1500
-                easing.type: "OutQuad"
+                target: foldableArea
+                property: "height"
+                to: 0
+                duration: 500
             }
         }
-        function clickAction() {activateInsertion(index)}
-    }
-    Column {
-        spacing: window.height * 0.005
-        Repeater {
-            id: innerBlock
-            Item {
-                width: controlsLoader.width
-                height: controlsLoader.height
-                Loader {
-                    id: controlsLoader
-                    width: item.width
-                    height: item.height
-                    sourceComponent: {
-                        switch (type) {
-                        case "joystick": overlayControls.joystick; break;
-                        case "slider": overlayControls.slider; break;
-                        case "buttonSwitch": overlayControls.buttonSwitch; break;
-                        default: overlayControls.empty; break
+        SequentialAnimation {
+            id: opening
+            PropertyAnimation {
+                target: foldableArea
+                property: "height"
+                to: foldableArea.childrenRect.height
+                duration: 500
+            }
+        }
+        ButtonDark {
+            id: insertButtonRect
+
+            SequentialAnimation {
+                loops: Animation.Infinite
+                running: leftPanel.getEffectsBlockState() === "insertion" ? index === 0 : leftPanel.getEffectsBlockState() === "insertion2" ? index === 1 : false
+                PropertyAnimation {
+                    target: insertButtonRect
+                    property: "color"
+                    from: style.darkGlassAccent
+                    to: "#5C9e619e"
+                    duration: 1000
+                    easing.type: "InOutQuad"
+                }
+                PropertyAnimation {
+                    target: insertButtonRect
+                    property: "color"
+                    from: "#5C9e619e"
+                    to: style.darkGlassAccent
+                    duration: 1500
+                    easing.type: "OutQuad"
+                }
+            }
+            function clickAction() {activateInsertion(index)}
+        }
+        Column {
+            y: insertButtonRect.y + insertButtonRect.height + spacing
+            spacing: window.height * 0.005
+            Repeater {
+                id: innerBlock
+                Item {
+                    width: controlsLoader.width
+                    height: controlsLoader.height
+                    Loader {
+                        id: controlsLoader
+                        width: item.width
+                        height: item.height
+                        sourceComponent: {
+                            switch (type) {
+                            case "joystick": overlayControls.joystick; break;
+                            case "slider": overlayControls.slider; break;
+                            case "buttonSwitch": overlayControls.buttonSwitch; break;
+                            default: overlayControls.empty; break
+                            }
                         }
                     }
-                }
-                OverlayControls {
-                    id: overlayControls
+                    OverlayControls {
+                        id: overlayControls
+                    }
                 }
             }
         }
@@ -63,13 +108,17 @@ Column {
     function activateInsertion(index) {
         const effectsBlockState = leftPanel.getEffectsBlockState()
         const setEffectsBlockState = leftPanel.setEffectsBlockState
-        if (index === 0) {
+        switch (index) {
+        case 0: {
             if (effectsBlockState !== "insertion") setEffectsBlockState("insertion")
             else setEffectsBlockState("enabled")
+            break
         }
-        else if (index === 1) {
+        case 1: {
             if (effectsBlockState !== "insertion2") setEffectsBlockState("insertion2")
             else setEffectsBlockState("enabled")
+            break
+        }
         }
     }
 
@@ -82,5 +131,11 @@ Column {
             insertButtonRect.text = ""
             innerBlock.model = []
         }
+    }
+    function setFoldState(state) {
+        foldableArea.state = state
+    }
+    function getFoldState() {
+        return foldableArea.state
     }
 }

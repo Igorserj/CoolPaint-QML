@@ -34,19 +34,30 @@ function reActivateLayer(layersModel, overlaysModel, idx, iteration) {
     if (iteration === 0) {
         const overlay = overlaysModel.getModel(idx, 1)
         if (overlay.length > 0) overlay[0].activated = true
-    } else {
+    } else if (iteration === 1) {
         layersModel.setProperty(idx, "activated", true)
     }
 }
 
 function propertyPopulation(type, items, index) {
+    let result;
     if (type === "one") {
-        if (items !== null && items.count > 0) return items.get(index).val1
-        else return 0
+        if (items !== null && items.count > 0) result = items.get(index).val1
+        else result =  0
     } else if (type === "two") {
-        if (items !== null && items.count > 0) return Qt.point(items.get(index).val1, items.get(index).val2)
-        else return Qt.point(0, 0)
+        if (items !== null && items.count > 0) result = Qt.point(items.get(index).val1, items.get(index).val2)
+        else result = Qt.point(0, 0)
     }
+    console.log('Result', result)
+    return result
+}
+
+function propertyPopulationDropdown(items, index) {
+    let result;
+    if (items !== null && items.count > 0) result = items.get(index).val1
+    else result =  0
+    console.log('Result', result)
+    return result
 }
 
 function srcPopulation(repeater, index, baseImage) {

@@ -28,7 +28,10 @@ Rectangle {
             function clickAction() {
                 val1 = bval1
                 updateAll(bval1)
-                if (!doNotLog.includes(category)) logAction()
+                if (!doNotLog.includes(category)) {
+                    logAction()
+                    autoSave()
+                }
             }
         }
     }
@@ -41,7 +44,7 @@ Rectangle {
 
     function updateVal(val1) {
         if (category === "layer") {
-            canva.layersModelUpdate('val1', val1, idx, index)
+            canva.layersModelUpdate('val1', val1, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
         } else if (category === "view") {
             if (name === "Mirroring") {
                 canva.mirroring = val1
@@ -62,7 +65,7 @@ Rectangle {
                               name: `Reset value of ${name}`,
                               prevValue: {val: val1 === 0 ? 1 : 0},
                               value: {val: val1},
-                              index: leftPanel.layerIndex,//typeof(idx) !== "undefined" ? idx : -1, // layer number
+                              index: leftPanel.layerIndex, // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 0

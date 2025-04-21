@@ -12,7 +12,7 @@ Rectangle {
     property int layerIndex: -1
     width: window.width / 1280 * 260
     height: window.height
-    color: "#302430"
+    color: style.vinous
     state: "default"
     states: [
         State {
@@ -62,6 +62,7 @@ Rectangle {
         onAccepted: ExportController.exportDialogAccept(canva.finalImage, currentFile, selectedNameFilter.extensions)
     }
     ExportMenuBlockModel {id: exportMenuBlockModel}
+    SettingsMenuBlockModel {id: settingsMenuBlockModel}
     StyleSheet {id: style}
 
     function switchState() {
@@ -91,12 +92,35 @@ Rectangle {
                                 "min1": sizes.sourceH < sizes.aspectH / 1.5 ? sizes.sourceH : sizes.aspectH / 1.5
                             }
                             )
+        let i = 0
         exportMenuBlockModel.set(1, {
                                      'block': []
                                  })
-        for (let i = 0; i < exportMenuModel.count; ++i) {
+        for (; i < exportMenuModel.count; ++i) {
             exportMenuBlockModel.get(1).block.append(exportMenuModel.get(i))
         }
+
+        settingsMenuBlockModel.set(1, {
+                                     'block': []
+                                 })
+        for (i = 0; i < settingsMenuModel.count; ++i) {
+            settingsMenuBlockModel.get(1).block.append(settingsMenuModel.get(i))
+        }
+
+        const settingsFile = `${baseDir}/settings.json`
+        const data = fileIO.read(settingsFile)
+        if (data !== "") {
+            const jsonData = JSON.parse(data)
+            for (i = 0; i < jsonData.settings.length; ++i) {
+                for (let j = 0; j < settingsMenuBlockModel.get(1).block.count; ++ j) {
+                    if (settingsMenuBlockModel.get(1).block.get(j).name === jsonData.settings[i].name) {
+                        settingsMenuBlockModel.get(1).block.setProperty(j, 'val1', parseInt(jsonData.settings[i].val1))
+                        break
+                    }
+                }
+            }
+        }
+
         state = "export"
     }
     function close() {
@@ -112,9 +136,10 @@ Rectangle {
     }
     function manualLayerChoose(index) {
         Controller.chooseLayer("buttonLayers", layersModel, rightPanel.propertiesModel, index, setEffectsBlockState)
+        layerIndex = index
     }
     function addLayer(index) {
-        Controller.addLayer(effectsModel.get(index).name, "buttonDark", effectsModel, layersModel, index)
+        Controller.addLayer(effectsModel.get(index).name, "buttonDark", effectsModel, layersModel, overlayEffectsModel, index)
         Controller.layersBlockModelGeneration(layersModel, layersBlockModel)
         setLayersBlockState("enabled")
     }
@@ -127,6 +152,7 @@ Rectangle {
     }
     function addOverlayLayer(layerIndex, index, state) {
         setEffectsBlockState(Controller.addOverlayLayer(state, effectsModel, overlayEffectsModel, index, layerIndex))
+        manualLayerChoose(layerIndex)
         rightPanel.propertiesBlockUpdate()
         canva.layersModelUpdate('', -1, layerIndex, 0)
     }
@@ -184,6 +210,13 @@ Rectangle {
             rightPanel.propertiesBlockUpdate()
             canva.layersModelUpdate('', -1, index, valIndex)
         }
+    }
+    function setBlendingMode(index, subIndex, valIndex, value) {
+        layersModel.get(index).items.setProperty(subIndex, `val${valIndex+1}`, value)
+        manualLayerChoose(index)
+        rightPanel.propertiesBlockUpdate()
+        canva.layersModelUpdate('', -1, index, valIndex)
+        // updateLayersBlockModel()
     }
     function setLayersOrder(prevValue, value) {
         Controller.swapLayers(layersModel, layersBlockModel, overlayEffectsModel, prevValue, value)

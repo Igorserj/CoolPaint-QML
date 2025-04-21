@@ -17,8 +17,9 @@ public:
     explicit FileIO(QObject *parent = nullptr);
 
     Q_INVOKABLE bool write(const QString &filePath, const QString &data);
-    Q_INVOKABLE bool read(const QString &filePath, QString &data);
+    Q_INVOKABLE QString read(const QString &filePath);
     Q_INVOKABLE bool exists(const QString &filePath);
+    Q_INVOKABLE bool remove(const QString &dirPath, const int &cacheSize);
     Q_INVOKABLE bool createDirectory(const QString &dirPath);
     Q_INVOKABLE QString getParentDir(const QString &filePath);
     Q_INVOKABLE QString getFileName(const QString &filePath);

@@ -49,7 +49,7 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -124,17 +124,17 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -175,7 +175,7 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -206,12 +206,12 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -246,12 +246,12 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -282,12 +282,12 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -332,7 +332,7 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -373,7 +373,7 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -384,22 +384,22 @@ ListModel {
         items: [
             ListElement {
                 category: "layer"
-                type: "insert"
+                type: "insertButton"
                 name: "Mask"
             },
             ListElement {
                 category: "layer"
-                type: "insert"
-                name: "Image"
+                type: "insertButton"
+                name: "Effect"
+            },
+            ListElement {
+                category: "layer"
+                type: "insertDropdown"
+                name: "Blending mode:"
             },
             ListElement {
                 category: ""
-                type: ""
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -428,12 +428,12 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -468,12 +468,12 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -502,17 +502,17 @@ ListModel {
                 // val1: 0.1
                 // bval1: 0.1
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]
@@ -547,12 +547,12 @@ ListModel {
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             },
             ListElement {
                 category: ""
-                type: ""
+                type: "empty"
                 name: ""
             }
         ]

@@ -8,7 +8,7 @@ Rectangle {
     x: window.width - width
     width: window.width / 1280 * 260
     height: window.height
-    color: "#302430"
+    color: style.vinous
     Component.onCompleted: {
         viewsBlockPopulate()
         logAssign(historyMenuBlockModel, Controller.historyBlockModelGeneration)
@@ -60,12 +60,16 @@ Rectangle {
     HistoryMenuBlockModel {
         id: historyMenuBlockModel
     }
+    StyleSheet {
+        id: style
+    }
 
     function propertiesBlockUpdate() {
         Controller.propertiesBlockModelGeneration(propertiesModel, propertiesBlockModel)
     }
     function resetPropertiesBlock() {
         Controller.flushPropertiesBlockModel(propertiesBlockModel)
+        leftPanel.layerIndex = -1
     }
     function viewsBlockPopulate() {
         Controller.viewsBlockModelGeneration(viewsModel, viewsBlockModel)

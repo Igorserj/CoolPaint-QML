@@ -45,6 +45,7 @@ Rectangle {
             function clickAction() {
                 if (!doNotLog.includes(category)) logAction(bval1)
                 updateAll(bval1)
+                autoSave()
             }
         }
     }
@@ -56,7 +57,7 @@ Rectangle {
     }
     function updateVal(val1) {
         if (category === "layer") {
-            canva.layersModelUpdate('val1', val1, idx, index)
+            canva.layersModelUpdate('val1', val1, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
         } else if (category === "view") {
             if (name === "Scale") {
                 canva.scaling = val1

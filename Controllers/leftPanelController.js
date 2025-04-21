@@ -19,14 +19,44 @@ function layersBlockModelGeneration(model, blockModel) {
     for (let i = 0; i < model.count; ++i) {
         blockModel.get(1).block.append({type: "buttonLayers", wdth: 240, name: model.get(i).name})
     }
-    // if (typeof(finisher) !== "undefined") finisher()
 }
 
-function addLayer(name, type, effectsModel, layersModel, index) {
+function addLayer(name, type, effectsModel, layersModel, overlayModel, index) {
     if (type === "buttonDark") {
         const effect = JSON.parse(JSON.stringify(effectsModel.get(index)))
         if (name !== "Overlay") effect.activated = true
-        else effect.activated = false
+        else {
+            const blends = ['Addition', 'Subtract', 'Multiply', 'Divide']
+            const item = {
+                "bval1": 0,
+                "bval2": 0,
+                "val1": 1,
+                "val2": 0,
+                "max1": 1,
+                "max2": 1,
+                "min1": 0,
+                "min2": 0,
+                "name": '',
+                "type": "buttonDark",
+                "category": "layer"
+            }
+            const items = blends.map((blendName) => {
+                                         const it = JSON.parse(JSON.stringify(item))
+                                         it.name = blendName
+                                         return it
+                                     })
+            const obj = {
+                "isOverlay": false,
+                "name": `Blending mode: ${blends[0]}`,
+                "idx": layersModel.count,
+                "iteration": 2,
+                "overlay": false,
+                "activated": false
+            }
+            obj.items = items
+            overlayModel.append(obj)
+            effect.activated = false
+        }
         effect.idx = layersModel.count
         effect.overlay = false
         layersModel.append(effect)

@@ -4,7 +4,8 @@ Item {
     id: label
     property string text: ""
     property alias labelArea: labelArea
-    height: window.width / 1280 * 30
+    property int w: 30
+    height: window.width / 1280 * w
     width: parent.width * 0.9
     clip: true
     states: [

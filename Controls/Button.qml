@@ -3,6 +3,7 @@ import QtQuick 2.15
 Rectangle {
     id: button
     property string text: ""
+    property Component image
     property alias buttonText: buttonText
     property alias area: area
     Behavior on color {
@@ -22,6 +23,10 @@ Rectangle {
         text: parent.text
         font.family: "Helvetica"
         font.bold: true
+        anchors.centerIn: parent
+    }
+    Loader {
+        sourceComponent: typeof(image) !== "undefined" ? image : ""
         anchors.centerIn: parent
     }
     MouseArea {

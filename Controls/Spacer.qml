@@ -5,12 +5,14 @@ Rectangle {
     property var upperBlock
     property var lowerBlock
     property string type: "vertical"
-    width: type === "horizontal" ?  5 : parent.width
-    height: type === "horizontal" ? parent.height : 5
-    color: spacerArea.containsMouse ? style.pinkWhiteAccent : style.pinkWhite //`#33${style.pinkWhiteDim.toString().substring(1)}`
+    width: type === "horizontal" ?  3 : parent.width
+    height: type === "horizontal" ? parent.height : 3
+    color: spacerArea.containsMouse ? style.pinkWhiteAccent : style.pinkWhite
     MouseArea {
         id: spacerArea
-        anchors.fill: parent
+        y: (parent.height - height) / 2
+        width: parent.width
+        height: 7
         cursorShape: type === "horizontal" ?  Qt.SplitHCursor : Qt.SplitVCursor
         drag.axis: type === "horizontal" ? Drag.XAxis : Drag.YAxis
         drag.target: spacer
