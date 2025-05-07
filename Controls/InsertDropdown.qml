@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import "../Controllers/insertionController.js" as Controller
 
 Column {
     id: insertDropdown
@@ -67,7 +68,12 @@ Column {
                     OverlayControls {
                         id: overlayControls
                         function controlsAction() {
-                            dropdownChoose(name, index)
+                            if (category !== "settings") {
+                                Controller.dropdownChoose(name, index, setName, setVal, getVals, doNotLog, layersModel.get(leftPanelFunctions.getLayerIndex()).items, modelFunctions.autoSave, actionsLog, setStepIndex, canvaFunctions.layersModelUpdate)
+                            } else {
+                                Controller.dropdownChoose(name, index, setName, setVal, getVals, doNotLog, settingsMenuModel.get(parentIndex).items, modelFunctions.autoSave, actionsLog, setStepIndex, canvaFunctions.layersModelUpdate)
+                            }
+                            clickAction()
                         }
                     }
                 }
@@ -76,16 +82,26 @@ Column {
     }
     StyleSheet {id: style}
 
-    function dropdownChoose(optionName, optionIndex) {
-        const logging = !doNotLog.includes(category)
-        name = `Blending mode: ${optionName}`
-        if (logging) logAction(optionIndex)
-        val1 = optionIndex
-        layersModel.get(leftPanel.layerIndex).items.setProperty(index, 'name', name)
-        canva.layersModelUpdate('val1', val1, idx, index, -1)
-        if (logging) autoSave()
+    function setName(newName) {
+        name = newName
     }
-
+    function setVal(value) {
+        val1 = value
+    }
+    function setStepIndex(value) {
+        stepIndex = value
+    }
+    function getVals() {
+        return {
+            val1,
+            idx: typeof(idx) !== "undefined" ? idx : -1,
+            name,
+            index,
+            layerIndex: leftPanelFunctions.getLayerIndex(),
+            stepIndex,
+            category
+        }
+    }
     function setFoldState(state) {
         foldableArea.state = state
     }
@@ -93,27 +109,24 @@ Column {
         return foldableArea.state
     }
     function updating() {
-        const model = overlayEffectsModel.getModel(leftPanel.layerIndex, index)
-        if (model.length !== 0) {
-            innerBlock.model = model[0].items
-            name = `Blending mode: ${innerBlock.model.get(dropdownIndex).name}`
+        let model
+        if (category !== "settings") {
+            model = overlayEffectsModel.getModel(leftPanelFunctions.getLayerIndex(), index)
+            if (model.length !== 0) {
+                innerBlock.model = model[0].items
+                name = `Blending mode: ${innerBlock.model.get(dropdownIndex).name}`
+            } else {
+                innerBlock.model = []
+            }
         } else {
-            innerBlock.model = []
+            model = settingsMenuModel.get(index)
+            if (model.length !== 0) {
+                innerBlock.model = model.items
+                // name = `Lights: ${innerBlock.model.get(dropdownIndex).name}`
+                name = 'Lights'
+            } else {
+                innerBlock.model = []
+            }
         }
-    }
-    function logAction(val2) {
-        actionsLog.trimModel(stepIndex)
-        actionsLog.append({
-                              block: category,
-                              name: `Set blending mode to ${innerBlock.model.get(val2).name}`,
-                              prevValue: {val: val1},
-                              value: {val: val2},
-                              index: leftPanel.layerIndex, // layer number
-                              subIndex: parentIndex, // sublayer number
-                              propIndex: index, // sublayer property number
-                              valIndex: 0
-                          })
-        console.log(Object.entries(actionsLog.get(actionsLog.count-1).prevValue), Object.entries(actionsLog.get(actionsLog.count-1).value))
-        stepIndex += 1
     }
 }

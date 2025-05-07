@@ -1,6 +1,7 @@
 import QtQuick 2.15
 
 Rectangle {
+    id: valueDialog
     property double value
     property var updateFunc
     property string name: ""
@@ -10,12 +11,40 @@ Rectangle {
     property int propIndex: -1
     property int valIndex: -1
     property int subIndex: -1
-    color: style.darkGlass
+    color: style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 80
-    visible: false
     enabled: false
     radius: height / 4
+    state: "hidden"
+    Behavior on opacity {
+        PropertyAnimation {
+            target: valueDialog
+            property: "opacity"
+            duration: 200
+        }
+    }
+    states: [
+        State {
+            name: "visible"
+            PropertyChanges {
+                target: valueDialog
+                opacity: 1
+            }
+        },
+        State {
+            name: "hidden"
+            PropertyChanges {
+                target: valueDialog
+                opacity: 0
+            }
+        }
+    ]
+    AcrylicBackground {
+        id: acrylicBackground
+        background: valueDialog.parent
+        z: -1
+    }
     Label {
         width: valueRect.width - row.width - row.spacing
         x: parent.width * 0.05
@@ -28,7 +57,7 @@ Rectangle {
         height: window.width / 1280 * 30
         x: parent.width * 0.05
         y: parent.height - height - parent.radius / 3
-        color: style.pinkWhite
+        color: style.currentTheme.pinkWhite
         radius: width / 4
         TextInput {
             id: textEdit
@@ -40,7 +69,7 @@ Rectangle {
             font.family: "Helvetica"
             font.bold: true
             anchors.fill: parent
-            color: style.lightDark
+            color: style.currentTheme.lightDark
             font.pixelSize: parent.height / 25 * 12
             onAccepted: buttonAction('Apply')
         }
@@ -76,7 +105,7 @@ Rectangle {
             if (logging) logAction(val0)
             value = val0
             updateFunc(parseFloat(value))
-            if (logging) autoSave()
+            if (logging) modelFunctions.autoSave()
             close()
         } else if (text === 'Close') {
             close()
@@ -84,24 +113,27 @@ Rectangle {
     }
 
     function open({value, name, updateFunc, category, index, propIndex, valIndex, subIndex, addName}) {
-        canva.disableManipulator()
-        this.value = value
-        this.name = name
-        this.category = category
-        this.addName = addName
-        this.index = index
-        this.propIndex = propIndex
-        this.valIndex = valIndex
-        this.subIndex = subIndex
-        this.updateFunc = updateFunc
-        visible = true
+        canvaFunctions.disableManipulator()
+        valueDialog.value = value
+        valueDialog.name = name
+        valueDialog.category = category
+        valueDialog.addName = addName
+        valueDialog.index = index
+        valueDialog.propIndex = propIndex
+        valueDialog.valIndex = valIndex
+        valueDialog.subIndex = subIndex
+        valueDialog.updateFunc = updateFunc
+        if (state !== "visible") acrylicBackground.activate()
         enabled = true
+        state = "visible"
     }
     function close() {
         value = 0.0
-        visible = false
+        name = ''
         enabled = false
         updateFunc = undefined
+        state = "hidden"
+        acrylicBackground.deactivate()
     }
     function logAction(val0) {
         actionsLog.trimModel(stepIndex)

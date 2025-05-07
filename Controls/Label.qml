@@ -4,6 +4,7 @@ Item {
     id: label
     property string text: ""
     property alias labelArea: labelArea
+    property bool containsMouse: labelArea.containsMouse
     property int w: 30
     height: window.width / 1280 * w
     width: parent.width * 0.9
@@ -32,11 +33,12 @@ Item {
     ]
     Text {
         id: labelText
+        x: 0
         height: parent.height
         text: parent.text
         font.family: "Helvetica"
         font.bold: true
-        color: style.pinkWhiteAccent
+        color: style.currentTheme.pinkWhiteAccent
         font.pixelSize: parent.height / 27 * 12
         verticalAlignment: Text.AlignVCenter
     }

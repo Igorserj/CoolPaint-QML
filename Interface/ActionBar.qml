@@ -4,6 +4,7 @@ import "../Models"
 
 Item {
     x: (window.width - childrenRect.width) / 2
+    Component.onCompleted: setActionBarFunctions()
     Row {
         Repeater {
             model: actionsBarModel
@@ -43,32 +44,32 @@ Item {
                              str: actionsLog.get(stepIndex).name,
                              subStrs: ['Added effect']
                          })) {
-                leftPanel.removeLayer(item.index, false)
+                leftPanelFunctions.removeLayer(item.index, false)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Set overlay effect']
                                 })) {
-                leftPanel.removeOverlayLayer(item.index, item.subIndex, item.prevValue.overlayEffectsModel)
+                leftPanelFunctions.removeOverlayLayer(item.index, item.subIndex, item.prevValue.overlayEffectsModel)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Removed effect']
                                 })) {
-                leftPanel.layerRecovery(item.index, item.prevValue)
+                leftPanelFunctions.layerRecovery(item.index, item.prevValue)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['value of', 'Set state of']
                                 })) {
-                leftPanel.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.prevValue.val)
+                leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.prevValue.val)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStr: ['Set blending mode']
                                 })) {
-                leftPanel.setBlendingMode(item.index, item.subIndex, item.valIndex, item.prevValue.val)
+                leftPanelFunctions.setBlendingMode(item.index, item.subIndex, item.valIndex, item.prevValue.val)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Swap layers']
                                 })) {
-                leftPanel.setLayersOrder(item.prevValue.val, item.value.val)
+                leftPanelFunctions.setLayersOrder(item.prevValue.val, item.value.val)
             }
 
             stepIndex -= 1
@@ -83,36 +84,42 @@ Item {
                              str: actionsLog.get(stepIndex).name,
                              subStrs: ['Added effect']
                          })) {
-                leftPanel.addLayer(item.value.val)
+                leftPanelFunctions.addLayer(item.value.val)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Set overlay effect']
                                 })) {
-                leftPanel.addOverlayLayer(item.index, item.value.val, item.subIndex === 0 ? "insertion" : "insertion2")
+                leftPanelFunctions.addOverlayLayer(item.index, item.value.val, item.subIndex === 0 ? "insertion" : "insertion2")
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Removed effect']
                                 })) {
-                leftPanel.removeLayer(item.index, false)
+                leftPanelFunctions.removeLayer(item.index, false)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['value of', 'Set state of']
                                 })) {
-                leftPanel.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.value.val)
+                leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.value.val)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStr: ['Set blending mode']
                                 })) {
-                leftPanel.setBlendingMode(item.index, item.subIndex, item.valIndex, item.value.val)
+                leftPanelFunctions.setBlendingMode(item.index, item.subIndex, item.valIndex, item.value.val)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Swap layers']
                                 })) {
-                leftPanel.setLayersOrder(item.value.val, item.prevValue.val)
+                leftPanelFunctions.setLayersOrder(item.value.val, item.prevValue.val)
             }
         }
     }
     function history() {
-        rightPanel.switchState()
+        rightPanelFunctions.switchState()
+    }
+    function setActionBarFunctions() {
+        actionBarFunctions = {
+            undo,
+            redo
+        }
     }
 }

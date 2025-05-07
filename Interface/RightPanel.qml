@@ -4,14 +4,14 @@ import "../Models"
 import "../Controllers/rightPanelController.js" as Controller
 
 Rectangle {
-    property alias propertiesModel: propertiesModel
     x: window.width - width
     width: window.width / 1280 * 260
     height: window.height
-    color: style.vinous
+    color: style.currentTheme.vinous
     Component.onCompleted: {
         viewsBlockPopulate()
         logAssign(historyMenuBlockModel, Controller.historyBlockModelGeneration)
+        setRightPanelFunctions()
     }
     state: "default"
     states: [
@@ -69,7 +69,7 @@ Rectangle {
     }
     function resetPropertiesBlock() {
         Controller.flushPropertiesBlockModel(propertiesBlockModel)
-        leftPanel.layerIndex = -1
+        leftPanelFunctions.setLayerIndex(-1)
     }
     function viewsBlockPopulate() {
         Controller.viewsBlockModelGeneration(viewsModel, viewsBlockModel)
@@ -78,9 +78,12 @@ Rectangle {
         if (state === "history") {
             close()
         } else if (state === "default") {
-            canva.disableManipulator()
+            canvaFunctions.disableManipulator()
             open()
         }
+    }
+    function getPropertiesModel() {
+        return propertiesModel
     }
     function open() {
         Controller.historyBlockModelGeneration(actionsLog, historyMenuBlockModel, stepIndex)
@@ -96,5 +99,13 @@ Rectangle {
         spacer.upperBlock = undefined
         spacer.lowerBlock = undefined
         state = "default"
+    }
+    function setRightPanelFunctions() {
+        rightPanelFunctions = {
+            resetPropertiesBlock,
+            switchState,
+            propertiesBlockUpdate,
+            getPropertiesModel
+        }
     }
 }

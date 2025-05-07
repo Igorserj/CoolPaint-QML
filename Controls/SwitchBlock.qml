@@ -2,7 +2,7 @@ import QtQuick 2.15
 
 Rectangle {
     property string text: ""
-    color: style.darkGlass
+    color: style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 80
     radius: height / 4
@@ -30,7 +30,7 @@ Rectangle {
                 updateAll(bval1)
                 if (!doNotLog.includes(category)) {
                     logAction()
-                    autoSave()
+                    modelFunctions.autoSave()
                 }
             }
         }
@@ -44,17 +44,17 @@ Rectangle {
 
     function updateVal(val1) {
         if (category === "layer") {
-            canva.layersModelUpdate('val1', val1, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
+            canvaFunctions.layersModelUpdate('val1', val1, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
         } else if (category === "view") {
             if (name === "Mirroring") {
-                canva.mirroring = val1
+                canvaFunctions.setMirroring(val1)
             } else if (name === "Smoothing") {
-                canva.smoothing = val1
-                canva.reDraw()
+                canvaFunctions.setSmoothing(val1)
+                canvaFunctions.reDraw()
             }
         } else if (category === "export") {
             if (name === "Preserve aspect fit") {
-                canva.preserveAspect = val1
+                canvaFunctions.setPreserveAspect(val1)
             }
         }
     }
@@ -65,7 +65,7 @@ Rectangle {
                               name: `Reset value of ${name}`,
                               prevValue: {val: val1 === 0 ? 1 : 0},
                               value: {val: val1},
-                              index: leftPanel.layerIndex, // layer number
+                              index: leftPanelFunctions.getLayerIndex(), // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 0

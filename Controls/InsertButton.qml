@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import "../Controllers/insertionController.js" as Controller
 
 Column {
     id: insertButton
@@ -55,11 +56,15 @@ Column {
 
             SequentialAnimation {
                 loops: Animation.Infinite
-                running: leftPanel.getEffectsBlockState() === "insertion" ? index === 0 : leftPanel.getEffectsBlockState() === "insertion2" ? index === 1 : false
+                running: leftPanelFunctions.getEffectsBlockState() === "insertion" ?
+                             index === 0 :
+                             leftPanelFunctions.getEffectsBlockState() === "insertion2" ?
+                                 index === 1 :
+                                 false
                 PropertyAnimation {
                     target: insertButtonRect
                     property: "color"
-                    from: style.darkGlassAccent
+                    from: style.currentTheme.darkGlassAccent
                     to: "#5C9e619e"
                     duration: 1000
                     easing.type: "InOutQuad"
@@ -68,12 +73,12 @@ Column {
                     target: insertButtonRect
                     property: "color"
                     from: "#5C9e619e"
-                    to: style.darkGlassAccent
+                    to: style.currentTheme.darkGlassAccent
                     duration: 1500
                     easing.type: "OutQuad"
                 }
             }
-            function clickAction() {activateInsertion(index)}
+            function clickAction() {Controller.activateInsertion(index, leftPanelFunctions)}
         }
         Column {
             y: insertButtonRect.y + insertButtonRect.height + spacing
@@ -88,12 +93,7 @@ Column {
                         width: item.width
                         height: item.height
                         sourceComponent: {
-                            switch (type) {
-                            case "joystick": overlayControls.joystick; break;
-                            case "slider": overlayControls.slider; break;
-                            case "buttonSwitch": overlayControls.buttonSwitch; break;
-                            default: overlayControls.empty; break
-                            }
+                            overlayControls[type]
                         }
                     }
                     OverlayControls {
@@ -105,31 +105,14 @@ Column {
     }
     StyleSheet {id: style}
 
-    function activateInsertion(index) {
-        const effectsBlockState = leftPanel.getEffectsBlockState()
-        const setEffectsBlockState = leftPanel.setEffectsBlockState
-        switch (index) {
-        case 0: {
-            if (effectsBlockState !== "insertion") setEffectsBlockState("insertion")
-            else setEffectsBlockState("enabled")
-            break
-        }
-        case 1: {
-            if (effectsBlockState !== "insertion2") setEffectsBlockState("insertion2")
-            else setEffectsBlockState("enabled")
-            break
-        }
-        }
-    }
-
     function updating() {
-        const model = overlayEffectsModel.getModel(leftPanel.layerIndex, index)
+        const model = overlayEffectsModel.getModel(leftPanelFunctions.getLayerIndex(), index)
         if (model.length !== 0) {
-            insertButtonRect.text = model[0].name
             innerBlock.model = model[0].items
+            insertButtonRect.text = model[0].name
         } else {
-            insertButtonRect.text = ""
             innerBlock.model = []
+            insertButtonRect.text = ""
         }
     }
     function setFoldState(state) {

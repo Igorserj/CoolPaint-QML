@@ -2,7 +2,7 @@ import QtQuick 2.15
 
 Rectangle {
     property string text: ""
-    color: style.darkGlass
+    color: style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 80
     radius: height / 4
@@ -26,12 +26,12 @@ Rectangle {
             w: 40
             text: val1.toFixed(2)
             function clickAction() {
-                valueDialog.open({
+                popUpFunctions.openValueDialog({
                                      value: val1,
                                      name: name,
                                      updateFunc: updateAll,
                                      category: category,
-                                     index: leftPanel.layerIndex,
+                                     index: leftPanelFunctions.getLayerIndex(),
                                      propIndex: index,
                                      subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
                                      addName: "",
@@ -45,7 +45,7 @@ Rectangle {
             function clickAction() {
                 if (!doNotLog.includes(category)) logAction(bval1)
                 updateAll(bval1)
-                autoSave()
+                modelFunctions.autoSave()
             }
         }
     }
@@ -57,16 +57,16 @@ Rectangle {
     }
     function updateVal(val1) {
         if (category === "layer") {
-            canva.layersModelUpdate('val1', val1, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
+            canvaFunctions.layersModelUpdate('val1', val1, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
         } else if (category === "view") {
             if (name === "Scale") {
-                canva.scaling = val1
+                canvaFunctions.setScaling(val1)
             }
         } else if (category === "export") {
             if (name === "Width") {
-                canva.setImageSize(val1, -1)
+                canvaFunctions.setImageSize(val1, -1)
             } else if (name === "Height") {
-                canva.setImageSize(-1, val1)
+                canvaFunctions.setImageSize(-1, val1)
             }
         }
     }
@@ -79,7 +79,7 @@ Rectangle {
                                   name: `Reset value of ${name}`,
                                   prevValue: {val: val1},
                                   value: {val: val0},
-                                  index: leftPanel.layerIndex,//typeof(idx) !== "undefined" ? idx : -1, // layer number
+                                  index: leftPanelFunctions.getLayerIndex, // layer number
                                   subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                                   propIndex: index, // sublayer property number
                                   valIndex: 0

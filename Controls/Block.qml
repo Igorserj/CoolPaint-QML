@@ -48,7 +48,7 @@ Rectangle {
                     id: colArea
                     anchors.fill: col
                     onWheel: {
-                        scroller.wheelScroll(wheel.angleDelta.y)
+                        scroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
                     }
                 }
                 Column {
@@ -68,12 +68,13 @@ Rectangle {
                         }
                     }
                 }
-                Scroller {
+                ScrollerV {
                     id: scroller
                     enabled: index > 0
                     anchors.right: parent.right
                     height: blockRect.height - rep.itemAt(0).height - col.spacing
                     contentItem: col
+                    contentSize: col.height
                 }
             }
         }
@@ -96,5 +97,4 @@ Rectangle {
         blockRect.index = index
         blockAction(index)
     }
-    // function blockAction(index) {}
 }

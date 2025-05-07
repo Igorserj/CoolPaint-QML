@@ -6,12 +6,14 @@ Item {
     property var controller: Controller
     width: baseImage.paintedWidth
     height: baseImage.paintedHeight
+    Component.onCompleted: setCanvaFunctions()
     Repeater {
         id: layersRepeater
         model: layersModel
         delegate: Item {
             width: parent.width
             height: parent.height
+            visible: index === layersModel.count - 1
             Loader {
                 property var itemList: items
                 property int layerIndex: index
@@ -31,13 +33,12 @@ Item {
                 smooth: smoothing
                 x: baseImage.x
                 y: baseImage.y
-                visible: false
+                visible: true
                 onSourceChanged: Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
                 Component.onCompleted: {
                     if (index === layersModel.count - 1) {
                         scale = Qt.binding(() => scaling)
                         mirror = Qt.binding(() => mirroring)
-                        visible = true
                         finalImage = this
                     }
                 }
@@ -50,6 +51,7 @@ Item {
         delegate: Item {
             width: parent.width
             height: parent.height
+            visible: false
             Loader {
                 property var itemList: items
                 property int layerIndex: idx
@@ -94,6 +96,7 @@ Item {
             property double lowerRange: Controller.propertyPopulation("one", itemList, 1)
             property point center: Controller.propertyPopulation("two", itemList, 2)
             property double roundness: Controller.propertyPopulation("one", itemList, 3)
+            property double aspect: parent.width / parent.height
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/vignette.fsh"
@@ -184,7 +187,7 @@ Item {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property variant src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0] + 1)
             property variant src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0] + 1)
-            property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel.get(layerIndex).items, 2))
+            property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel, layerIndex, 2))
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/overlay.fsh"
@@ -234,5 +237,21 @@ Item {
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/rotation.fsh"
         }
+    }
+    Component {
+        id: negativeEffect
+        ShaderEffect {
+            property point u_resolution: Qt.point(parent.width, parent.height)
+            property double opacity_str: Controller.propertyPopulation("one", itemList, 0)
+            property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/negative.fsh"
+        }
+    }
+    function setCanvaFunctions() {
+        canvaFunctions.reActivateLayer = reActivateLayer
+    }
+    function reActivateLayer(idx, iteration) {
+        Controller.reActivateLayer(layersModel, overlayEffectsModel, idx, iteration)
     }
 }

@@ -12,7 +12,7 @@ Rectangle {
     property int layerIndex: -1
     width: window.width / 1280 * 260
     height: window.height
-    color: style.vinous
+    color: style.currentTheme.vinous
     state: "default"
     states: [
         State {
@@ -30,6 +30,7 @@ Rectangle {
             }
         }
     ]
+    Component.onCompleted: setLeftPanelFunctions()
     Loader {
         id: leftPanelLoader
         anchors.fill: parent
@@ -59,7 +60,7 @@ Rectangle {
         nameFilters: ["Joint Photographic Experts Group (*.jpeg)", /*"Digital Negative Specification (*.dng)", */"Tagged Image File Format (*.tiff)", "Portable Network Graphics (*.png)", "Bitmap Picture (*.bmp)"]
         fileMode: FileDialog.SaveFile
         selectedNameFilter.index: 0
-        onAccepted: ExportController.exportDialogAccept(canva.finalImage, currentFile, selectedNameFilter.extensions)
+        onAccepted: ExportController.exportDialogAccept(canvaFunctions.getFinalImage(), currentFile, selectedNameFilter.extensions)
     }
     ExportMenuBlockModel {id: exportMenuBlockModel}
     SettingsMenuBlockModel {id: settingsMenuBlockModel}
@@ -77,7 +78,7 @@ Rectangle {
         spacer.y = (parent.height - spacer.height) / 2
         spacer.upperBlock = undefined
         spacer.lowerBlock = undefined
-        const sizes = canva.getBaseImageDims()
+        const sizes = canvaFunctions.getBaseImageDims()
         exportMenuModel.set(0,
                             {
                                 "val1": sizes.width,
@@ -104,7 +105,25 @@ Rectangle {
                                      'block': []
                                  })
         for (i = 0; i < settingsMenuModel.count; ++i) {
-            settingsMenuBlockModel.get(1).block.append(settingsMenuModel.get(i))
+            const model = settingsMenuModel.get(i)
+            const themes = ['Dark purple', 'Light purple', 'Dark classic']
+            if (model.name === "Lights") {
+                model.items.clear()
+                themes.forEach((theme) => {
+                                   model.items.append({
+                                                          name: theme,
+                                                          type: "buttonDark",
+                                                          category: "settings",
+                                                          val1: 0,
+                                                          bval1: 0,
+                                                          max1: 1,
+                                                          min1: 0,
+                                                          wdth: 240
+                                                      })
+                               }
+                               )
+            }
+            settingsMenuBlockModel.get(1).block.append(model)
         }
 
         const settingsFile = `${baseDir}/settings.json`
@@ -135,7 +154,7 @@ Rectangle {
         Controller.layersBlockModelGeneration(layersModel, layersBlockModel)
     }
     function manualLayerChoose(index) {
-        Controller.chooseLayer("buttonLayers", layersModel, rightPanel.propertiesModel, index, setEffectsBlockState)
+        Controller.chooseLayer("buttonLayers", layersModel, rightPanelFunctions.getPropertiesModel(), index, setEffectsBlockState)
         layerIndex = index
     }
     function addLayer(index) {
@@ -147,14 +166,14 @@ Rectangle {
         const modelIndex = overlayEffectsModel.getModel(layerIndex, index, 'index')[0]
         overlayEffectsModel.set(modelIndex, value)
         manualLayerChoose(layerIndex)
-        rightPanel.propertiesBlockUpdate()
-        canva.layersModelUpdate('', -1, layerIndex, 0)
+        rightPanelFunctions.propertiesBlockUpdate()
+        canvaFunctions.layersModelUpdate('', -1, layerIndex, 0)
     }
     function addOverlayLayer(layerIndex, index, state) {
         setEffectsBlockState(Controller.addOverlayLayer(state, effectsModel, overlayEffectsModel, index, layerIndex))
         manualLayerChoose(layerIndex)
-        rightPanel.propertiesBlockUpdate()
-        canva.layersModelUpdate('', -1, layerIndex, 0)
+        rightPanelFunctions.propertiesBlockUpdate()
+        canvaFunctions.layersModelUpdate('', -1, layerIndex, 0)
     }
     function layerRecovery(layerIndex, value) {
         let i = layerIndex
@@ -163,6 +182,7 @@ Rectangle {
         for (; i < layersModel.count; ++i) {
             const modelIndices = overlayEffectsModel.getModel(i, -1, 'index')
             layersModel.setProperty(i, "idx", i + 1)
+            console.log('Recovery', modelIndices)
             overlayEffectsModel.setProperty(modelIndices[0], 'idx', overlayEffectsModel.get(modelIndices[0]).idx + 1)
             overlayEffectsModel.setProperty(modelIndices[1], 'idx', overlayEffectsModel.get(modelIndices[1]).idx + 1)
         }
@@ -171,8 +191,8 @@ Rectangle {
         }
         layersModel.insert(layerIndex, value.layersModel)
         manualLayerChoose(layerIndex)
-        rightPanel.propertiesBlockUpdate()
-        canva.layersModelUpdate('', -1, 0, 0)
+        rightPanelFunctions.propertiesBlockUpdate()
+        canvaFunctions.layersModelUpdate('', -1, 0, 0)
         updateLayersBlockModel()
     }
     function removeLayer(index, logging = true) {
@@ -187,13 +207,16 @@ Rectangle {
             if (idx > index) overlayEffectsModel.setProperty(i, "idx", idx - 1)
             else if (idx === index) overlayIndices.push(i)
         }
-        canva.deactivateEffects(index)
+        canvaFunctions.deactivateEffects(index)
         layersModel.remove(index)
         for (i = 0; i < overlayIndices.length; ++i) {
             overlayEffectsModel.remove(overlayIndices[i] - i)
         }
-        if (layersModel.count > 0) canva.layersModelUpdate('', 0, 0, index)
-        rightPanel.resetPropertiesBlock()
+        if (logging) modelFunctions.autoSave()
+        if (layersModel.count > 0) canvaFunctions.layersModelUpdate('', 0, 0, index)
+        leftPanelFunctions.setEffectsBlockState("enabled")
+        rightPanelFunctions.resetPropertiesBlock()
+        canvaFunctions.disableManipulator()
         updateLayersBlockModel()
     }
     function setValue(index, subIndex, propIndex, valIndex, value) {
@@ -201,22 +224,21 @@ Rectangle {
             console.log(`Setting propIndex val${valIndex+1} to ${value}`)
             layersModel.get(index).items.setProperty(propIndex, `val${valIndex+1}`, value)
             manualLayerChoose(index)
-            rightPanel.propertiesBlockUpdate()
-            canva.layersModelUpdate('', -1, index, valIndex)
+            rightPanelFunctions.propertiesBlockUpdate()
+            canvaFunctions.layersModelUpdate('', -1, index, valIndex)
         } else {
             const overlayIndex = overlayEffectsModel.getModel(index, subIndex, 'index')[0]
             overlayEffectsModel.get(overlayIndex).items.setProperty(propIndex, `val${valIndex+1}`, value)
             manualLayerChoose(index)
-            rightPanel.propertiesBlockUpdate()
-            canva.layersModelUpdate('', -1, index, valIndex)
+            rightPanelFunctions.propertiesBlockUpdate()
+            canvaFunctions.layersModelUpdate('', -1, index, valIndex)
         }
     }
     function setBlendingMode(index, subIndex, valIndex, value) {
         layersModel.get(index).items.setProperty(subIndex, `val${valIndex+1}`, value)
         manualLayerChoose(index)
-        rightPanel.propertiesBlockUpdate()
-        canva.layersModelUpdate('', -1, index, valIndex)
-        // updateLayersBlockModel()
+        rightPanelFunctions.propertiesBlockUpdate()
+        canvaFunctions.layersModelUpdate('', -1, index, valIndex)
     }
     function setLayersOrder(prevValue, value) {
         Controller.swapLayers(layersModel, layersBlockModel, overlayEffectsModel, prevValue, value)
@@ -249,8 +271,31 @@ Rectangle {
     function setLayersBlockState(state = "") {
         if (typeof(layersBlockItem) !== "undefined" && layersBlockItem !== null) layersBlockItem.state = state
     }
-    function getLayersBlockState() {
-        if (typeof(layersBlockItem) !== "undefined" && layersBlockItem !== null) return layersBlockItem.state
-        else return "enabled"
+    function getLayerIndex() {
+        return layerIndex
+    }
+    function setLayerIndex(value) {
+        if (!isNaN(parseInt(value)) && value >= -1) layerIndex = parseInt(value)
+        else console.log(`Wrong value: ${value} for layer index`)
+    }
+
+    function setLeftPanelFunctions() {
+        leftPanelFunctions = {
+            getEffectsBlockState,
+            setEffectsBlockState,
+            updateLayersBlockModel,
+            removeLayer,
+            removeOverlayLayer,
+            layerRecovery,
+            setValue,
+            setBlendingMode,
+            setLayersOrder,
+            addLayer,
+            addOverlayLayer,
+            getLayerIndex,
+            setLayerIndex,
+            setLayersBlockState,
+            switchState
+        }
     }
 }

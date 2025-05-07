@@ -14,12 +14,12 @@ Rectangle {
             name: "enabled"
             PropertyChanges {
                 target: header
-                color: style.dark
+                color: style.currentTheme.dark
                 radius: width / 4
             }
             PropertyChanges {
                 target: headerText
-                color: style.pinkWhiteAccent
+                color: style.currentTheme.pinkWhiteAccent
                 font.pixelSize: header.height / 40 * 16
             }
         }

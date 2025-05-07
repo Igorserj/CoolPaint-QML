@@ -14,9 +14,9 @@ Rectangle {
             PropertyChanges {
                 target: slider
                 radius: slider.height / 2.5
-                color: style.pinkWhite
+                color: style.currentTheme.pinkWhite
                 border.width: 1
-                border.color: style.pinkWhite
+                border.color: style.currentTheme.pinkWhite
             }
         },
         State {
@@ -25,9 +25,9 @@ Rectangle {
             PropertyChanges {
                 target: slider
                 radius: slider.height / 2
-                color: style.pinkWhiteAccent
+                color: style.currentTheme.pinkWhiteAccent
                 border.width: 1
-                border.color: style.pinkWhiteAccent
+                border.color: style.currentTheme.pinkWhiteAccent
             }
         }
     ]
@@ -44,9 +44,9 @@ Rectangle {
         }
     }
     Rectangle {
-        color: style.lightDark
+        color: style.currentTheme.lightDark
         border.width: 1
-        border.color: style.pinkWhite
+        border.color: style.currentTheme.pinkWhite
         radius: parent.radius
         height: parent.height
         width: pillWidth()
@@ -58,7 +58,7 @@ Rectangle {
         onMouseXChanged: if (containsPress) clickAction()
         onReleased: if (!doNotLog.includes(category)) {
                         logAction()
-                        autoSave()
+                        modelFunctions.autoSave()
                     }
     }
     StyleSheet {id: style}
@@ -71,7 +71,7 @@ Rectangle {
                               name: `Set value of ${name} to ${val1.toFixed(2)}`,
                               prevValue: {val: prevVal},
                               value: {val: val1},
-                              index: leftPanel.layerIndex,//typeof(idx) !== "undefined" ? idx : -1, // layer number
+                              index: leftPanelFunctions.getLayerIndex(), // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 0

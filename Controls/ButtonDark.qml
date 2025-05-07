@@ -16,12 +16,12 @@ Button {
                       )
             PropertyChanges {
                 target: button
-                color: style.pinkWhite
+                color: style.currentTheme.pinkWhite
                 radius: width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: style.lightDark
+                color: style.currentTheme.lightDark
                 font.pixelSize: button.height / 30 * 12
             }
         },
@@ -30,12 +30,12 @@ Button {
             when: !area.containsMouse && button.enabled
             PropertyChanges {
                 target: button
-                color: style.darkGlass
+                color: style.currentTheme.darkGlass
                 radius: width / 24
             }
             PropertyChanges {
                 target: buttonText
-                color: style.pinkWhiteAccent
+                color: style.currentTheme.pinkWhiteAccent
                 font.pixelSize: button.height / 30 * 12
             }
         },
@@ -44,12 +44,12 @@ Button {
             when: !button.enabled
             PropertyChanges {
                 target: button
-                color: style.darkGlassDim
+                color: style.currentTheme.darkGlassDim
                 radius: width / 24
             }
             PropertyChanges {
                 target: buttonText
-                color: style.pinkWhite
+                color: style.currentTheme.pinkWhite
                 font.pixelSize: button.height / 30 * 12
             }
         },
@@ -58,12 +58,12 @@ Button {
             when: area.containsMouse && button.enabled
             PropertyChanges {
                 target: button
-                color: style.darkGlassAccent
+                color: style.currentTheme.darkGlassAccent
                 radius: width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: style.pinkWhiteAccent
+                color: style.currentTheme.pinkWhiteAccent
                 font.pixelSize: button.height / 30 * 12
             }
         }

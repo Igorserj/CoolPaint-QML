@@ -6,14 +6,15 @@ import "../Controllers/menuController.js" as Controller
 
 Item {
     x: (window.width - childrenRect.width) / 2
-    y: window.height - childrenRect.height
+    y: window.height - childrenRect.height - 10
     Component.onCompleted: window.saveProj = saveProj
     Row {
         Repeater {
             model: menuModel
             delegate: Controls {
+                enabled: name === "Save as" ? imageAssigned : true
                 function controlsAction() {
-                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog, leftPanel)
+                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog, leftPanelFunctions)
                 }
             }
         }
@@ -35,6 +36,9 @@ Item {
             const data = fileIO.read(currentFile)
             if (data !== "") {
                 openedFileHandle(data)
+            } else {
+                const notificationText = 'Selected file has no data'
+                popUpFunctions.openNotification(notificationText, notificationText.length * 100)
             }
         }
     }
@@ -42,51 +46,25 @@ Item {
         id: openDialog
         nameFilters: ["Image file (*.jpeg *.jpg *.dng *.tif *.tiff *.png *.webp *.svg)"]
         fileMode: FileDialog.OpenFile
-        onAccepted: Controller.openDialogAccept(canva, currentFile, layersModel, exportMenuModel)
+        onAccepted: Controller.openDialogAccept(canvaFunctions, currentFile, layersModel, exportMenuModel)
     }
 
-    function saveProj(currentFile) {
-        const model = { 'layers': [], 'overlays': [], 'history': [] }
-        let k = 0
-        for (k = 0; k < layersModel.count; ++k) {
-            model.layers.push(layersModel.get(k))
-        }
-        for (k = 0; k < overlayEffectsModel.count; ++k) {
-            model.overlays.push(overlayEffectsModel.get(k))
-        }
-        for (k = 0; k < actionsLog.count; ++k) {
-            model.history.push(actionsLog.get(k))
-        }
-        const jsonData = JSON.stringify(model, null, '\t')
-        // Write using the C++ helper
-        if (fileIO.write(currentFile, jsonData)) {
-            console.log("Save successful");
-        } else {
-            console.error("Save failed");
-        }
-    }
     function openedFileHandle(response) {
-        const text = JSON.parse(response)
-        layersModel.clear()
-        overlayEffectsModel.clear()
-        let k = 0
-        if (!!text.layers) {
-            for (k = 0; k < text.layers.length; ++k) {
-                layersModel.append(text.layers[k])
-            }
+        let text = ''
+        try {
+            text = JSON.parse(response)
+        } catch (error) {
+            const notificationText = error.toString()
+            popUpFunctions.openNotification(notificationText, notificationText.length * 100)
+            return
         }
-        if (!!text.overlays) {
-            for (k = 0; k < text.overlays.length; ++k) {
-                overlayEffectsModel.append(text.overlays[k])
-            }
+        if (typeof(text) === "undefined" || !!text.settings || !(!!text.layers || !!text.overlays || !!text.history)) {
+            const notificationText = 'You have selected the wrong project file!'
+            popUpFunctions.openNotification(notificationText, notificationText.length * 100)
+            return
         }
-        if (!!text.history) {
-            for (k = 0; k < text.history.length; ++k) {
-                actionsLog.append(text.history[k])
-            }
-            stepIndex = text.history.length - 1
-        }
-        leftPanel.updateLayersBlockModel()
-        canva.reDraw()
+        parserWorker.sendMessage({ text, 'type': 'project' })
+
     }
+    function saveProj(currentFile) {Controller.saveProj(currentFile, fileIO, modelFunctions)}
 }

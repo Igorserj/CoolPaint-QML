@@ -66,7 +66,7 @@ function addLayer(name, type, effectsModel, layersModel, overlayModel, index) {
 function chooseLayer(type, layersModel, propertiesModel, index, setEffectsBlockState) {
     if (type === "buttonLayers") {
         propertiesModel.clear()
-        canva.disableManipulator()
+        canvaFunctions.disableManipulator()
         for (let i = 0; i < layersModel.get(index).items.count; ++i) {
             const item = JSON.parse(JSON.stringify(layersModel.get(index).items.get(i)))
             item.idx = index
@@ -126,8 +126,8 @@ function addOverlayLayer(state, effectsModel, overlayModel, index, insertionInde
     return "enabled"
 }
 function swapLayers(model, blockModel, overlayEffectsModel, index1, index2) {
-    rightPanel.resetPropertiesBlock()
-    canva.deactivateEffects(Math.min(index1, index2))
+    rightPanelFunctions.resetPropertiesBlock()
+    canvaFunctions.deactivateEffects(Math.min(index1, index2))
     const item = JSON.parse(JSON.stringify(model.get(index1)))
     const overlayItemsIndex1 = overlayEffectsModel.getModel(index1, -1, 'index')
     const overlayItemsIndex2 = overlayEffectsModel.getModel(index2, -1, 'index')
@@ -142,6 +142,6 @@ function swapLayers(model, blockModel, overlayEffectsModel, index1, index2) {
         overlayEffectsModel.setProperty(overlayItemsIndex2[i], 'idx', index1)
     }
     layersBlockModelGeneration(model, blockModel)
-    if (layersModel.count > 0) canva.layersModelUpdate('', 0, 0, Math.min(index1, index2))
+    if (layersModel.count > 0) canvaFunctions.layersModelUpdate('', 0, 0, Math.min(index1, index2))
     updateLayersBlockModel()
 }

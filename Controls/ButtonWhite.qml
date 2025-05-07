@@ -3,7 +3,7 @@ import QtQuick 2.15
 Button {
     id: button
     property int w: 30
-    width: buttonText.width > window.width / 1280 * w ? buttonText.width + window.width / 1280 * 5 : window.width / 1280 * w
+    width: buttonText.width * 1.1 > window.width / 1280 * w ? buttonText.width + window.width / 1280 * 10 : window.width / 1280 * w
     height: window.width / 1280 * w / 2
     state: "enabled"
     states: [
@@ -12,12 +12,12 @@ Button {
             when: !area.containsMouse && button.enabled
             PropertyChanges {
                 target: button
-                color: style.pinkWhite
+                color: style.currentTheme.pinkWhite
                 radius: width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: style.lightDark
+                color: style.currentTheme.lightDark
                 font.pixelSize: button.height / 20 * 12
             }
         },
@@ -26,12 +26,12 @@ Button {
             when: !button.enabled
             PropertyChanges {
                 target: button
-                color: style.pinkWhiteDim
+                color: style.currentTheme.pinkWhiteDim
                 radius: width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: style.lightDark
+                color: style.currentTheme.lightDark
                 font.pixelSize: button.height / 20 * 12
             }
         },
@@ -40,12 +40,12 @@ Button {
             when: area.containsMouse && button.enabled
             PropertyChanges {
                 target: button
-                color: style.pinkWhiteAccent
+                color: style.currentTheme.pinkWhiteAccent
                 radius: width / 2
             }
             PropertyChanges {
                 target: buttonText
-                color: style.lightDark
+                color: style.currentTheme.lightDark
                 font.pixelSize: button.height / 20 * 12
             }
         }

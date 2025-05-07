@@ -2,12 +2,40 @@ import QtQuick 2.15
 
 Rectangle {
     id: exitDialog
-    color: style.darkGlass
+    color: style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 80
-    visible: false
     enabled: false
     radius: height / 4
+    state: "hidden"
+    Behavior on opacity {
+        PropertyAnimation {
+            target: exitDialog
+            property: "opacity"
+            duration: 200
+        }
+    }
+    states: [
+        State {
+            name: "visible"
+            PropertyChanges {
+                target: exitDialog
+                opacity: 1
+            }
+        },
+        State {
+            name: "hidden"
+            PropertyChanges {
+                target: exitDialog
+                opacity: 0
+            }
+        }
+    ]
+    AcrylicBackground {
+        id: acrylicBackground
+        background: exitDialog.parent
+        z: -1
+    }
     Label {
         width: labelArea.width
         height: parent.height / 2
@@ -20,14 +48,14 @@ Rectangle {
         y: parent.height / 2
         spacing: parent.width / 40
         ButtonWhite {
-            w: 60
+            w: 50
             text: "Quit"
             function clickAction() {
                 buttonAction(text)
             }
         }
         ButtonWhite {
-            w: 60
+            w: 50
             text: "Cancel"
             function clickAction() {
                 buttonAction(text)
@@ -72,12 +100,15 @@ Rectangle {
     function open() {
         if (visible && enabled) rejectClosing.start()
         else {
-            visible = true
+            acrylicBackground.activate()
             enabled = true
+            state = "visible"
         }
     }
     function close() {
-        visible = false
         enabled = false
+        state = "hidden"
+        popUpFunctions.closeNotification()
+        acrylicBackground.deactivate()
     }
 }

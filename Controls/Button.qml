@@ -26,6 +26,8 @@ Rectangle {
         anchors.centerIn: parent
     }
     Loader {
+        layer.samples: 8
+        layer.enabled: true
         sourceComponent: typeof(image) !== "undefined" ? image : ""
         anchors.centerIn: parent
     }

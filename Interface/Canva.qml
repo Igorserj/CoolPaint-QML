@@ -4,7 +4,6 @@ import "../Models"
 
 Item {
     property alias effectComponents: effectComponents
-    property bool imageAssigned: false
     property Image finalImage
     property bool mirroring: false
     property bool smoothing: false
@@ -13,6 +12,7 @@ Item {
     x: (window.width - width) / 2
     width: window.width / 1280 * (1280 - 2 * 260)
     height: window.height
+    Component.onCompleted: setCanvaFunctions()
     Image {
         id: baseImage
         readonly property double aspect: sourceSize.width / sourceSize.height
@@ -26,6 +26,12 @@ Item {
         visible: layersModel.count === 0
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
+    }
+    MouseArea {
+        anchors.fill: parent
+        onWheel: {
+            canvaScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
+        }
     }
     Repeater {
         model: layersModel
@@ -55,8 +61,26 @@ Item {
             }
             function logAction() {
                 logJoystick(category, index, val1, val2, prevVal, parentIndex, propIndex, name)
+                prevVal = [val1, val2]
             }
         }
+    }
+    ScrollerV {
+        id: canvaScroller
+        scaling: parent.scaling
+        anchors.right: parent.right
+        height: parent.height
+        baseVal: (parent.height - baseImage.height) / 2
+        contentItem: baseImage
+        contentSize: baseImage.height * scaling
+    }
+    ScrollerH {
+        scaling: parent.scaling
+        anchors.bottom: parent.bottom
+        width: parent.width
+        baseVal: (parent.width - baseImage.width) / 2
+        contentItem: baseImage
+        contentSize: baseImage.width * scaling
     }
     ManipulatorModel {
         id: manipulatorModel
@@ -88,7 +112,7 @@ Item {
             layersModel.setProperty(i, "activated", false)
         }
         for (i = 0; i < overlayEffectsModel.count; ++i) {
-            if (overlayEffectsModel.get(i).idx >= idx) {
+            if (overlayEffectsModel.get(i).idx >= idx && overlayEffectsModel.get(i).iteration < 2) {
                 overlayEffectsModel.setProperty(i, "activated", false)
             }
         }
@@ -141,5 +165,41 @@ Item {
                           })
         stepIndex += 1
         console.log(Object.entries(actionsLog.get(actionsLog.count-2)), Object.entries(actionsLog.get(actionsLog.count-1)))
+    }
+    function setScaling(value) {
+        if (!isNaN(parseFloat(scaling))) scaling = value
+        else console.log(`Wrong value. Value is not a number`)
+    }
+    function setMirroring(value) {
+        if (value === 0 || value === 1) mirroring = Boolean(value)
+        else {console.log(`Wrong value: ${value} for mirroring`)}
+    }
+    function setSmoothing(value) {
+        if (value === 0 || value === 1) smoothing = Boolean(value)
+        else {console.log(`Wrong value: ${value} for smoothing`)}
+    }
+    function setPreserveAspect(value) {
+        if (value === 0 || value === 1) preserveAspect = Boolean(value)
+        else {console.log(`Wrong value: ${value} for preserve aspect`)}
+    }
+    function getFinalImage() {
+        return finalImage
+    }
+    function setCanvaFunctions() {
+        canvaFunctions = {
+            disableManipulator,
+            deactivateEffects,
+            layersModelUpdate,
+            setImage,
+            reDraw,
+            getBaseImageDims,
+            enableManipulator,
+            setScaling,
+            setMirroring,
+            setSmoothing,
+            setPreserveAspect,
+            getFinalImage,
+            setImageSize
+        }
     }
 }

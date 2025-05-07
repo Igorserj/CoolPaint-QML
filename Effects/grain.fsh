@@ -37,7 +37,7 @@ void main(void)
     if (isOverlay) {
         tex.rgb = vec3(1.-smoothstep(lowerRange, upperRange, color));
     } else {
-        tex.rgb *= color;
+        tex.rgba *= vec4(1.-smoothstep(lowerRange, upperRange, color));
     }
     gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
 }

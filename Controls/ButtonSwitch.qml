@@ -13,9 +13,9 @@ Rectangle {
             PropertyChanges {
                 target: buttonSwitch
                 radius: buttonSwitch.height / 2.5
-                color: style.pinkWhite
+                color: style.currentTheme.pinkWhite
                 border.width: 1
-                border.color: style.pinkWhite
+                border.color: style.currentTheme.pinkWhite
             }
         },
         State {
@@ -24,9 +24,9 @@ Rectangle {
             PropertyChanges {
                 target: buttonSwitch
                 radius: buttonSwitch.height / 2
-                color: style.pinkWhiteAccent
+                color: style.currentTheme.pinkWhiteAccent
                 border.width: 1
-                border.color: style.pinkWhiteAccent
+                border.color: style.currentTheme.pinkWhiteAccent
             }
         }
     ]
@@ -45,9 +45,9 @@ Rectangle {
 
     Rectangle {
         id: pill
-        color: style.lightDark
+        color: style.currentTheme.lightDark
         border.width: 1
-        border.color: style.pinkWhite
+        border.color: style.currentTheme.pinkWhite
         radius: parent.radius
         height: parent.height
         width: placeholder.x + placeholder.width + parent.width * 0.05
@@ -72,7 +72,7 @@ Rectangle {
             height: parent.height
             font.family: "Helvetica"
             font.bold: true
-            color: style.pinkWhiteAccent
+            color: style.currentTheme.pinkWhiteAccent
             font.pixelSize: parent.height / 40 * 12
             x: parent.radius / 3
             y: parent.radius / 3
@@ -83,17 +83,18 @@ Rectangle {
         id: area
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: clickAction()
+        onClicked: controlsAction()//clickAction()
     }
 
-    function clickAction() {
+    function controlsAction() {
         if (val1 === min1) val1 = max1
         else if (val1 === max1) val1 = min1
         updateVal(val1)
         if (!doNotLog.includes(category)) {
             logAction()
-            autoSave()
+            modelFunctions.autoSave()
         }
+        clickAction()
     }
     function logAction() {
         actionsLog.trimModel(stepIndex)
@@ -102,7 +103,7 @@ Rectangle {
                               name: `Set state of ${name} to ${val1 === 0 ? "Off" : "On"}`,
                               prevValue: {val: val1 === 0 ? 1 : 0},
                               value: {val: val1},
-                              index: leftPanel.layerIndex, // layer number
+                              index: leftPanelFunctions.getLayerIndex(), // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 0
@@ -110,5 +111,6 @@ Rectangle {
         console.log(Object.entries(actionsLog.get(actionsLog.count-1).prevValue), Object.entries(actionsLog.get(actionsLog.count-1).value))
         stepIndex += 1
     }
+
     StyleSheet {id: style}
 }

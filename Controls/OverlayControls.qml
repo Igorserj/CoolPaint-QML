@@ -49,6 +49,7 @@ Item {
         id: buttonSwitch
         SwitchBlock {
             text: name
+            function clickAction() {controlsAction()}
         }
     }
     Component {

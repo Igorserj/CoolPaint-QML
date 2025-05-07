@@ -4,7 +4,7 @@ import "../Controls"
 Rectangle {
     width: window.width
     height: window.height
-    color: style.lightDark
+    color: style.currentTheme.lightDark
     StyleSheet {
         id: style
     }

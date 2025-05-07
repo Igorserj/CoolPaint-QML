@@ -5,9 +5,15 @@ Rectangle {
     property var upperBlock
     property var lowerBlock
     property string type: "vertical"
+    onUpperBlockChanged: resizeBlocksV()
+    onLowerBlockChanged: resizeBlocksV()
     width: type === "horizontal" ?  3 : parent.width
     height: type === "horizontal" ? parent.height : 3
-    color: spacerArea.containsMouse ? style.pinkWhiteAccent : style.pinkWhite
+    Connections {
+        target: spacer.parent
+        function onHeightChanged() {if (spacer.y > parent.height * 0.85) spacer.y = parent.height * 0.85}
+    }
+    color: spacerArea.containsMouse ? style.currentTheme.pinkWhiteAccent : style.currentTheme.pinkWhite
     MouseArea {
         id: spacerArea
         y: (parent.height - height) / 2
@@ -34,17 +40,15 @@ Rectangle {
     function resizeBlocksV() {
         if (typeof(upperBlock) !== "undefined") {
             upperBlock.height = Qt.binding(() => spacer.y - height / 2)
-            // upperBlock.y = 0
         }
         if (typeof(lowerBlock) !== "undefined") {
             lowerBlock.y = Qt.binding(() => spacer.y + height / 2)
-            lowerBlock.height = Qt.binding(() => parent.height - lowerBlock.y)
+            lowerBlock.height = Qt.binding(() => parent.height - (spacer.y + height / 2))
         }
     }
     function resizeBlocksH() {
         if (typeof(upperBlock) !== "undefined") {
             upperBlock.width = Qt.binding(() => spacer.x - width / 2)
-            // upperBlock.x = 0
         }
         if (typeof(lowerBlock) !== "undefined") {
             lowerBlock.x = Qt.binding(() => spacer.x + width / 2)

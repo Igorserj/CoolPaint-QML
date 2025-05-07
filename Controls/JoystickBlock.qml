@@ -4,7 +4,7 @@ Rectangle {
     id: block
     property string text: ""
     property int blockIndex: index
-    color: style.darkGlass
+    color: style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 160
     radius: height / 6
@@ -32,25 +32,27 @@ Rectangle {
                     text: index === 0 ? val1.toFixed(2) : index === 1 ? val2.toFixed(2) : "+"
                     function clickAction() {
                         console.log("blockIndex", blockIndex)
+                        const layerIndex = leftPanelFunctions.getLayerIndex()
+                        // console.log("name", name)
                         if (index === 0) {
-                            valueDialog.open({
+                            popUpFunctions.openValueDialog({
                                                  value: val1,
                                                  name: name,
                                                  updateFunc: updateVal1,
                                                  category: category,
-                                                 index: leftPanel.layerIndex,
+                                                 index: layerIndex,
                                                  propIndex: blockIndex,
                                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
                                                  addName: "X",
                                                  valIndex: index
                                              })
                         } else if (index === 1) {
-                            valueDialog.open({
+                            popUpFunctions.openValueDialog({
                                                  value: val2,
                                                  name: name,
                                                  updateFunc: updateVal2,
                                                  category: category,
-                                                 index: leftPanel.layerIndex,
+                                                 index: layerIndex,
                                                  propIndex: blockIndex,
                                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
                                                  addName: "Y",
@@ -65,15 +67,15 @@ Rectangle {
                                 max2: max2,
                                 val2: val2,
                                 name: name,
-                                idx: leftPanel.layerIndex,
-                                index: leftPanel.layerIndex,
+                                idx: layerIndex,
+                                index: layerIndex,
                                 propIndex: blockIndex,
                                 parentIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1,
                                 activated: true,
                                 category: category,
                                 joy: joystick
                             }
-                            canva.enableManipulator(joystick, model)
+                            canvaFunctions.enableManipulator(joystick, model)
                         }
                     }
                 }
@@ -92,7 +94,7 @@ Rectangle {
                             updateVal2(bval2)
                         }
                         joystick.updating()
-                        if (logging) autoSave()
+                        if (logging) modelFunctions.autoSave()
                     }
                 }
             }
@@ -102,11 +104,11 @@ Rectangle {
 
     function updateVal1(value) {
         val1 = value
-        canva.layersModelUpdate('val1', value, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
+        canvaFunctions.layersModelUpdate('val1', value, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
     }
     function updateVal2(value) {
         val2 = value
-        canva.layersModelUpdate('val2', value, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
+        canvaFunctions.layersModelUpdate('val2', value, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
     }
     function logActionX(val0) {
         console.log(val1, val0)
@@ -116,7 +118,7 @@ Rectangle {
                               name: `Reset value of ${name} X`,
                               prevValue: {val: val1},
                               value: {val: val0},
-                              index: leftPanel.layerIndex, // layer number
+                              index: leftPanelFunctions.getLayerIndex(), // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 0
@@ -131,7 +133,7 @@ Rectangle {
                               name: `Reset value of ${name} Y`,
                               prevValue: {val: val2},
                               value: {val: val0},
-                              index: leftPanel.layerIndex, // layer number
+                              index: leftPanelFunctions.getLayerIndex(), // layer number
                               subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                               propIndex: index, // sublayer property number
                               valIndex: 1

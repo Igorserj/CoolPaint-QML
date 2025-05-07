@@ -4,7 +4,7 @@ import "../Controls"
 Item {
     Block {
         id: effectsBlock
-        enabled: canva.imageAssigned
+        enabled: imageAssigned
         blockModel: effectsBlockModel
         function blockAction() {
             console.log(state)
@@ -23,7 +23,7 @@ Item {
                                       valIndex: -1
                                   })
                 stepIndex += 1
-                setLayersBlockState("enabled")
+                leftPanelFunctions.setLayersBlockState("enabled")
             } else {
                 const subIndex = state === "insertion" ? 0 : 1
                 const overlayModel = overlayEffectsModel.getModel(layerIndex, subIndex)[0]
@@ -52,10 +52,10 @@ Item {
                 stepIndex += 1
                 state = controller.addOverlayLayer(state, effectsModel, overlayEffectsModel, index, layerIndex)
                 manualLayerChoose(layerIndex)
-                rightPanel.propertiesBlockUpdate()
-                canva.layersModelUpdate('', -1, layerIndex, 0)
+                rightPanelFunctions.propertiesBlockUpdate()
+                canvaFunctions.layersModelUpdate('', -1, layerIndex, 0)
             }
-            autoSave()
+            modelFunctions.autoSave()
         }
         Component.onCompleted: {
             effectsBlockItem = this
@@ -68,8 +68,8 @@ Item {
         function blockAction() {
             if (state === "enabled") {
                 layerIndex = index
-                controller.chooseLayer(type, layersModel, rightPanel.propertiesModel, index, setEffectsBlockState)
-                rightPanel.propertiesBlockUpdate()
+                controller.chooseLayer(type, layersModel, rightPanelFunctions.getPropertiesModel(), index, setEffectsBlockState)
+                rightPanelFunctions.propertiesBlockUpdate()
             } else if (state === "layerSwap") {
                 controller.swapLayers(layersModel, layersBlockModel, overlayEffectsModel, layerIndex, index)
                 actionsLog.trimModel(stepIndex)
@@ -85,10 +85,10 @@ Item {
                                   })
                 stepIndex += 1
                 layerIndex = index
-                rightPanel.propertiesBlockUpdate()
-                canva.layersModelUpdate('', -1, 0, 0)
+                rightPanelFunctions.propertiesBlockUpdate()
+                canvaFunctions.layersModelUpdate('', -1, 0, 0)
                 state = "enabled"
-                autoSave()
+                modelFunctions.autoSave()
             }
         }
         Component.onCompleted: {

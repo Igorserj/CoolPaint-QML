@@ -14,26 +14,33 @@ function addEffect(name) {
     case "Color highlight": return colorHighlight
     case "Gaussian blur": return gaussianBlur
     case "Rotation": return rotationEffect
+    case "Negative": return negativeEffect
     }
 }
 
 function setImage(ldr, img) {
-    ldr.grabToImage(result => img.source = result.url)
+    if (ldr.width !== 0 && ldr.height !== 0) {
+        ldr.grabToImage(result => img.source = result.url)
+    } else {
+        const notificationText = 'Nothing to show: you have not opened an image'
+        popUpFunctions.openNotification(notificationText, notificationText.length * 100)
+    }
 }
 
 function reActivateLoader(layersModel, overlaysModel, index) {
-    if (index < layersModel.count - 1 && layersModel.get(index + 1).name !== "Overlay") layersModel.setProperty(index + 1, "activated", true)
-    else if (index < layersModel.count - 1 && layersModel.get(index + 1).name === "Overlay") {
-        let overlay = []
-        if (index + 1 < overlaysModel.count - 1) overlay = overlaysModel.getModel(index + 1, 0)
-        if (overlay.length > 0) overlay[0].activated = true
+    if (index + 1 < layersModel.count && layersModel.get(index + 1).name !== "Overlay") layersModel.setProperty(index + 1, "activated", true)
+    else if (index + 1 < layersModel.count /*- 1*/ && layersModel.get(index + 1).name === "Overlay") {
+        let overlayIndex = []
+        if (index + 1 <= overlaysModel.count) overlayIndex = overlaysModel.getModel(index + 1, 0, 'index')
+        if (overlayIndex.length > 0) overlaysModel.setProperty(overlayIndex[0], 'activated', true)
     }
 }
 
 function reActivateLayer(layersModel, overlaysModel, idx, iteration) {
+    let overlayIndex = []
     if (iteration === 0) {
-        const overlay = overlaysModel.getModel(idx, 1)
-        if (overlay.length > 0) overlay[0].activated = true
+        overlayIndex = overlaysModel.getModel(idx, 1, 'index')
+        if (overlayIndex.length > 0) overlaysModel.setProperty(overlayIndex[0], 'activated', true)
     } else if (iteration === 1) {
         layersModel.setProperty(idx, "activated", true)
     }
@@ -48,19 +55,20 @@ function propertyPopulation(type, items, index) {
         if (items !== null && items.count > 0) result = Qt.point(items.get(index).val1, items.get(index).val2)
         else result = Qt.point(0, 0)
     }
-    console.log('Result', result)
     return result
 }
 
-function propertyPopulationDropdown(items, index) {
-    let result;
-    if (items !== null && items.count > 0) result = items.get(index).val1
-    else result =  0
-    console.log('Result', result)
+function propertyPopulationDropdown(model, layerIndex, index) {
+    const items = !!model.get(layerIndex) ? model.get(layerIndex).items : undefined;
+    let result = -1;
+    if (!!items) {
+        if (items !== null && items.count > 0) result = items.get(index).val1
+        else result =  0
+    }
     return result
 }
 
 function srcPopulation(repeater, index, baseImage) {
     if (index === 0) return baseImage
-    else return repeater.itemAt(index-1).children[1]
+    else if (repeater.itemAt(index-1) !== null) return repeater.itemAt(index-1).children[1]
 }

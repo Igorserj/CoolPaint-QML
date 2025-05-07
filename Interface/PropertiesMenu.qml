@@ -6,11 +6,13 @@ Item {
     Block {
         id: propertiesBlock
         blockModel: propertiesBlockModel
+        function blockAction() {}
     }
     Block {
         id: viewsBlock
         y: parent.height / 2
         blockModel: viewsBlockModel
+        function blockAction() {}
     }
     Component.onCompleted: {
         spacer.upperBlock = propertiesBlock

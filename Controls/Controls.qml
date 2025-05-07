@@ -30,7 +30,9 @@ Item {
     }
     Component {
         id: insertDropdown
-        InsertDropdown {}
+        InsertDropdown {
+            function clickAction() {controlsAction()}
+        }
     }
     function controlsAction() {}
 }

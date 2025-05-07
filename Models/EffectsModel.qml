@@ -160,8 +160,8 @@ ListModel {
                 view: "overlay"
                 min1: 0
                 max1: 1.0
-                val1: 0.9
-                bval1: 0.9
+                val1: 0.98
+                bval1: 0.98
             },
             ListElement {
                 category: "layer"
@@ -170,8 +170,8 @@ ListModel {
                 view: "overlay"
                 min1: 0
                 max1: 1
-                val1: 1.0
-                bval1: 1.0
+                val1: 0.93
+                bval1: 0.93
             },
             ListElement {
                 category: ""
@@ -544,6 +544,37 @@ ListModel {
                 val2: 0.5
                 bval1: 0.5
                 bval2: 0.5
+            },
+            ListElement {
+                category: ""
+                type: "empty"
+                name: ""
+            },
+            ListElement {
+                category: ""
+                type: "empty"
+                name: ""
+            }
+        ]
+    }
+    ListElement {
+        name: "Negative"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Opacity"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 1.
+                val1: 0.
+                bval1: 0.
+            },
+            ListElement {
+                category: ""
+                type: "empty"
+                name: ""
             },
             ListElement {
                 category: ""

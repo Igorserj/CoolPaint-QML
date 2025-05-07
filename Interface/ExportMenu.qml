@@ -7,12 +7,12 @@ Item {
         blockModel: exportMenuBlockModel
         function blockAction() {
             if (name === "Set source size") {
-                const sizes = canva.getBaseImageDims()
+                const sizes = canvaFunctions.getBaseImageDims()
                 exportMenuModel.setProperty(0, "val1", sizes.sourceW)
                 exportMenuModel.setProperty(1, "val1", sizes.sourceH)
-                canva.setImageSize(sizes.sourceW, sizes.sourceH)
+                canvaFunctions.setImageSize(sizes.sourceW, sizes.sourceH)
             } else if (name === "Apply") {
-                canva.reDraw()
+                canvaFunctions.reDraw()
             } else if (name === "Export image") {
                 exportFileDialog.open()
             } else if (name === "Close") {
@@ -27,7 +27,7 @@ Item {
         function blockAction(index) {
             let i = 0
             switch (name) {
-            case "Save": {
+            case "Apply and save": {
                 const model = { 'settings': [] }
                 const settingsFile = `${baseDir}/settings.json`
                 for (; i < settingsMenuBlockModel.get(1).block.count - 2; ++i) {
@@ -35,7 +35,10 @@ Item {
                 }
                 const jsonData = JSON.stringify(model, null, '\t')
                 const result = fileIO.write(settingsFile, jsonData)
-                lightTheme = settingsMenuBlockModel.get(1).block.get(1).val1 === 1
+                const themeIndex = settingsMenuModel.getModel("Lights", "index")
+                const effectsIndex = settingsMenuModel.getModel("UI Effects", "index")
+                lightTheme = settingsMenuBlockModel.get(1).block.get(themeIndex[0]).val1
+                uiEffects = settingsMenuBlockModel.get(1).block.get(effectsIndex[0]).val1
                 console.log('Writing to', settingsFile, 'success:', result)
                 break
             }
@@ -53,6 +56,15 @@ Item {
                         }
                     }
                 }
+                break
+            }
+            case "Lights": {
+                // lightTheme = settingsMenuBlockModel.get(1).block.get(index).val1
+                break
+            }
+            case "UI Effects": {
+                // console.log("click")
+                // uiEffects = settingsMenuBlockModel.get(1).block.get(index).val1
                 break
             }
             }

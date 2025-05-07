@@ -74,5 +74,14 @@
         <file>Models/SettingsMenuModel.qml</file>
         <file>Controls/OverlayFolder.qml</file>
         <file>Controls/InsertDropdown.qml</file>
+        <file>Controllers/insertionController.js</file>
+        <file>Controls/ShapesStorage.qml</file>
+        <file>Controllers/mainController.js</file>
+        <file>Controls/ScrollerH.qml</file>
+        <file>Controls/ScrollerV.qml</file>
+        <file>Effects/negative.fsh</file>
+        <file>Controls/Notification.qml</file>
+        <file>Controllers/parsingScript.mjs</file>
+        <file>Controls/AcrylicBackground.qml</file>
     </qresource>
 </RCC>
