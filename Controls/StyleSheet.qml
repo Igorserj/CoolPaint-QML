@@ -14,7 +14,8 @@ QtObject {
         "darkGlassAccent": "#5CAF9FAF",
         "darkGlassDim": "#5C241424",
         "dark": "#1F0F1F",
-        "vinous": "#302430"
+        "vinous": "#302430",
+        "vinousGlass": "#5C9E619E"
     }
 
     readonly property var lightPurple: {
@@ -26,7 +27,8 @@ QtObject {
         "darkGlassAccent": "#5CCCCCCC",
         "darkGlassDim": "#5C948494",
         "dark": "#8F7F8F",
-        "vinous": "#604860"
+        "vinous": "#604860",
+        "vinousGlass": "#5CCE85CE"
     }
 
     readonly property var darkClassic: {
@@ -38,6 +40,7 @@ QtObject {
         "darkGlassAccent": "#4D2C2C2C",
         "darkGlassDim": "#4D4D4D4D",
         "dark": "#0A0A0A",
-        "vinous": "#242424"
+        "vinous": "#242424",
+        "vinousGlass": "#5C9E9E9E"
     }
 }

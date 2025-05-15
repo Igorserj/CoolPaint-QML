@@ -67,8 +67,17 @@ Item {
         blockModel: layersBlockModel
         function blockAction() {
             if (state === "enabled") {
-                layerIndex = index
-                controller.chooseLayer(type, layersModel, rightPanelFunctions.getPropertiesModel(), index, setEffectsBlockState)
+                if (!["insertion", "insertion2"].includes(leftPanelFunctions.getEffectsBlockState())) layerIndex = index
+                controller.chooseLayer(type,
+                                       layersModel,
+                                       rightPanelFunctions.getPropertiesModel(),
+                                       overlayEffectsModel,
+                                       index,
+                                       leftPanelFunctions.getEffectsBlockState,
+                                       leftPanelFunctions.setEffectsBlockState,
+                                       leftPanelFunctions.getLayerIndex,
+                                       leftPanelFunctions.setLayerIndex
+                                       )
                 rightPanelFunctions.propertiesBlockUpdate()
             } else if (state === "layerSwap") {
                 controller.swapLayers(layersModel, layersBlockModel, overlayEffectsModel, layerIndex, index)

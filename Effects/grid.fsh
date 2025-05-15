@@ -22,12 +22,11 @@ void main(void)
         leftSide = (cellPosition.y - 1.)/10.*rows;
         rightSide = rows - leftSide;
         st.y = step(floor(rightSide) * row, st.y) * step(floor(leftSide) * row, 1.-st.y);
-        // st.y = 1.0;
-        tex.rgba = vec4(st.x * st.y);
+        tex = vec4(st.x * st.y);
     } else {
         st.x = fract(st.x*columns);
         st.y = fract(st.y*rows);
         tex = texture2D(src, vec2(st.x, 1.-st.y));
     }
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
+    gl_FragColor = vec4(tex);
 }

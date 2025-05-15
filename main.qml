@@ -12,6 +12,7 @@ Window {
     id: window
     property var doNotLog: ['view', 'export', 'settings']
     property int stepIndex: -1
+    property int iterationIndex: -1
     property var saveProj
     property int lightTheme: 0
     property bool uiEffects: false
@@ -39,6 +40,7 @@ Window {
     }
     Component.onCompleted: {
         settingsLoading()
+        modelNormalisation()
     }
     FileIO {
         id: fileIO
@@ -101,6 +103,10 @@ Window {
             }
             }
         }
+    }
+    WorkerScript {
+        id: normalisationWorker
+        source: "./Controllers/effectsModelNormalisation.mjs"
     }
 
     //Range of categories 'layer', 'history', 'export', 'view', 'settings', ''
@@ -186,5 +192,15 @@ Window {
         }
         const jsonData = JSON.stringify(model, null, '\t')
         const result = fileIO.write(settingsFile, jsonData)
+    }
+
+    function setIterationIndex(index) {
+        iterationIndex = index
+    }
+    function getIterationIndex() {
+        return iterationIndex
+    }
+    function modelNormalisation() {
+        normalisationWorker.sendMessage({model: effectsModel})
     }
 }

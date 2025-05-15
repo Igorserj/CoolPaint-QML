@@ -6,7 +6,12 @@ Item {
     Block {
         id: propertiesBlock
         blockModel: propertiesBlockModel
-        function blockAction() {}
+        function blockAction() {
+            if (name === "Open link") {
+                leftPanelFunctions.manualLayerChoose(val[0])
+                rightPanelFunctions.propertiesBlockUpdate()
+            }
+        }
     }
     Block {
         id: viewsBlock

@@ -6,6 +6,7 @@ ListModel {
         type: "slider"
         category: "settings"
         val1: 5
+        val2: 0
         bval1: 5
         max1: 10
         min1: 0
@@ -18,6 +19,7 @@ ListModel {
         min1: 0
         max1: 1
         val1: 0
+        val2: 0
         bval1: 0
         items: []
     }
@@ -28,6 +30,7 @@ ListModel {
         min1: 0
         max1: 3
         val1: 0
+        val2: 0
         bval1: 0
         items: []
     }
@@ -36,6 +39,7 @@ ListModel {
         type: "buttonDark"
         category: "settings"
         val1: 0
+        val2: 0
         bval1: 0
         max1: 1
         min1: 0
@@ -47,6 +51,7 @@ ListModel {
         type: "buttonDark"
         category: "settings"
         val1: 0
+        val2: 0
         bval1: 0
         max1: 1
         min1: 0

@@ -1,7 +1,5 @@
 WorkerScript.onMessage = function(message) {
-
     function objectParser(objects, keyValue) {
-        // console.log(typeof(objects), typeof(keyValue))
         for (const object of objects) {
             const keys = Object.keys(object)
             for (const key of keys) {
@@ -11,7 +9,6 @@ WorkerScript.onMessage = function(message) {
                             obj => {
                                 const partialStatement = (obj.key === key && obj.type === typeof(value) && (obj.validRange.length > 0 ? obj.validRange.includes(value) : true))
                                 if (partialStatement && obj.list.length === 0) {
-                                    // console.log(obj.validRange, value)
                                     isExact = true
                                 } else if (partialStatement && obj.list.length > 0) {
                                     isExact = objectParser(value, obj.list)
@@ -128,9 +125,8 @@ WorkerScript.onMessage = function(message) {
         result = projectParser(message.text)
     }
     WorkerScript.sendMessage({
-                                 result,
+                                 'result': true/*result*/,
                                  'text': message.text,
                                  'type': message.type
-                                 // 'callback': /*() => */message.callback(result, message.text)
                              })
 }

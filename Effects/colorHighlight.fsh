@@ -17,9 +17,9 @@ void main(void)
     float lowerLimit = step(tex2.r - tolerance, tex.r) * step(tex2.g - tolerance, tex.g) * step(tex2.b - tolerance, tex.b);
     float mask = lowerLimit * upperLimit;
     if (isOverlay) {
-        tex.rgb = vec3(mask);
+        tex = vec4(mask);
     } else {
-        tex.rgba *= 1. - mask;
+        tex *= 1. - mask;
     }
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
+    gl_FragColor = vec4(tex);
 }

@@ -1,18 +1,31 @@
-function activateInsertion(index, leftPanelFunctions) {
+function activateInsertion(index, leftPanelFunctions, name, setIterationIndex, animation) {
     const effectsBlockState = leftPanelFunctions.getEffectsBlockState()
     const setEffectsBlockState = leftPanelFunctions.setEffectsBlockState
-    switch (index) {
-    case 0: {
-        if (effectsBlockState !== "insertion") setEffectsBlockState("insertion")
-        else setEffectsBlockState("enabled")
+    switch (name) {
+    case "Mask": {
+        if (effectsBlockState !== "insertion") {
+            setEffectsBlockState("insertion")
+            animation.start()
+        }
+        else {
+            setEffectsBlockState("enabled")
+            animation.stop()
+        }
         break
     }
-    case 1: {
-        if (effectsBlockState !== "insertion2") setEffectsBlockState("insertion2")
-        else setEffectsBlockState("enabled")
+    case "Effect": {
+        if (effectsBlockState !== "insertion2") {
+            setEffectsBlockState("insertion2")
+            animation.start()
+        }
+        else {
+            setEffectsBlockState("enabled")
+            animation.stop()
+        }
         break
     }
     }
+    setIterationIndex(index)
 }
 
 function dropdownChoose(optionName, optionIndex, setName, setVal, getVals, doNotLog, items, autoSave, actionsLog, setStepIndex, updateModel) {

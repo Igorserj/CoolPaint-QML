@@ -154,7 +154,17 @@ Rectangle {
         Controller.layersBlockModelGeneration(layersModel, layersBlockModel)
     }
     function manualLayerChoose(index) {
-        Controller.chooseLayer("buttonLayers", layersModel, rightPanelFunctions.getPropertiesModel(), index, setEffectsBlockState)
+        Controller.chooseLayer(
+                    "buttonLayers",
+                    layersModel,
+                    rightPanelFunctions.getPropertiesModel(),
+                    overlayEffectsModel,
+                    index,
+                    leftPanelFunctions.getEffectsBlockState,
+                    leftPanelFunctions.setEffectsBlockState,
+                    leftPanelFunctions.getLayerIndex,
+                    leftPanelFunctions.setLayerIndex
+                    )
         layerIndex = index
     }
     function addLayer(index) {
@@ -218,6 +228,11 @@ Rectangle {
         rightPanelFunctions.resetPropertiesBlock()
         canvaFunctions.disableManipulator()
         updateLayersBlockModel()
+    }
+    function switchRendering(index, isRenderable) {
+        layersModel.setProperty(index, 'isRenderable', !isRenderable)
+        layersBlockModel.get(1).block.setProperty(index, 'isRenderable', !isRenderable)
+        canvaFunctions.layersModelUpdate('', -1, index, 0)
     }
     function setValue(index, subIndex, propIndex, valIndex, value) {
         if (subIndex === -1) {
@@ -295,7 +310,8 @@ Rectangle {
             getLayerIndex,
             setLayerIndex,
             setLayersBlockState,
-            switchState
+            switchState,
+            manualLayerChoose
         }
     }
 }

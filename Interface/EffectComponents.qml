@@ -24,7 +24,7 @@ Item {
                 visible: false
                 active: activated
                 sourceComponent: Controller.addEffect(name)
-                onLoaded: Controller.setImage(this, img)
+                onLoaded: Controller.setImage(this, img, isRenderable, index)
             }
             Image {
                 id: img
@@ -62,7 +62,7 @@ Item {
                 visible: false
                 active: activated
                 sourceComponent: Controller.addEffect(name)
-                onLoaded: Controller.setImage(this, img2)
+                onLoaded: Controller.setImage(this, img2, true, index)
             }
             Image {
                 id: img2
@@ -246,6 +246,19 @@ Item {
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/negative.fsh"
+        }
+    }
+    Component {
+        id: combinationMask
+        ShaderEffect {
+            property point u_resolution: Qt.point(parent.width, parent.height)
+            property var src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0] + 1, baseImage)
+            property var src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0] + 1, baseImage)
+            property double opacity_str: Controller.propertyPopulation("one", itemList, 2)
+            property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel, layerIndex, 3))
+            property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/combinationMask.fsh"
         }
     }
     function setCanvaFunctions() {

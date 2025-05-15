@@ -14,6 +14,15 @@ ButtonDark {
     }
     ButtonWhite {
         w: parent.w / 6
+        x: (parent.width / 24) + parent.w / 6
+        y: (parent.height - height) / 2
+        text: isRenderable ? "Ο" : "Θ"
+        function clickAction() {
+            switchRendering(index, isRenderable)
+        }
+    }
+    ButtonWhite {
+        w: parent.w / 6
         x: (parent.width / 24)
         y: (parent.height - height) / 2
         image: shapes.mover

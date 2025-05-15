@@ -31,8 +31,8 @@ Item {
     Component {
         id: insertDropdown
         InsertDropdown {
-            function clickAction() {controlsAction()}
+            function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
-    function controlsAction() {}
+    function controlsAction(item) {}
 }

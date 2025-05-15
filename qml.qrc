@@ -83,5 +83,7 @@
         <file>Controls/Notification.qml</file>
         <file>Controllers/parsingScript.mjs</file>
         <file>Controls/AcrylicBackground.qml</file>
+        <file>Effects/combinationMask.fsh</file>
+        <file>Controllers/effectsModelNormalisation.mjs</file>
     </qresource>
 </RCC>

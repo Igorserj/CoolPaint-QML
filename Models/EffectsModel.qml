@@ -46,11 +46,6 @@ ListModel {
                 val2: 0
                 bval1: 0
                 bval2: 0
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -121,21 +116,6 @@ ListModel {
                 val2: 0
                 bval1: 0
                 bval2: 0
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -172,11 +152,6 @@ ListModel {
                 max1: 1
                 val1: 0.93
                 bval1: 0.93
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -203,16 +178,6 @@ ListModel {
                 max1: 1
                 val1: 0
                 bval1: 0
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -243,16 +208,6 @@ ListModel {
                 max1: 20
                 val1: 2
                 bval1: 2
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -279,16 +234,6 @@ ListModel {
                 max1: 0.5
                 val1: 0
                 bval1: 0
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -329,11 +274,6 @@ ListModel {
                 val2: 1
                 bval1: 1
                 bval2: 1
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -370,11 +310,6 @@ ListModel {
                 max1: 2
                 val1: 1
                 bval1: 1
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -396,11 +331,6 @@ ListModel {
                 category: "layer"
                 type: "insertDropdown"
                 name: "Blending mode:"
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -425,16 +355,6 @@ ListModel {
                 max1: 1
                 val1: 0
                 bval1: 0
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -465,16 +385,6 @@ ListModel {
                 max1: 0.3
                 val1: 0
                 bval1: 0
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -491,29 +401,6 @@ ListModel {
                 max1: 15.
                 val1: 0
                 bval1: 0
-            },
-            ListElement {
-                // category: "layer"
-                // type: "slider"
-                // name: "Deviation"
-                // view: "normal,overlay"
-                // min1: 0.1
-                // max1: 6.
-                // val1: 0.1
-                // bval1: 0.1
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -544,16 +431,6 @@ ListModel {
                 val2: 0.5
                 bval1: 0.5
                 bval2: 0.5
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
-            },
-            ListElement {
-                category: ""
-                type: "empty"
-                name: ""
             }
         ]
     }
@@ -570,21 +447,37 @@ ListModel {
                 max1: 1.
                 val1: 0.
                 bval1: 0.
+            }
+        ]
+    }
+    ListElement {
+        name: "Combination mask"
+        isOverlay: true
+        items: [
+            ListElement {
+                category: "layer"
+                type: "insertButton"
+                name: "Mask"
             },
             ListElement {
-                category: ""
-                type: "empty"
-                name: ""
+                category: "layer"
+                type: "insertButton"
+                name: "Mask"
             },
             ListElement {
-                category: ""
-                type: "empty"
-                name: ""
+                category: "layer"
+                type: "slider"
+                name: "Opacity"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 1.
+                val1: 0.
+                bval1: 0.
             },
             ListElement {
-                category: ""
-                type: "empty"
-                name: ""
+                category: "layer"
+                type: "insertDropdown"
+                name: "Blending mode:"
             }
         ]
     }

@@ -14,5 +14,5 @@ void main(void)
     tex.r *= red;
     tex.g *= green;
     tex.b *= blue;
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
+    gl_FragColor = vec4(tex);
 }

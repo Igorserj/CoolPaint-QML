@@ -13,13 +13,13 @@ void main(void)
     lowp vec4 tex = texture2D(src, vec2(st.x, 1.-st.y)); //basic image
     lowp vec4 tex2 = texture2D(src2, vec2(st.x, 1.-st.y)); //mask
     lowp vec4 tex3 = texture2D(src3, vec2(st.x, 1.-st.y)); //masked image
-    lowp vec3 leftSide = tex3.rgb * tex2.rgb;
-    lowp vec3 rightSide = tex.rgb * (1.-tex2.rgb);
+    lowp vec4 leftSide = tex3 * tex2.a;
+    lowp vec4 rightSide = tex * (1.-tex2.a);
 
-    if (overlayMode == 0) tex.rgb = leftSide + rightSide;
-    else if (overlayMode == 1) tex.rgb = leftSide - rightSide;
-    else if (overlayMode == 2) tex.rgb = leftSide * rightSide;
-    else if (overlayMode == 3) tex.rgb = leftSide / rightSide;
-    else tex.rgb = leftSide + rightSide;
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
+    if (overlayMode == 0) tex = rightSide + leftSide;
+    else if (overlayMode == 1) tex = rightSide - leftSide;
+    else if (overlayMode == 2) tex = rightSide * leftSide;
+    else if (overlayMode == 3) tex = rightSide / leftSide;
+    else tex = leftSide + rightSide;
+    gl_FragColor = vec4(tex);
 }

@@ -15,12 +15,21 @@ function addEffect(name) {
     case "Gaussian blur": return gaussianBlur
     case "Rotation": return rotationEffect
     case "Negative": return negativeEffect
+    case "Combination mask": return combinationMask
     }
 }
 
-function setImage(ldr, img) {
+function setImage(ldr, img, isRenderable, index) {
     if (ldr.width !== 0 && ldr.height !== 0) {
-        ldr.grabToImage(result => img.source = result.url)
+        if (isRenderable) {
+            ldr.grabToImage(result => img.source = result.url)
+        } else {
+            if (index > 0) {
+                img.source = layersRepeater.itemAt(index - 1).children[1].source
+            } else {
+                img.source = baseImage.source
+            }
+        }
     } else {
         const notificationText = 'Nothing to show: you have not opened an image'
         popUpFunctions.openNotification(notificationText, notificationText.length * 100)
@@ -28,8 +37,9 @@ function setImage(ldr, img) {
 }
 
 function reActivateLoader(layersModel, overlaysModel, index) {
-    if (index + 1 < layersModel.count && layersModel.get(index + 1).name !== "Overlay") layersModel.setProperty(index + 1, "activated", true)
-    else if (index + 1 < layersModel.count /*- 1*/ && layersModel.get(index + 1).name === "Overlay") {
+    if (index + 1 < layersModel.count && !["Overlay", "Combination mask"].includes(layersModel.get(index + 1).name)) {
+        layersModel.setProperty(index + 1, "activated", true)
+    } else if (index + 1 < layersModel.count && ["Overlay", "Combination mask"].includes(layersModel.get(index + 1).name)) {
         let overlayIndex = []
         if (index + 1 <= overlaysModel.count) overlayIndex = overlaysModel.getModel(index + 1, 0, 'index')
         if (overlayIndex.length > 0) overlaysModel.setProperty(overlayIndex[0], 'activated', true)

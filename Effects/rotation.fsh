@@ -21,5 +21,5 @@ void main(void)
     st = rotate2d( angle / 180. * PI ) * st;
     st += center;
     lowp vec4 tex = texture2D(src, vec2(st.x, 1.-st.y));
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
+    gl_FragColor = vec4(tex);
 }

@@ -35,9 +35,9 @@ void main(void)
     vec2 pos = vec2(st*max(u_resolution.x, u_resolution.y)*(density/10.));
     float color = noise(pos)*.5+1.;
     if (isOverlay) {
-        tex.rgb = vec3(1.-smoothstep(lowerRange, upperRange, color));
+        tex = vec4(1.-smoothstep(lowerRange, upperRange, color));
     } else {
-        tex.rgba *= vec4(1.-smoothstep(lowerRange, upperRange, color));
+        tex *= vec4(1.-smoothstep(lowerRange, upperRange, color));
     }
-    gl_FragColor = vec4(tex.r, tex.g, tex.b, tex.a);
+    gl_FragColor = vec4(tex);
 }

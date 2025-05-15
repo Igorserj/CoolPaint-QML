@@ -89,7 +89,7 @@ Item {
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Set overlay effect']
                                 })) {
-                leftPanelFunctions.addOverlayLayer(item.index, item.value.val, item.subIndex === 0 ? "insertion" : "insertion2")
+                leftPanelFunctions.addOverlayLayer(item.index, item.value.val, item.subIndex === 0 ? "insertion" : "insertion2") //THINK ABOUT "insertion" for combination mask
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Removed effect']

@@ -55,30 +55,28 @@ Column {
             id: insertButtonRect
 
             SequentialAnimation {
+                id: flashAnimation
                 loops: Animation.Infinite
-                running: leftPanelFunctions.getEffectsBlockState() === "insertion" ?
-                             index === 0 :
-                             leftPanelFunctions.getEffectsBlockState() === "insertion2" ?
-                                 index === 1 :
-                                 false
                 PropertyAnimation {
                     target: insertButtonRect
                     property: "color"
                     from: style.currentTheme.darkGlassAccent
-                    to: "#5C9e619e"
+                    to: style.currentTheme.vinousGlass
                     duration: 1000
                     easing.type: "InOutQuad"
                 }
                 PropertyAnimation {
                     target: insertButtonRect
                     property: "color"
-                    from: "#5C9e619e"
+                    from: style.currentTheme.vinousGlass
                     to: style.currentTheme.darkGlassAccent
                     duration: 1500
                     easing.type: "OutQuad"
                 }
             }
-            function clickAction() {Controller.activateInsertion(index, leftPanelFunctions)}
+            function clickAction() {
+                Controller.activateInsertion(index, leftPanelFunctions, name, setIterationIndex, flashAnimation)
+            }
         }
         Column {
             y: insertButtonRect.y + insertButtonRect.height + spacing

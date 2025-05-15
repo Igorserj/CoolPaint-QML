@@ -26,7 +26,7 @@ Item {
         ButtonWhite {
             w: wdth
             text: name
-            function clickAction() {controlsAction()}
+            function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
     Component {
@@ -34,7 +34,7 @@ Item {
         ButtonDark {
             w: wdth
             text: name
-            function clickAction() {controlsAction()}
+            function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
     Component {
@@ -42,14 +42,14 @@ Item {
         ButtonLayers {
             w: wdth
             text: name
-            function clickAction() {controlsAction()}
+            function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
     Component {
         id: buttonSwitch
         SwitchBlock {
             text: name
-            function clickAction() {controlsAction()}
+            function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
     Component {

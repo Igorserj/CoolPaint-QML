@@ -97,7 +97,7 @@ Item {
                 else overlayEffectsModel.getModel(idx, subIndex)[0].items.setProperty(index, key, value)
             }
             deactivateEffects(idx)
-            if (layersModel.get(idx).name !== "Overlay") layersModel.setProperty(idx, "activated", true)
+            if (!["Overlay", "Combination mask"].includes(layersModel.get(idx).name)) layersModel.setProperty(idx, "activated", true)
             else {
                 const overlay = overlayEffectsModel.getModel(idx, 0)
                 if (overlay.length > 0) {

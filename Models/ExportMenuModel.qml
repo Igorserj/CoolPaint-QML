@@ -6,6 +6,7 @@ ListModel {
         type: "slider"
         category: "export"
         val1: 0
+        val2: 0
         bval1: 0
         max1: 0
         min1: 0
@@ -15,6 +16,7 @@ ListModel {
         type: "slider"
         category: "export"
         val1: 0
+        val2: 0
         bval1: 0
         max1: 0
         min1: 0
@@ -24,6 +26,7 @@ ListModel {
         type: "buttonSwitch"
         category: "export"
         val1: 1
+        val2: 0
         bval1: 1
         max1: 1
         min1: 0
@@ -33,6 +36,7 @@ ListModel {
         type: "buttonDark"
         category: "export"
         val1: 0
+        val2: 0
         bval1: 0
         max1: 1
         min1: 0
@@ -43,6 +47,7 @@ ListModel {
         type: "buttonDark"
         category: "export"
         val1: 0
+        val2: 0
         bval1: 0
         max1: 1
         min1: 0
@@ -53,6 +58,7 @@ ListModel {
         type: "buttonDark"
         category: "export"
         val1: 0
+        val2: 0
         bval1: 0
         max1: 1
         min1: 0
@@ -63,6 +69,7 @@ ListModel {
         type: "buttonDark"
         category: "export"
         val1: 0
+        val2: 0
         bval1: 0
         max1: 1
         min1: 0
