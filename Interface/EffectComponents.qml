@@ -24,7 +24,7 @@ Item {
                 visible: false
                 active: activated
                 sourceComponent: Controller.addEffect(name)
-                onLoaded: Controller.setImage(this, img, isRenderable, index)
+                onLoaded: Controller.setImage(this, img, img3, isRenderable, index)
             }
             Image {
                 id: img
@@ -34,7 +34,6 @@ Item {
                 x: baseImage.x
                 y: baseImage.y
                 visible: true
-                onSourceChanged: Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
                 Component.onCompleted: {
                     if (index === layersModel.count - 1) {
                         scale = Qt.binding(() => scaling)
@@ -42,6 +41,14 @@ Item {
                         finalImage = this
                     }
                 }
+            }
+            Image {
+                id: img3
+                width: parent.width
+                height: parent.height
+                smooth: smoothing
+                visible: false
+                onSourceChanged: Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
             }
         }
     }
@@ -62,7 +69,7 @@ Item {
                 visible: false
                 active: activated
                 sourceComponent: Controller.addEffect(name)
-                onLoaded: Controller.setImage(this, img2, true, index)
+                onLoaded: Controller.setImage(this, img2, undefined, true, index)
             }
             Image {
                 id: img2
@@ -185,8 +192,8 @@ Item {
         id: overlayEffect
         ShaderEffect {
             property point u_resolution: Qt.point(parent.width, parent.height)
-            property variant src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0] + 1)
-            property variant src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0] + 1)
+            property variant src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0], baseImage, 0)
+            property variant src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0], baseImage, 1)
             property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel, layerIndex, 2))
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
@@ -252,8 +259,8 @@ Item {
         id: combinationMask
         ShaderEffect {
             property point u_resolution: Qt.point(parent.width, parent.height)
-            property var src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0] + 1, baseImage)
-            property var src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0] + 1, baseImage)
+            property var src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0], baseImage, 0)
+            property var src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0], baseImage, 1)
             property double opacity_str: Controller.propertyPopulation("one", itemList, 2)
             property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel, layerIndex, 3))
             property bool isOverlay: overLay

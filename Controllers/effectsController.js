@@ -19,16 +19,22 @@ function addEffect(name) {
     }
 }
 
-function setImage(ldr, img, isRenderable, index) {
+function setImage(ldr, img, img2, isRenderable, index) {
     if (ldr.width !== 0 && ldr.height !== 0) {
         if (isRenderable) {
-            ldr.grabToImage(result => img.source = result.url)
+            ldr.grabToImage(result => {
+                                img.source = result.url
+                                img2.source = result.url
+                            })
         } else {
             if (index > 0) {
                 img.source = layersRepeater.itemAt(index - 1).children[1].source
             } else {
                 img.source = baseImage.source
             }
+            ldr.grabToImage(result => {
+                                img2.source = result.url
+                            })
         }
     } else {
         const notificationText = 'Nothing to show: you have not opened an image'
@@ -78,7 +84,18 @@ function propertyPopulationDropdown(model, layerIndex, index) {
     return result
 }
 
-function srcPopulation(repeater, index, baseImage) {
-    if (index === 0) return baseImage
-    else if (repeater.itemAt(index-1) !== null) return repeater.itemAt(index-1).children[1]
+function srcPopulation(repeater, index, baseImage, iteration = -1) {
+    if (iteration === -1) {
+        if (index === 0) return baseImage
+        else if (repeater.itemAt(index-1) !== null) return repeater.itemAt(index-1).children[1]
+    } else {
+        const items = overlayEffectsModel.get(index).items
+        for (let i = 0; i < items.count; ++i) {
+            const item = items.get(i)
+            if (item.name === 'Open link') {
+                return layersRepeater.itemAt(item.val1).children[2]
+            }
+        }
+        return repeater.itemAt(index).children[1]
+    }
 }

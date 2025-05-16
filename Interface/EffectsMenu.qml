@@ -79,6 +79,7 @@ Item {
                                        leftPanelFunctions.setLayerIndex
                                        )
                 rightPanelFunctions.propertiesBlockUpdate()
+                canvaFunctions.layersModelUpdate('', '', index, 0)
             } else if (state === "layerSwap") {
                 controller.swapLayers(layersModel, layersBlockModel, overlayEffectsModel, layerIndex, index)
                 actionsLog.trimModel(stepIndex)

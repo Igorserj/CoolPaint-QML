@@ -42,7 +42,7 @@ function addLayer(name, type, effectsModel, layersModel, overlayModel, index) {
         if (!["Overlay", "Combination mask"].includes(name)) {
             effect.activated = true
         } else if (name === "Combination mask") {
-            const blends = ['Addition', 'Subtract', 'Intersection']
+            const blends = ['Combination', 'Union', 'Subtract', 'Intersection']
             const item = {
                 "bval1": 0,
                 "bval2": 0,

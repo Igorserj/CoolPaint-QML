@@ -19,8 +19,10 @@ void main(void)
     if (overlayMode == 0) {
         tex *= ((tex2.a - (tex2.a * tex3.a)) + tex3.a) * (1.-opacity_str) + opacity_str;
     } else if (overlayMode == 1) {
-        tex *= ((tex2.a - (tex2.a * tex3.a))) * (1.-opacity_str) + opacity_str;
+        tex *= (tex2.a + tex3.a) * (1.-opacity_str) + opacity_str;
     } else if (overlayMode == 2) {
+        tex *= ((tex2.a - (tex2.a * tex3.a))) * (1.-opacity_str) + opacity_str;
+    } else if (overlayMode == 3) {
         tex *= (tex2.a * tex3.a) * (1.-opacity_str) + opacity_str;
     }
 
