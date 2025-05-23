@@ -81,6 +81,29 @@ Column {
         Column {
             y: insertButtonRect.y + insertButtonRect.height + spacing
             spacing: window.height * 0.005
+            Item {
+                width: inversionLoader.width
+                height: inversionLoader.height
+                Loader {
+                    id: inversionLoader
+                    onLoaded: {
+                        width = Qt.binding(() => item.width)
+                        height = Qt.binding(() => item.height)
+                    }
+                    sourceComponent: {
+                        if (name === "Mask") {
+                            inversionControls.buttonSwitch
+                        }
+                    }
+                }
+                OverlayControls {
+                    id: inversionControls
+                    property string category: "properties"
+                    property string type: "buttonSwitch"
+                    property string name: "Inversion"
+                    property string view: "normal,overlay"
+                }
+            }
             Repeater {
                 id: innerBlock
                 Item {
@@ -88,10 +111,12 @@ Column {
                     height: controlsLoader.height
                     Loader {
                         id: controlsLoader
-                        width: item.width
-                        height: item.height
                         sourceComponent: {
                             overlayControls[type]
+                        }
+                        onLoaded: {
+                            width = Qt.binding(() => item.width)
+                            height = Qt.binding(() => item.height)
                         }
                     }
                     OverlayControls {

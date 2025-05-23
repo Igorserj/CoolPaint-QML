@@ -1,26 +1,69 @@
 import QtQuick 2.15
 
 Rectangle {
+    id: switchBlock
     property string text: ""
     color: style.currentTheme.darkGlass
     width: window.width / 1280 * 240
-    height: window.width / 1280 * 80
     radius: height / 4
+    state: category === "properties" ? "compact" : "default"
+    states: [
+        State {
+            name: "default"
+            PropertyChanges {
+                target: slider
+                x: slider.parent.width * 0.05
+                y: slider.parent.height - slider.height - slider.parent.radius / 2
+            }
+            PropertyChanges {
+                target: switchBlock
+                height: window.width / 1280 * 80
+            }
+            PropertyChanges {
+                target: row
+                x: row.parent.width * 0.95 - row.width
+                y: (slider.y - row.height) / 2
+            }
+            PropertyChanges {
+                target: label
+                width: slider.width - row.width - row.spacing
+                x: label.parent.width * 0.05
+                y: (slider.y - label.height) / 2
+                text: parent.text
+            }
+        },
+        State {
+            name: "compact"
+            PropertyChanges {
+                target: slider
+                x: (slider.parent.width - width) - slider.parent.radius
+                y: (slider.parent.height - slider.height) / 2
+                width: (slider.parent.width - slider.parent.radius) / 2
+            }
+            PropertyChanges {
+                target: switchBlock
+                height: window.width / 1280 * 40
+            }
+            PropertyChanges {
+                target: row
+                x: row.parent.width * 0.95 - row.width
+                y: (row.parent.height - height) / 2
+            }
+            PropertyChanges {
+                target: label
+                width: label.parent.width - slider.width - label.parent.radius
+                x: label.parent.width * 0.05
+                y: (parent.height - label.height) / 2
+                text: parent.text
+            }
+        }
+    ]
     Label {
-        width: slider.width - row.width - row.spacing
-        x: parent.width * 0.05
-        y: (slider.y - height) / 2
+        id: label
         text: parent.text
-    }
-    ButtonSwitch {
-        id: slider
-        x: parent.width * 0.05
-        y: parent.height - height - parent.radius / 2
     }
     Row {
         id: row
-        x: parent.width * 0.95 - width
-        y: (slider.y - height) / 2
         spacing: parent.width / 40
         ButtonWhite {
             w: 40
@@ -34,6 +77,9 @@ Rectangle {
                 }
             }
         }
+    }
+    ButtonSwitch {
+        id: slider
     }
     StyleSheet {id: style}
 

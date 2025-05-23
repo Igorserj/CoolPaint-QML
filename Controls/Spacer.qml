@@ -39,11 +39,11 @@ Rectangle {
 
     function resizeBlocksV() {
         if (typeof(upperBlock) !== "undefined") {
-            upperBlock.height = Qt.binding(() => spacer.y - height / 2)
+            upperBlock.height = Qt.binding(() => spacer.y - height / 2 - window.height * 0.02)
         }
         if (typeof(lowerBlock) !== "undefined") {
-            lowerBlock.y = Qt.binding(() => spacer.y + height / 2)
-            lowerBlock.height = Qt.binding(() => parent.height - (spacer.y + height / 2))
+            lowerBlock.y = Qt.binding(() => spacer.y + height / 2 + window.height * 0.01)
+            lowerBlock.height = Qt.binding(() => parent.height - (spacer.y + height / 2) - window.height * 0.02)
         }
     }
     function resizeBlocksH() {

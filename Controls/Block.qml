@@ -8,7 +8,6 @@ Rectangle {
     property string name: ''
     property var val: []
     color: "transparent"
-    height: 0.5 * parent.height - window.height * 0.005
     width: parent.width
     clip: true
     state: "enabled"
@@ -28,13 +27,14 @@ Rectangle {
     ]
     Rectangle {
         width: column.width * 0.95
-        height: column.height
+        height: column.height + window.height * 0.01
         anchors.horizontalCenter: column.horizontalCenter
         color: "#0AFFFFFF"
         radius: parent.width / 24
     }
     Column {
         id: column
+        y: window.height * 0.005
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: window.height * 0.005
         Repeater {
@@ -42,6 +42,7 @@ Rectangle {
             model: blockModel
             delegate: Item {
                 property bool blockIndex: index
+                clip: true
                 height: col.height
                 width: window.width / 1280 * 260
                 z: -index + blockModel.count
@@ -49,7 +50,7 @@ Rectangle {
                     id: colArea
                     anchors.fill: col
                     onWheel: {
-                        scroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
+                        if (index > 0) scroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
                     }
                 }
                 Column {
@@ -72,27 +73,30 @@ Rectangle {
                 ScrollerV {
                     id: scroller
                     enabled: index > 0
+                    visible: index > 0
                     anchors.right: parent.right
-                    height: blockRect.height - rep.itemAt(0).height - col.spacing
+                    height: blockRect.height - rep.itemAt(0).height //- col.spacing
                     contentItem: col
-                    contentSize: col.height
+                    contentSize: col.height + window.height * 0.01
                 }
             }
         }
     }
     StyleSheet {id: style}
+
     function enableByState(type, name, index, isOverlay) {
         const layerIndex = leftPanelFunctions.getLayerIndex()
         if (blockRect.enabled) {
             switch (blockRect.state) {
             case "enabled": return true
-            case "insertion": return isOverlay && layerIndex !== -1 ? name !== layersModel.get(layerIndex).name : false
-            case "insertion2": return name !== "Overlay"
+            case "insertion": return isOverlay && layerIndex !== -1 ? !["Overlay", "Combination mask"].includes(name) : false
+            case "insertion2": return !["Overlay", "Combination mask"].includes(name)
             case "layerSwap": return true
             }
         }
         else return false
     }
+
     function clickAction(name, type, index, val) {
         console.log(name, type, index, val)
         blockRect.name = name

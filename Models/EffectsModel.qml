@@ -239,6 +239,32 @@ ListModel {
     }
     ListElement {
         name: "Grid"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Rows"
+                view: "normal,overlay"
+                min1: 1
+                max1: 10
+                val1: 1
+                bval1: 1
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Columns"
+                view: "normal,overlay"
+                min1: 1
+                max1: 10
+                val1: 1
+                bval1: 1
+            }
+        ]
+    }
+    ListElement {
+        name: "Grid section"
         isOverlay: true
         items: [
             ListElement {
@@ -266,14 +292,24 @@ ListModel {
                 type: "joystick"
                 name: "Cell position"
                 view: "overlay"
-                min1: 1
-                min2: 1
-                max1: 11
-                max2: 11
+                min1: 0
+                min2: 0
+                max1: 1
+                max2: 1
+                val1: 0
+                val2: 0
+                bval1: 0
+                bval2: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "buttonSwitch"
+                name: "Fixed position"
+                view: "normal,overlay"
+                min1: 0
+                max1: 1
                 val1: 1
-                val2: 1
                 bval1: 1
-                bval2: 1
             }
         ]
     }

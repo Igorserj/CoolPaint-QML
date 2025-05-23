@@ -12,6 +12,15 @@ Item {
     x: (window.width - width) / 2
     width: window.width / 1280 * (1280 - 2 * 260)
     height: window.height
+    state: "default"
+    states: [
+        State {
+            name: "default"
+        },
+        State {
+            name: "manipulator"
+        }
+    ]
     Component.onCompleted: setCanvaFunctions()
     Image {
         id: baseImage
@@ -28,9 +37,29 @@ Item {
         y: (parent.height - height) / 2
     }
     MouseArea {
+        id: canvaArea
+        property point currentPos: Qt.point(0, 0)
         anchors.fill: parent
+        cursorShape: (canvaHScroller.state === "enabled" || canvaVScroller.state === "enabled") ? containsMouse
+                                                                                                  ? Qt.ClosedHandCursor
+                                                                                                  : Qt.OpenHandCursor : Qt.ArrowCursor
+        onMouseXChanged: {
+            if (parent.state === 'default' && canvaHScroller.state === "enabled") {
+                canvaHScroller.wheelScroll((mouseX - currentPos.x) / 2, (mouseY - currentPos.y) / 2)
+            }
+        }
+        onMouseYChanged: {
+            if (parent.state === 'default' && canvaVScroller.state === "enabled") {
+                canvaVScroller.wheelScroll((mouseX - currentPos.x) / 2, (mouseY - currentPos.y) / 2)
+            }
+        }
         onWheel: {
-            canvaScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
+            canvaVScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
+        }
+        onContainsMouseChanged: {
+            if (canvaArea.containsMouse) {
+                canvaArea.currentPos = Qt.point(canvaArea.mouseX, canvaArea.mouseY)
+            }
         }
     }
     Repeater {
@@ -66,7 +95,7 @@ Item {
         }
     }
     ScrollerV {
-        id: canvaScroller
+        id: canvaVScroller
         scaling: parent.scaling
         anchors.right: parent.right
         height: parent.height
@@ -75,6 +104,7 @@ Item {
         contentSize: baseImage.height * scaling
     }
     ScrollerH {
+        id: canvaHScroller
         scaling: parent.scaling
         anchors.bottom: parent.bottom
         width: parent.width
@@ -86,6 +116,12 @@ Item {
         id: manipulatorModel
     }
 
+    function setCanvaState(newState) {
+        state = newState
+    }
+    function getCanvaState() {
+        return state
+    }
     function setImage(source) {
         baseImage.source = source
         imageAssigned = true
@@ -97,8 +133,9 @@ Item {
                 else overlayEffectsModel.getModel(idx, subIndex)[0].items.setProperty(index, key, value)
             }
             deactivateEffects(idx)
-            if (!["Overlay", "Combination mask"].includes(layersModel.get(idx).name)) layersModel.setProperty(idx, "activated", true)
-            else {
+            if (!["Overlay", "Combination mask"].includes(layersModel.get(idx).name)) {
+                layersModel.setProperty(idx, "activated", true)
+            } else {
                 const overlay = overlayEffectsModel.getModel(idx, 0)
                 if (overlay.length > 0) {
                     overlay[0].activated = true
@@ -119,9 +156,11 @@ Item {
     }
     function enableManipulator(joystick, props) {
         manipulatorModel.set(0, props)
+        setCanvaState('manipulator')
     }
     function disableManipulator() {
         manipulatorModel.clear()
+        setCanvaState('default')
     }
     function setImageSize(w, h) {
         if (w !== -1) baseImage.w = w
@@ -188,18 +227,20 @@ Item {
     function setCanvaFunctions() {
         canvaFunctions = {
             disableManipulator,
+            enableManipulator,
             deactivateEffects,
             layersModelUpdate,
             setImage,
             reDraw,
             getBaseImageDims,
-            enableManipulator,
             setScaling,
             setMirroring,
             setSmoothing,
             setPreserveAspect,
             getFinalImage,
-            setImageSize
+            setImageSize,
+            setCanvaState,
+            getCanvaState
         }
     }
 }

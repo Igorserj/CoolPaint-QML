@@ -75,7 +75,17 @@ Rectangle {
                                 category: category,
                                 joy: joystick
                             }
-                            canvaFunctions.enableManipulator(joystick, model)
+                            const canvaState = canvaFunctions.getCanvaState()
+                            switch (canvaState) {
+                            case "default": {
+                                canvaFunctions.enableManipulator(joystick, model)
+                                break
+                            }
+                            case "manipulator": {
+                                canvaFunctions.disableManipulator()
+                                break
+                            }
+                            }
                         }
                     }
                 }

@@ -79,7 +79,7 @@ Item {
                 x: (baseImage.width - width) / 2
                 y: (baseImage.height - height) / 2
                 visible: false
-                onSourceChanged: Controller.reActivateLayer(layersModel, overlayEffectsModel, idx, iteration)
+                onSourceChanged: Controller.reActivateLayer(layersModel, overlayEffectsModel, idx, iteration, finalImage)
             }
         }
     }
@@ -170,10 +170,22 @@ Item {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property double rows: parseInt(Controller.propertyPopulation("one", itemList, 0))
             property double columns: parseInt(Controller.propertyPopulation("one", itemList, 1))
-            property point cellPosition: Controller.propertyPopulation("two", itemList, 2)
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/grid.fsh"
+        }
+    }
+    Component {
+        id: gridSection
+        ShaderEffect {
+            property point u_resolution: Qt.point(parent.width, parent.height)
+            property double rows: parseInt(Controller.propertyPopulation("one", itemList, 0))
+            property double columns: parseInt(Controller.propertyPopulation("one", itemList, 1))
+            property point cellPosition: Controller.propertyPopulation("two", itemList, 2)
+            property bool fixedPosition: Controller.propertyPopulation("one", itemList, 3)
+            property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/gridSection.fsh"
         }
     }
     Component {
@@ -195,6 +207,7 @@ Item {
             property variant src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0], baseImage, 0)
             property variant src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0], baseImage, 1)
             property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel, layerIndex, 2))
+            property bool inversion2: Controller.propertyPopulation("one", itemList, 0)
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/overlay.fsh"
@@ -261,6 +274,8 @@ Item {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property var src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0], baseImage, 0)
             property var src3: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 1, "index")[0], baseImage, 1)
+            property bool inversion2: Controller.propertyPopulation("one", itemList, 0)
+            property bool inversion3: Controller.propertyPopulation("one", itemList, 1)
             property double opacity_str: Controller.propertyPopulation("one", itemList, 2)
             property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel, layerIndex, 3))
             property bool isOverlay: overLay
@@ -272,6 +287,6 @@ Item {
         canvaFunctions.reActivateLayer = reActivateLayer
     }
     function reActivateLayer(idx, iteration) {
-        Controller.reActivateLayer(layersModel, overlayEffectsModel, idx, iteration)
+        Controller.reActivateLayer(layersModel, overlayEffectsModel, idx, iteration, finalImage)
     }
 }

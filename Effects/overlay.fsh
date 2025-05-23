@@ -5,6 +5,7 @@ uniform lowp vec2 u_resolution;
 uniform sampler2D src;
 uniform sampler2D src2;
 uniform sampler2D src3;
+uniform bool inversion2;
 uniform lowp int overlayMode;
 
 void main(void)
@@ -13,6 +14,7 @@ void main(void)
     lowp vec4 tex = texture2D(src, vec2(st.x, 1.-st.y)); //basic image
     lowp vec4 tex2 = texture2D(src2, vec2(st.x, 1.-st.y)); //mask
     lowp vec4 tex3 = texture2D(src3, vec2(st.x, 1.-st.y)); //masked image
+    if (inversion2) tex2.a = 1.-tex2.a;
     lowp vec4 leftSide = tex3 * tex2.a;
     lowp vec4 rightSide = tex * (1.-tex2.a);
 

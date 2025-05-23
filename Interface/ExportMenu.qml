@@ -4,6 +4,7 @@ import "../Controls"
 Item {
     Block {
         id: exportMenuBlock
+        y: window.height * 0.01
         blockModel: exportMenuBlockModel
         function blockAction() {
             if (name === "Set source size") {
@@ -22,7 +23,7 @@ Item {
     }
     Block {
         id: settingsMenuBlock
-        y: 0.5 * parent.height
+        y: 0.5 * parent.height + window.height * 0.01
         blockModel: settingsMenuBlockModel
         function blockAction(index) {
             let i = 0

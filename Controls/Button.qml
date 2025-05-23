@@ -4,7 +4,8 @@ Rectangle {
     id: button
     property string text: ""
     property Component image
-    property alias buttonText: buttonText
+    property alias buttonText: buttonText.labelText
+    property alias label: buttonText
     property alias area: area
     Behavior on color {
         ColorAnimation {
@@ -18,13 +19,6 @@ Rectangle {
             duration: 200
         }
     }
-    Text {
-        id: buttonText
-        text: parent.text
-        font.family: "Helvetica"
-        font.bold: true
-        anchors.centerIn: parent
-    }
     Loader {
         layer.samples: 8
         layer.enabled: true
@@ -37,6 +31,12 @@ Rectangle {
         enabled: button.enabled
         hoverEnabled: button.enabled
         onClicked: clickHandler()
+    }
+    Label {
+        id: buttonText
+        text: parent.text
+        centered: true
+        anchors.centerIn: parent
     }
 
     function clickHandler() {

@@ -8,6 +8,7 @@ function addEffect(name) {
     case "Motion blur": return motionBlur
     case "Tone map": return toneMap
     case "Grid": return grid
+    case "Grid section": return gridSection
     case "Color curve": return colorCurve
     case "Overlay": return overlayEffect
     case "Mirror": return mirrorEffect
@@ -52,11 +53,12 @@ function reActivateLoader(layersModel, overlaysModel, index) {
     }
 }
 
-function reActivateLayer(layersModel, overlaysModel, idx, iteration) {
+function reActivateLayer(layersModel, overlaysModel, idx, iteration, finalImage) {
     let overlayIndex = []
     if (iteration === 0) {
         overlayIndex = overlaysModel.getModel(idx, 1, 'index')
-        if (overlayIndex.length > 0) overlaysModel.setProperty(overlayIndex[0], 'activated', true)
+        if (overlayIndex.length > 0 && overlaysModel.get(overlayIndex[0]).name !== "") overlaysModel.setProperty(overlayIndex[0], 'activated', true)
+        else finalImage.source = ""
     } else if (iteration === 1) {
         layersModel.setProperty(idx, "activated", true)
     }

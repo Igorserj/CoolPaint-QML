@@ -3,8 +3,10 @@ import QtQuick 2.15
 Item {
     id: label
     property string text: ""
+    property alias labelText: labelText
     property alias labelArea: labelArea
     property bool containsMouse: labelArea.containsMouse
+    property bool centered: false
     property int w: 30
     height: window.width / 1280 * w
     width: parent.width * 0.9
@@ -12,7 +14,7 @@ Item {
     states: [
         State {
             name: "normal"
-            when: !(labelArea.containsMouse && (labelText.contentWidth > label.width))
+            when: !(labelArea.containsMouse && (labelText.contentWidth > label.width)) && !centered
             PropertyChanges {
                 target: textAnimation
                 running: false
@@ -23,8 +25,24 @@ Item {
             }
         },
         State {
+            name: "centered"
+            when: !(labelArea.containsMouse && (labelText.contentWidth > label.width)) && centered
+            PropertyChanges {
+                target: textAnimation
+                running: false
+            }
+            PropertyChanges {
+                target: labelText
+                x: label.width > labelText.width ? (label.width - labelText.width) / 2 : 0
+            }
+        },
+        State {
             name: "wide"
             when: labelArea.containsMouse && (labelText.contentWidth > label.width)
+            PropertyChanges {
+                target: labelText
+                x: 0
+            }
             PropertyChanges {
                 target: textAnimation
                 running: true
@@ -34,7 +52,7 @@ Item {
     Text {
         id: labelText
         x: 0
-        height: parent.height
+        y: (label.height - labelText.contentHeight) / 2
         text: parent.text
         font.family: "Helvetica"
         font.bold: true
@@ -45,6 +63,7 @@ Item {
     MouseArea {
         id: labelArea
         hoverEnabled: true
+        propagateComposedEvents: true
         anchors.fill: labelText
     }
     SequentialAnimation {

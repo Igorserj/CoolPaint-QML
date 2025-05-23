@@ -71,6 +71,9 @@ Rectangle {
         Controller.flushPropertiesBlockModel(propertiesBlockModel)
         leftPanelFunctions.setLayerIndex(-1)
     }
+    function getPropertiesBlockModel() {
+        return propertiesBlockModel
+    }
     function viewsBlockPopulate() {
         Controller.viewsBlockModelGeneration(viewsModel, viewsBlockModel)
     }
@@ -105,7 +108,8 @@ Rectangle {
             resetPropertiesBlock,
             switchState,
             propertiesBlockUpdate,
-            getPropertiesModel
+            getPropertiesModel,
+            getPropertiesBlockModel
         }
     }
 }

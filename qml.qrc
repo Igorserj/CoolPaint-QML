@@ -85,5 +85,7 @@
         <file>Controls/AcrylicBackground.qml</file>
         <file>Effects/combinationMask.fsh</file>
         <file>Controllers/effectsModelNormalisation.mjs</file>
+        <file>Controls/Underscore.qml</file>
+        <file>Effects/gridSection.fsh</file>
     </qresource>
 </RCC>

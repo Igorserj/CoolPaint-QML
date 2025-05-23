@@ -27,7 +27,7 @@ function openDialogAccept(canvaFunctions, source, layersModel, exportModel) {
 }
 
 function saveProj(currentFile, fileIO, modelFunctions) {
-    const model = { 'layers': [], 'overlays': [], 'history': [] }
+    const model = { 'layers': [], 'overlays': [], 'history': [], 'stepIndex': stepIndex }
     let k = 0
     for (k = 0; k < modelFunctions.getLayersModelLength(); ++k) {
         model.layers.push(modelFunctions.getLayersModel(k))

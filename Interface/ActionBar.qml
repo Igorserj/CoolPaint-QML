@@ -47,7 +47,7 @@ Item {
                 leftPanelFunctions.removeLayer(item.index, false)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['Set overlay effect']
+                                    subStrs: ['Set overlay effect', 'Set overlay layer']
                                 })) {
                 leftPanelFunctions.removeOverlayLayer(item.index, item.subIndex, item.prevValue.overlayEffectsModel)
             } else if (includes({
@@ -59,7 +59,7 @@ Item {
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['value of', 'Set state of']
                                 })) {
-                leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.prevValue.val)
+                leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.prevValue.val, item.name)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStr: ['Set blending mode']
@@ -89,8 +89,13 @@ Item {
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Set overlay effect']
                                 })) {
-                leftPanelFunctions.addOverlayLayer(item.index, item.value.val, item.subIndex === 0 ? "insertion" : "insertion2") //THINK ABOUT "insertion" for combination mask
+                leftPanelFunctions.addOverlayEffect(item.index, item.value.val, item.subIndex)
             } else if (includes({
+                                     str: actionsLog.get(stepIndex).name,
+                                     subStrs: ['Set overlay layer']
+                                 })) {
+                leftPanelFunctions.removeOverlayLayer(item.index, item.subIndex, item.value.overlayEffectsModel)
+             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Removed effect']
                                 })) {
@@ -99,7 +104,7 @@ Item {
                                     str: actionsLog.get(stepIndex).name,
                                     subStrs: ['value of', 'Set state of']
                                 })) {
-                leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.value.val)
+                leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.value.val, item.name)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
                                     subStr: ['Set blending mode']

@@ -27,7 +27,7 @@ Button {
         },
         State {
             name: "enabled"
-            when: !area.containsMouse && button.enabled
+            when: !(area.containsMouse || label.containsMouse) && button.enabled
             PropertyChanges {
                 target: button
                 color: style.currentTheme.darkGlass
@@ -55,7 +55,7 @@ Button {
         },
         State {
             name: "hovered"
-            when: area.containsMouse && button.enabled
+            when: (area.containsMouse || label.containsMouse) && button.enabled
             PropertyChanges {
                 target: button
                 color: style.currentTheme.darkGlassAccent

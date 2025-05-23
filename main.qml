@@ -174,7 +174,7 @@ Window {
                 for (k = 0; k < text.history.length; ++k) {
                     actionsLog.append(text.history[k])
                 }
-                stepIndex = text.history.length - 1
+                if (!!text.stepIndex) stepIndex = text.stepIndex
             }
             leftPanelFunctions.updateLayersBlockModel()
             canvaFunctions.reDraw()
@@ -202,5 +202,11 @@ Window {
     }
     function modelNormalisation() {
         normalisationWorker.sendMessage({model: effectsModel})
+    }
+    function getStepIndex() {
+        return stepIndex
+    }
+    function setStepIndex(newStepIndex) {
+        stepIndex = newStepIndex
     }
 }

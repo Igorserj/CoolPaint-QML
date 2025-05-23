@@ -61,9 +61,11 @@ Column {
                     height: controlsLoader.height
                     Loader {
                         id: controlsLoader
-                        width: item.width
-                        height: item.height
                         sourceComponent: overlayControls[type]
+                        onLoaded: {
+                            width = Qt.binding(() => item.width)
+                            height = Qt.binding(() => item.height)
+                        }
                     }
                     OverlayControls {
                         id: overlayControls
