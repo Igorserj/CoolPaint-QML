@@ -17,7 +17,7 @@ void main(void)
         tex = vec4(edge);
     } else {
         tex.rgb += edge;
-        tex.a *= edge;
+        // tex.a *= edge;
     }
     gl_FragColor = vec4(tex);
 }

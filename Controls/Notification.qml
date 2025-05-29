@@ -5,11 +5,11 @@ Rectangle {
     property string name: ""
     property int idleTime: 0
     property bool isHidden: true
-    color: style.currentTheme.darkGlass
+    color: window.style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 80
     enabled: false
-    radius: height / 4
+    radius: strictStyle ? 0 : height / 4
     state: "hidden"
     onIsHiddenChanged: {
         if (!label.containsMouse && isHidden) {
@@ -18,7 +18,7 @@ Rectangle {
     }
     AcrylicBackground {
         id: acrylicBackground
-        background: notification.parent
+        background: ui
         z: -1
     }
     Behavior on y {
@@ -29,7 +29,7 @@ Rectangle {
             easing.type: "OutBack"
         }
     }
-    Label {
+    TextBlock {
         id: label
         width: parent.width * 0.9
         x: parent.width * 0.05
@@ -75,7 +75,6 @@ Rectangle {
         }
     }
 
-    StyleSheet {id: style}
     function open(text, time = 0) {
         if (state !== "visible") acrylicBackground.activate()
         idleAnimation.stop()

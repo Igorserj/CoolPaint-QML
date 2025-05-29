@@ -13,10 +13,10 @@ Rectangle {
             when: !area.containsMouse && slider.enabled
             PropertyChanges {
                 target: slider
-                radius: slider.height / 2.5
-                color: style.currentTheme.pinkWhite
+                radius: strictStyle ? 0 : slider.height / 2.5
+                color: window.style.currentTheme.pinkWhite
                 border.width: 1
-                border.color: style.currentTheme.pinkWhite
+                border.color: window.style.currentTheme.pinkWhite
             }
         },
         State {
@@ -24,10 +24,10 @@ Rectangle {
             when: area.containsMouse && slider.enabled
             PropertyChanges {
                 target: slider
-                radius: slider.height / 2
-                color: style.currentTheme.pinkWhiteAccent
+                radius: strictStyle ? 0 : slider.height / 2
+                color: window.style.currentTheme.pinkWhiteAccent
                 border.width: 1
-                border.color: style.currentTheme.pinkWhiteAccent
+                border.color: window.style.currentTheme.pinkWhiteAccent
             }
         }
     ]
@@ -44,9 +44,9 @@ Rectangle {
         }
     }
     Rectangle {
-        color: style.currentTheme.lightDark
+        color: window.style.currentTheme.lightDark
         border.width: 1
-        border.color: style.currentTheme.pinkWhite
+        border.color: window.style.currentTheme.pinkWhite
         radius: parent.radius
         height: parent.height
         width: pillWidth()
@@ -61,7 +61,6 @@ Rectangle {
                         modelFunctions.autoSave()
                     }
     }
-    StyleSheet {id: style}
 
     function logAction() {
         console.log(prevVal, val1)

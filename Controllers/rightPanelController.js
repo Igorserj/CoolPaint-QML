@@ -76,14 +76,10 @@ function historyBlockModelGeneration(model, blockModel, stepIndex) {
                                        name: "History",
                                        view: "normal,overlay"
                                    })
-    // if (stepIndex !== -1) blockModel.get(1).block.setProperty(stepIndex, "enabled", false)
     for (let i = model.count-1; i >= 0; --i) {
-        // [[category,export],[view,undefined],[name,Width],[type,slider],[wdth,0],[min1,506.6666666666667],[max1,2016],[bval1,760],[val1,453]]
         const newModel = {
-            // name: `${model.get(i).block} ${model.get(i).name} ${model.get(i).value.val}`,
             name: model.get(i).name,
-            val1: model.get(i).value/*,
-            enabled: stepIndex === i*/
+            val1: model.get(i).value
         }
         newModel.wdth = 240
         newModel.category = "history"

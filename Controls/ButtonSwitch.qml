@@ -12,10 +12,10 @@ Rectangle {
             when: !area.containsMouse && buttonSwitch.enabled
             PropertyChanges {
                 target: buttonSwitch
-                radius: buttonSwitch.height / 2.5
-                color: style.currentTheme.pinkWhite
+                radius: strictStyle ? 0 : buttonSwitch.height / 2.5
+                color: window.style.currentTheme.pinkWhite
                 border.width: 1
-                border.color: style.currentTheme.pinkWhite
+                border.color: window.style.currentTheme.pinkWhite
             }
         },
         State {
@@ -23,10 +23,10 @@ Rectangle {
             when: area.containsMouse && buttonSwitch.enabled
             PropertyChanges {
                 target: buttonSwitch
-                radius: buttonSwitch.height / 2
-                color: style.currentTheme.pinkWhiteAccent
+                radius: strictStyle ? 0 : buttonSwitch.height / 2
+                color: window.style.currentTheme.pinkWhiteAccent
                 border.width: 1
-                border.color: style.currentTheme.pinkWhiteAccent
+                border.color: window.style.currentTheme.pinkWhiteAccent
             }
         }
     ]
@@ -45,9 +45,9 @@ Rectangle {
 
     Rectangle {
         id: pill
-        color: style.currentTheme.lightDark
+        color: window.style.currentTheme.lightDark
         border.width: 1
-        border.color: style.currentTheme.pinkWhite
+        border.color: window.style.currentTheme.pinkWhite
         radius: parent.radius
         height: parent.height
         width: placeholder.x + placeholder.width + parent.width * 0.05
@@ -72,10 +72,10 @@ Rectangle {
             height: parent.height
             font.family: "Helvetica"
             font.bold: true
-            color: style.currentTheme.pinkWhiteAccent
+            color: window.style.currentTheme.pinkWhiteAccent
             font.pixelSize: parent.height / 40 * 12
-            x: parent.radius / 3
-            y: parent.radius / 3
+            x: strictStyle ? 0 : parent.radius / 3
+            y: strictStyle ? 0 : parent.radius / 3
             verticalAlignment: Text.AlignVCenter
         }
     }
@@ -90,11 +90,11 @@ Rectangle {
         if (val1 === min1) val1 = max1
         else if (val1 === max1) val1 = min1
         updateVal(val1)
+        clickAction()
         if (!doNotLog.includes(category)) {
             logAction()
             modelFunctions.autoSave()
         }
-        clickAction()
     }
     function logAction() {
         actionsLog.trimModel(stepIndex)
@@ -111,6 +111,4 @@ Rectangle {
         console.log(Object.entries(actionsLog.get(actionsLog.count-1).prevValue), Object.entries(actionsLog.get(actionsLog.count-1).value))
         stepIndex += 1
     }
-
-    StyleSheet {id: style}
 }

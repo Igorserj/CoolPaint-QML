@@ -126,6 +126,10 @@ Item {
         baseImage.source = source
         imageAssigned = true
     }
+    function resetImage() {
+        baseImage.source = ""
+        imageAssigned = false
+    }
     function layersModelUpdate(key, value, idx, index, subIndex = -1) {
         if (layersModel.count > 0) {
             if (key !== '') {
@@ -231,6 +235,7 @@ Item {
             deactivateEffects,
             layersModelUpdate,
             setImage,
+            resetImage,
             reDraw,
             getBaseImageDims,
             setScaling,

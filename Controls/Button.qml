@@ -7,6 +7,10 @@ Rectangle {
     property alias buttonText: buttonText.labelText
     property alias label: buttonText
     property alias area: area
+    property alias shapes: shapes
+    Component.onCompleted: if (typeof(icon) !== "undefined") {
+                               image = shapes[icon]
+                           }
     Behavior on color {
         ColorAnimation {
             duration: 200
@@ -20,7 +24,8 @@ Rectangle {
         }
     }
     Loader {
-        layer.samples: 8
+        smooth: true
+        layer.samples: 4
         layer.enabled: true
         sourceComponent: typeof(image) !== "undefined" ? image : ""
         anchors.centerIn: parent
@@ -34,9 +39,16 @@ Rectangle {
     }
     Label {
         id: buttonText
-        text: parent.text
+        text: visible ? parent.text : ""
         centered: true
         anchors.centerIn: parent
+        visible: !!!image
+    }
+    ShapesStorage {
+        id: shapes
+        Component.onCompleted: {
+            if (typeof(icon) !== "undefined" && ["newProj", "open", "openProj", "saveAs", "exportImg", "home"].includes(icon)) shapeState = Qt.binding(() => area.containsMouse ? "hovered" : "default")
+        }
     }
 
     function clickHandler() {

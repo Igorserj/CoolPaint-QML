@@ -212,6 +212,22 @@ ListModel {
         ]
     }
     ListElement {
+        name: "Gaussian blur"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Radius"
+                view: "normal,overlay"
+                min1: 0
+                max1: 15.
+                val1: 0
+                bval1: 0
+            }
+        ]
+    }
+    ListElement {
         name: "Tone map"
         isOverlay: true
         items: [
@@ -425,7 +441,7 @@ ListModel {
         ]
     }
     ListElement {
-        name: "Gaussian blur"
+        name: "Blur"
         isOverlay: false
         items: [
             ListElement {

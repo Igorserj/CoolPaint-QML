@@ -127,6 +127,7 @@ WorkerScript.onMessage = function(message) {
     WorkerScript.sendMessage({
                                  'result': true/*result*/,
                                  'text': message.text,
-                                 'type': message.type
+                                 'type': message.type,
+                                 'currentFile': message.currentFile
                              })
 }

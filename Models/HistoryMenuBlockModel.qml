@@ -10,7 +10,4 @@ ListModel {
             category: "history"
         }
     }
-    // onRowsInserted: {
-    //     console.log("History",Object.entries(this.get(count-1)))
-    // }
 }

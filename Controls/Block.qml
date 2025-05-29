@@ -29,8 +29,8 @@ Rectangle {
         width: column.width * 0.95
         height: column.height + window.height * 0.01
         anchors.horizontalCenter: column.horizontalCenter
-        color: "#0AFFFFFF"
-        radius: parent.width / 24
+        color: window.style.currentTheme.whiteVeil
+        radius: strictStyle ? 0 : parent.width / 24
     }
     Column {
         id: column
@@ -75,14 +75,13 @@ Rectangle {
                     enabled: index > 0
                     visible: index > 0
                     anchors.right: parent.right
-                    height: blockRect.height - rep.itemAt(0).height //- col.spacing
+                    height: blockRect.height - rep.itemAt(0).height - window.height * 0.01
                     contentItem: col
                     contentSize: col.height + window.height * 0.01
                 }
             }
         }
     }
-    StyleSheet {id: style}
 
     function enableByState(type, name, index, isOverlay) {
         const layerIndex = leftPanelFunctions.getLayerIndex()
@@ -98,7 +97,6 @@ Rectangle {
     }
 
     function clickAction(name, type, index, val) {
-        console.log(name, type, index, val)
         blockRect.name = name
         blockRect.type = type
         blockRect.index = index

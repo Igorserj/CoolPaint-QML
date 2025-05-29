@@ -2,10 +2,10 @@ import QtQuick 2.15
 
 Rectangle {
     property string text: ""
-    color: style.currentTheme.darkGlass
+    color: window.style.currentTheme.darkGlass
     width: window.width / 1280 * 240
-    height: window.width / 1280 * 80
-    radius: height / 4
+    height: window.width / 1280 * 85
+    radius: strictStyle ? 0 : height / 4
     Label {
         width: slider.width - row.width - row.spacing
         x: parent.width * 0.05
@@ -15,7 +15,7 @@ Rectangle {
     Slider {
         id: slider
         x: parent.width * 0.05
-        y: parent.height - height - parent.radius / 2
+        y: parent.height - height - height / 2//parent.radius / 2
     }
     Row {
         id: row
@@ -49,7 +49,6 @@ Rectangle {
             }
         }
     }
-    StyleSheet {id: style}
 
     function updateAll(value) {
         val1 = value

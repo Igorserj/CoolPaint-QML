@@ -6,6 +6,7 @@ Item {
     property alias labelText: labelText
     property alias labelArea: labelArea
     property bool containsMouse: labelArea.containsMouse
+    property int elide: Text.ElideNone
     property bool centered: false
     property int w: 30
     height: window.width / 1280 * w
@@ -56,7 +57,9 @@ Item {
         text: parent.text
         font.family: "Helvetica"
         font.bold: true
-        color: style.currentTheme.pinkWhiteAccent
+        elide: label.elide
+        width: label.elide === 0 ? label.width : contentWidth
+        color: window.style.currentTheme.pinkWhiteAccent
         font.pixelSize: parent.height / 27 * 12
         verticalAlignment: Text.AlignVCenter
     }
@@ -91,5 +94,4 @@ Item {
             duration: Math.abs(label.width - labelText.contentWidth) * 5
         }
     }
-    StyleSheet {id: style}
 }

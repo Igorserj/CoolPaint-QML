@@ -7,14 +7,21 @@ import "../Controllers/menuController.js" as Controller
 Item {
     x: (window.width - childrenRect.width) / 2
     y: window.height - childrenRect.height - 10
-    Component.onCompleted: window.saveProj = saveProj
+    Component.onCompleted: {
+        window.saveProj = saveProj
+        setPopUpFunctions()
+    }
     Row {
+        spacing: window.width * 0.005
         Repeater {
             model: menuModel
             delegate: Controls {
-                enabled: name === "Save as" ? imageAssigned : true
+                enabled: name === "Save as" ? imageAssigned
+                                            : name === "Save" ? (currentProjectPath.toString() !== "" && !projectSaved && imageAssigned)
+                                                              : true
                 function controlsAction() {
-                    Controller.menuActions(index, openDialog, openProjDialog, saveDialog, leftPanelFunctions)
+                    console.log(name, currentProjectPath.toString() !== "", !projectSaved, imageAssigned)
+                    Controller.menuActions(name, createProject, openDialog, openProjDialog, saveDialog, leftPanelFunctions, saveProj, popUpFunctions.goHome)
                 }
             }
         }
@@ -26,18 +33,22 @@ Item {
         id: saveDialog
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.SaveFile
-        onAccepted: saveProj(currentFile)
+        onAccepted: {
+            saveProj(currentFile, false)
+        }
     }
     FileDialog {
         id: openProjDialog
+        property var callback
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.OpenFile
         onAccepted: {
             const data = fileIO.read(currentFile)
             if (data !== "") {
-                openedFileHandle(data)
+                openedFileHandle(data, currentFile)
+                callback && callback(currentFile)
             } else {
-                const notificationText = 'Selected file has no data'
+                const notificationText = 'Selected file is empty'
                 popUpFunctions.openNotification(notificationText, notificationText.length * 100)
             }
         }
@@ -46,10 +57,13 @@ Item {
         id: openDialog
         nameFilters: ["Image file (*.jpeg *.jpg *.dng *.tif *.tiff *.png *.webp *.svg)"]
         fileMode: FileDialog.OpenFile
-        onAccepted: Controller.openDialogAccept(canvaFunctions, currentFile, layersModel, exportMenuModel)
+        onAccepted: {
+            Controller.openDialogAccept(canvaFunctions, currentFile, layersModel, exportMenuModel)
+            setCurrentImagePath(currentFile)
+        }
     }
 
-    function openedFileHandle(response) {
+    function openedFileHandle(response, currentFile) {
         let text = ''
         try {
             text = JSON.parse(response)
@@ -63,8 +77,39 @@ Item {
             popUpFunctions.openNotification(notificationText, notificationText.length * 100)
             return
         }
-        parserWorker.sendMessage({ text, 'type': 'project' })
-
+        parserWorker.sendMessage({ text, currentFile, 'type': 'project' })
     }
-    function saveProj(currentFile) {Controller.saveProj(currentFile, fileIO, modelFunctions)}
+    function saveProj(currentFile, temporary) {
+        console.log(getCurrentProjectPath(), currentFile)
+        if (currentFile.toString() !== "") {
+            Controller.saveProj(currentFile, fileIO, modelFunctions, temporary, popUpFunctions.openNotification, setCurrentProjectPath, getCurrentImagePath, canvaFunctions.getFinalImage)
+        } else {
+            openSaveDialog()
+        }
+    }
+    function openProjectDialog(callback) {
+        openProjDialog.callback = callback
+        openProjDialog.open()
+    }
+    function openSaveDialog() {
+        if (imageAssigned) {
+            saveDialog.open()
+        } else {
+            const notificationText = 'You have not opened an image'
+            popUpFunctions.openNotification(notificationText, notificationText.length * 100)
+        }
+    }
+    function openImageDialog() {
+        openDialog.open()
+    }
+    function openDialogAccept(currentFile) {
+        Controller.openDialogAccept(canvaFunctions, currentFile, layersModel, exportMenuModel)
+    }
+    function setPopUpFunctions() {
+        popUpFunctions.openProjectDialog = openProjectDialog
+        popUpFunctions.openSaveDialog = openSaveDialog
+        popUpFunctions.openImageDialog = openImageDialog
+        popUpFunctions.openDialogAccept = openDialogAccept
+        popUpFunctions.openedFileHandle = openedFileHandle
+    }
 }

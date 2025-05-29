@@ -14,12 +14,12 @@ Rectangle {
             name: "enabled"
             PropertyChanges {
                 target: header
-                color: style.currentTheme.dark
-                radius: width / 4
+                color: window.style.currentTheme.dark
+                radius: strictStyle ? 0 : width / 4
             }
             PropertyChanges {
                 target: headerText
-                color: style.currentTheme.pinkWhiteAccent
+                color: window.style.currentTheme.pinkWhiteAccent
                 font.pixelSize: header.height / 40 * 16
             }
         }
@@ -48,8 +48,6 @@ Rectangle {
         anchors.fill: parent
         onClicked: clickAction()
     }
-
-    StyleSheet {id: style}
 
     function clickAction() {}
 }

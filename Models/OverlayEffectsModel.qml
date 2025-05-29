@@ -19,7 +19,4 @@ ListModel {
         }
         return newModel
     }
-    // onRowsInserted: {
-    //     console.log("Overlay",Object.entries(this.get(count-1)))
-    // }
 }

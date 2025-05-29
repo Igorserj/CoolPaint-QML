@@ -10,7 +10,4 @@ ListModel {
             category: "view"
         }
     }
-    // onRowsInserted: {
-    //     console.log("Views",Object.entries(this.get(count-1)))
-    // }
 }

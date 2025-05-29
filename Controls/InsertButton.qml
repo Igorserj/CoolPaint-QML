@@ -126,7 +126,6 @@ Column {
             }
         }
     }
-    StyleSheet {id: style}
 
     function updating() {
         const model = overlayEffectsModel.getModel(leftPanelFunctions.getLayerIndex(), index)

@@ -38,6 +38,7 @@ Item {
 
     function undo() {
         if (stepIndex !== -1) {
+            projectSaved = false
             console.log(actionsLog.get(stepIndex).name)
             const item = actionsLog.get(stepIndex)
             if (includes({
@@ -71,13 +72,16 @@ Item {
                                 })) {
                 leftPanelFunctions.setLayersOrder(item.prevValue.val, item.value.val)
             }
-
-            stepIndex -= 1
+            setStepIndex(getStepIndex() - 1)
+        } else {
+            const notificationText = "Reached limit"
+            popUpFunctions.openNotification(notificationText, notificationText.length * 100)
         }
     }
     function redo() {
         if (stepIndex !== actionsLog.count - 1) {
-            stepIndex += 1
+            projectSaved = false
+            setStepIndex(getStepIndex() + 1)
 
             const item = actionsLog.get(stepIndex)
             if (includes({
@@ -116,6 +120,9 @@ Item {
                                 })) {
                 leftPanelFunctions.setLayersOrder(item.value.val, item.prevValue.val)
             }
+        } else {
+            const notificationText = "Reached limit"
+            popUpFunctions.openNotification(notificationText, notificationText.length * 100)
         }
     }
     function history() {

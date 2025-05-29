@@ -1,9 +1,12 @@
-function menuActions(index, openDialog, openProjectDialog, saveFileDialog, exportFileDialog) {
-    switch (index) {
-    case 0: openDialog.open(); break;
-    case 1: openProjectDialog.open(); break;
-    case 2: saveFileDialog.open(); break;
-    case 3: exportFileDialog.switchState(); break;
+function menuActions(name, createProj, openDialog, openProjectDialog, saveFileDialog, exportFileDialog, saveProj, goHome) {
+    switch (name) {
+    case "New": createProj(); break;
+    case "Open": openDialog.open(); break;
+    case "Open project": openProjectDialog.open(); break;
+    case "Save as": saveFileDialog.open(); break;
+    case "Save": saveProj(getCurrentProjectPath(), false); break;
+    case "Export": exportFileDialog.switchState(); break;
+    case "Home": goHome(); break;
     }
 }
 
@@ -26,20 +29,44 @@ function openDialogAccept(canvaFunctions, source, layersModel, exportModel) {
                     })
 }
 
-function saveProj(currentFile, fileIO, modelFunctions) {
-    const model = { 'layers': [], 'overlays': [], 'history': [], 'stepIndex': stepIndex }
-    let k = 0
-    for (k = 0; k < modelFunctions.getLayersModelLength(); ++k) {
-        model.layers.push(modelFunctions.getLayersModel(k))
-    }
-    for (k = 0; k < modelFunctions.getOverlayEffectsModelLength(); ++k) {
-        model.overlays.push(modelFunctions.getOverlayEffectsModel(k))
-    }
-    for (k = 0; k < modelFunctions.getActionsLogLength(); ++k) {
-        model.history.push(modelFunctions.getActionsLog(k))
-    }
-    const jsonData = JSON.stringify(model, null, '\t')
+function saveProj(currentFile, fileIO, modelFunctions, temporary, openNotification, setCurrentProjectPath, getCurrentImagePath, getFinalImage) {
+    if ((temporary || !currentFile.toString().includes("/tmp/")) && !projectSaved) {
+        const model = { 'layers': [], 'overlays': [], 'history': [], stepIndex, temporary, 'image': getCurrentImagePath() }
+        let k = 0
+        for (k = 0; k < modelFunctions.getLayersModelLength(); ++k) {
+            model.layers.push(modelFunctions.getLayersModel(k))
+        }
+        for (k = 0; k < modelFunctions.getOverlayEffectsModelLength(); ++k) {
+            model.overlays.push(modelFunctions.getOverlayEffectsModel(k))
+        }
+        for (k = 0; k < modelFunctions.getActionsLogLength(); ++k) {
+            model.history.push(modelFunctions.getActionsLog(k))
+        }
+        const jsonData = JSON.stringify(model, null, '\t')
+        console.log("Saved", temporary, projectSaved)
+        if (!temporary) {
+            projectSaved = true
+            setCurrentProjectPath(currentFile)
+        }
+        // Write using the C++ helper
+        const path = currentFile.toString().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2')
+        fileIO.write(path + '.json', jsonData)
 
-    // Write using the C++ helper
-    fileIO.write(currentFile.toString().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2') + '.json', jsonData)
+        if (!temporary) {
+            const img = getFinalImage()
+            const name = path.substring(path.lastIndexOf('/') + 1)
+            const maxSize = Math.max(img.width, img.height)
+            img.grabToImage(result => {
+                                result.saveToFile(`${baseDir}/thumbs/${name}.png`)
+                            }, Qt.size((img.width / maxSize) * 200, (img.height / maxSize) * 200))
+            addSavedProject(path + '.json')
+        }
+
+    } else if ((temporary || !currentFile.toString().includes("/tmp/")) && projectSaved) {
+        const notificationText = "Project already saved"
+        openNotification(notificationText, notificationText.length * 100)
+    } else {
+        const notificationText = "Can't save file to tmp folder"
+        openNotification(notificationText, notificationText.length * 100)
+    }
 }

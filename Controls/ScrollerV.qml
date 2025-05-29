@@ -11,12 +11,12 @@ Scroller {
             when: !scrollbar.enabled || !bar.visible
             PropertyChanges {
                 target: bar
-                color: style.currentTheme.pinkWhiteDim
-                radius: width / 3
+                color: window.style.currentTheme.pinkWhiteDim
+                radius: strictStyle ? 0 : width / 3
             }
             PropertyChanges {
                 target: contentItem
-                y: baseVal
+                y: baseVal// < 0 ? 0 : baseVal > scrollbar.height - contentSize ? scrollbar.height - contentSize : baseVal
             }
         },
         State {
@@ -24,8 +24,8 @@ Scroller {
             when: !scrollerArea.containsMouse && scrollbar.enabled
             PropertyChanges {
                 target: bar
-                color: style.currentTheme.pinkWhite
-                radius: bar.width / 3
+                color: window.style.currentTheme.pinkWhite
+                radius: strictStyle ? 0 : bar.width / 3
             }
         },
         State {
@@ -33,12 +33,12 @@ Scroller {
             when: scrollerArea.containsMouse && scrollbar.enabled
             PropertyChanges {
                 target: bar
-                color: style.currentTheme.pinkWhiteAccent
-                radius: bar.width / 2
+                color: window.style.currentTheme.pinkWhiteAccent
+                radius: strictStyle ? 0 : bar.width / 2
             }
         }
     ]
-    StyleSheet {id: style}
+
     function wheelScroll(angleDeltaX, angleDeltaY) {
         wheelScrollY(angleDeltaY)
     }
@@ -47,9 +47,6 @@ Scroller {
     }
     function moveContent() {
         moveContentY()
-    }
-    function resetPosition() {
-        resetPositionY()
     }
     function sizeChange() {
         heightChange()

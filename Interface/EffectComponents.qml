@@ -24,7 +24,7 @@ Item {
                 visible: false
                 active: activated
                 sourceComponent: Controller.addEffect(name)
-                onLoaded: Controller.setImage(this, img, img3, isRenderable, index)
+                onLoaded: Controller.setImage(this, img, img3, isRenderable, index, parent.visible)
             }
             Image {
                 id: img
@@ -69,7 +69,7 @@ Item {
                 visible: false
                 active: activated
                 sourceComponent: Controller.addEffect(name)
-                onLoaded: Controller.setImage(this, img2, undefined, true, index)
+                onLoaded: Controller.setImage(this, img2, undefined, true, index, false)
             }
             Image {
                 id: img2
@@ -151,6 +151,16 @@ Item {
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/motionBlur.fsh"
+        }
+    }
+    Component {
+        id: gaussianBlur
+        ShaderEffect {
+            property point u_resolution: Qt.point(parent.width, parent.height)
+            property double u_radius: Controller.propertyPopulation("one", itemList, 0)
+            property bool isOverlay: overLay
+            property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/gaussianBlur.fsh"
         }
     }
     Component {
@@ -237,14 +247,13 @@ Item {
         }
     }
     Component {
-        id: gaussianBlur
+        id: blur
         ShaderEffect {
             property point u_resolution: Qt.point(parent.width, parent.height)
             property double u_radius: Controller.propertyPopulation("one", itemList, 0)
-            // property double u_sigma: Controller.propertyPopulation("one", itemList, 1)
             property bool isOverlay: overLay
             property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
-            fragmentShader: "qrc:/Effects/gaussianBlur.fsh"
+            fragmentShader: "qrc:/Effects/blur.fsh"
         }
     }
     Component {

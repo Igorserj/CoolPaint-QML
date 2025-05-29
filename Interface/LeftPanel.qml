@@ -12,7 +12,7 @@ Rectangle {
     property int layerIndex: -1
     width: window.width / 1280 * 260
     height: window.height
-    color: style.currentTheme.vinous
+    color: window.style.currentTheme.vinous
     state: "default"
     states: [
         State {
@@ -64,7 +64,6 @@ Rectangle {
     }
     ExportMenuBlockModel {id: exportMenuBlockModel}
     SettingsMenuBlockModel {id: settingsMenuBlockModel}
-    StyleSheet {id: style}
 
     function switchState() {
         const pattern = Object.assign(propsAndFuncsPattern(), { spacer, parent })
@@ -180,6 +179,10 @@ Rectangle {
         Controller.close(spacer, parent, setState)
     }
 
+    function populateSettings() {
+        Controller.populateSettings(settingsMenuBlockModel, settingsMenuModel)
+    }
+
     function propsAndFuncsPattern() {
         return {
             canvaFunctions,
@@ -222,7 +225,10 @@ Rectangle {
             setLayersBlockState,
             switchState,
             manualLayerChoose,
-            switchRendering
+            switchRendering,
+            populateSettings,
+            getState,
+            setState
         }
     }
 }

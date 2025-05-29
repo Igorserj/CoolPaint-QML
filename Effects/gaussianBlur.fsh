@@ -5,7 +5,6 @@ precision highp float;
 uniform vec2 u_resolution;
 uniform sampler2D src;
 uniform float u_radius;  // Blur radius
-// uniform float u_sigma;   // Gaussian sigma value
 
 float gaussian(float x, float sigma) {
     float PI = 3.14159265359;
@@ -14,7 +13,6 @@ float gaussian(float x, float sigma) {
 
 void main() {
     float u_sigma = 0.01;
-    // float u_radius = 5.0;
     vec2 st = gl_FragCoord.xy/u_resolution;
     st.y = 1.-st.y;
     vec2 texel = 1.0/u_resolution;

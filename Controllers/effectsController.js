@@ -6,6 +6,7 @@ function addEffect(name) {
     case "Grain": return grain
     case "Black and white": return blackAndWhite
     case "Motion blur": return motionBlur
+    case "Gaussian blur": return gaussianBlur
     case "Tone map": return toneMap
     case "Grid": return grid
     case "Grid section": return gridSection
@@ -13,19 +14,27 @@ function addEffect(name) {
     case "Overlay": return overlayEffect
     case "Mirror": return mirrorEffect
     case "Color highlight": return colorHighlight
-    case "Gaussian blur": return gaussianBlur
+    case "Blur": return blur
     case "Rotation": return rotationEffect
     case "Negative": return negativeEffect
     case "Combination mask": return combinationMask
     }
 }
 
-function setImage(ldr, img, img2, isRenderable, index) {
+function setImage(ldr, img, img2, isRenderable, index, isLastIndex) {
     if (ldr.width !== 0 && ldr.height !== 0) {
         if (isRenderable) {
             ldr.grabToImage(result => {
                                 img.source = result.url
                                 img2.source = result.url
+                                if (isLastIndex && fileIO.exists(modelFunctions.getTmp())) {
+                                    const path = modelFunctions.getTmp().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2')
+                                    const name = path.substring(path.lastIndexOf('/') + 1)
+                                    const maxSize = Math.max(img.width, img.height)
+                                    img.grabToImage(result => {
+                                        result.saveToFile(`${baseDir}/thumbs/${name}.png`)
+                                    }, Qt.size((img.width / maxSize) * 200, (img.height / maxSize) * 200))
+                                }
                             })
         } else {
             if (index > 0) {
@@ -90,7 +99,7 @@ function srcPopulation(repeater, index, baseImage, iteration = -1) {
     if (iteration === -1) {
         if (index === 0) return baseImage
         else if (repeater.itemAt(index-1) !== null) return repeater.itemAt(index-1).children[1]
-    } else {
+    } else { //if (overlayEffectsModel.count > index) {
         const items = overlayEffectsModel.get(index).items
         for (let i = 0; i < items.count; ++i) {
             const item = items.get(i)

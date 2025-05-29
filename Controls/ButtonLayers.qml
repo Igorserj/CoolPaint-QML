@@ -10,7 +10,8 @@ ButtonDark {
         w: parent.w / 6
         x: (parent.width / 24)
         y: (parent.height - height) / 2
-        image: shapes.mover
+        property string icon: "mover"
+        property string type: blockRect.state
         function clickAction() {
             if (blockRect.state !== "layerSwap") {
                 layerIndex = index
@@ -28,9 +29,5 @@ ButtonDark {
         function clickAction() {
             removeLayer(index)
         }
-    }
-    ShapesStorage {
-        id: shapes
-        shapeState: blockRect.state
     }
 }

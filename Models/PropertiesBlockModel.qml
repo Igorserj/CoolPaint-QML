@@ -9,7 +9,4 @@ ListModel {
             view: "normal,overlay"
         }
     }
-    // onRowsInserted: {
-    //     console.log("Props",Object.entries(this.get(count-1)))
-    // }
 }

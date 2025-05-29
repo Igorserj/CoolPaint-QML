@@ -7,7 +7,7 @@ Rectangle {
     y: parent.height - height * 2
     height: parent.height / 8
     opacity: 0
-    radius: height / 2
+    radius: strictStyle ? 0 : height / 2
     color: parent.state === "active" ? style.currentTheme.lightDark : style.currentTheme.pinkWhiteAccent
     ParallelAnimation {
         running: !isRenderable

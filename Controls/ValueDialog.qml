@@ -11,11 +11,11 @@ Rectangle {
     property int propIndex: -1
     property int valIndex: -1
     property int subIndex: -1
-    color: style.currentTheme.darkGlass
+    color: window.style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 80
     enabled: false
-    radius: height / 4
+    radius: strictStyle ? 0 : height / 4
     state: "hidden"
     Behavior on opacity {
         PropertyAnimation {
@@ -42,7 +42,7 @@ Rectangle {
     ]
     AcrylicBackground {
         id: acrylicBackground
-        background: valueDialog.parent
+        background: ui
         z: -1
     }
     Label {
@@ -56,9 +56,9 @@ Rectangle {
         width: window.width / 1280 * 220
         height: window.width / 1280 * 30
         x: parent.width * 0.05
-        y: parent.height - height - parent.radius / 3
-        color: style.currentTheme.pinkWhite
-        radius: width / 4
+        y: parent.height - height - valueDialog.height / 12//parent.radius / 3
+        color: window.style.currentTheme.pinkWhite
+        radius: strictStyle ? 0 : width / 4
         TextInput {
             id: textEdit
             clip: true
@@ -69,7 +69,7 @@ Rectangle {
             font.family: "Helvetica"
             font.bold: true
             anchors.fill: parent
-            color: style.currentTheme.lightDark
+            color: window.style.currentTheme.lightDark
             font.pixelSize: parent.height / 25 * 12
             onAccepted: buttonAction('Apply')
         }
@@ -95,8 +95,6 @@ Rectangle {
             }
         }
     }
-
-    StyleSheet {id: style}
 
     function buttonAction(text) {
         if (text === 'Apply') {

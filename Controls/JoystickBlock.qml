@@ -4,10 +4,10 @@ Rectangle {
     id: block
     property string text: ""
     property int blockIndex: index
-    color: style.currentTheme.darkGlass
+    color: window.style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 160
-    radius: height / 6
+    radius: strictStyle ? 0 : height / 6
     Label {
         width: joystick.width
         x: parent.width * 0.05
@@ -17,7 +17,7 @@ Rectangle {
     Joystick {
         id: joystick
         x: parent.width * 0.05
-        y: parent.height - height - parent.radius / 2
+        y: parent.height - height - height / 12//parent.radius / 2
     }
     Column {
         x: parent.width * 0.95 - width
@@ -110,7 +110,6 @@ Rectangle {
             }
         }
     }
-    StyleSheet {id: style}
 
     function updateVal1(value) {
         val1 = value

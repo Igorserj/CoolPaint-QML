@@ -7,7 +7,7 @@ Rectangle {
     x: window.width - width
     width: window.width / 1280 * 260
     height: window.height
-    color: style.currentTheme.vinous
+    color: window.style.currentTheme.vinous
     Component.onCompleted: {
         viewsBlockPopulate()
         logAssign(historyMenuBlockModel, Controller.historyBlockModelGeneration)
@@ -59,9 +59,6 @@ Rectangle {
     }
     HistoryMenuBlockModel {
         id: historyMenuBlockModel
-    }
-    StyleSheet {
-        id: style
     }
 
     function propertiesBlockUpdate() {

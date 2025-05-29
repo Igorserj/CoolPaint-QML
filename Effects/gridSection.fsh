@@ -22,11 +22,10 @@ void main(void)
         float row_num = floor(cellPosition.y * rows);
         leftSide = (step(col_num * col, st.x)) * (1.-step(col_num * col + col, st.x));
         rightSide = (step(row_num * row, 1.-st.y)) * (1.-step(row_num * row + row, 1.-st.y));
-        tex *= leftSide * rightSide;
     } else {
         leftSide = (step(cellPosition.x * col, st.x)) * (1.-step(cellPosition.x * col + col, st.x));
         rightSide = (step(cellPosition.y * row, 1.-st.y)) * (1.-step(cellPosition.y * row + row, 1.-st.y));
-        tex *= leftSide * rightSide;
     }
+    tex *= leftSide * rightSide;
     gl_FragColor = vec4(tex);
 }

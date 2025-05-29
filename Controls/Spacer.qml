@@ -69,8 +69,4 @@ Rectangle {
             lowerBlock.height = 0
         }
     }
-
-    StyleSheet {
-        id: style
-    }
 }

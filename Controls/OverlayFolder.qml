@@ -2,8 +2,10 @@ import QtQuick 2.15
 
 Item {
     id: folder
+    property var folderAction
     property string text: ""
     property int w: 240
+    property int elide: Text.ElideNone
     state: "down"
     width: window.width / 1280 * w
     height: window.width / 1280 * w / 8
@@ -11,28 +13,33 @@ Item {
         x: parent.width * 0.05
         width: foldButton.x - x
         Label {
+            id: label
             text: folder.text
+            elide: folder.elide
         }
     }
     ButtonWhite {
         id: foldButton
-        image: shapes.triangle
+        property string icon: "triangle"
+        property string type: folder.state//"down"
         x: parent.width * 0.95 - width
         w: 40
         anchors.verticalCenter: parent.verticalCenter
+        Component.onCompleted: folderAction = switchFold
         function clickAction() {
+            switchFold()
+        }
+        function switchFold() {
             const foldState = getFoldState()
             if (foldState === "collapsed") {
                 setFoldState("default")
-                folder.state = "down"
+                type = "down"
+                folder.state = type
             } else {
                 setFoldState("collapsed")
-                folder.state = "right"
+                type = "right"
+                folder.state = type
             }
         }
-    }
-    ShapesStorage {
-        id: shapes
-        shapeState: folder.state
     }
 }

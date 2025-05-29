@@ -16,12 +16,12 @@ Button {
                       )
             PropertyChanges {
                 target: button
-                color: style.currentTheme.pinkWhite
-                radius: width / 4
+                color: window.style.currentTheme.pinkWhite
+                radius: strictStyle ? 0 : width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: style.currentTheme.lightDark
+                color: window.style.currentTheme.lightDark
                 font.pixelSize: button.height / 30 * 12
             }
         },
@@ -30,12 +30,12 @@ Button {
             when: !(area.containsMouse || label.containsMouse) && button.enabled
             PropertyChanges {
                 target: button
-                color: style.currentTheme.darkGlass
-                radius: width / 24
+                color: window.style.currentTheme.darkGlass
+                radius: strictStyle ? 0 : width / 24
             }
             PropertyChanges {
                 target: buttonText
-                color: style.currentTheme.pinkWhiteAccent
+                color: window.style.currentTheme.pinkWhiteAccent
                 font.pixelSize: button.height / 30 * 12
             }
         },
@@ -44,12 +44,12 @@ Button {
             when: !button.enabled
             PropertyChanges {
                 target: button
-                color: style.currentTheme.darkGlassDim
-                radius: width / 24
+                color: window.style.currentTheme.darkGlassDim
+                radius: strictStyle ? 0 : width / 24
             }
             PropertyChanges {
                 target: buttonText
-                color: style.currentTheme.pinkWhite
+                color: window.style.currentTheme.pinkWhite
                 font.pixelSize: button.height / 30 * 12
             }
         },
@@ -58,15 +58,14 @@ Button {
             when: (area.containsMouse || label.containsMouse) && button.enabled
             PropertyChanges {
                 target: button
-                color: style.currentTheme.darkGlassAccent
-                radius: width / 4
+                color: window.style.currentTheme.darkGlassAccent
+                radius: strictStyle ? 0 : width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: style.currentTheme.pinkWhiteAccent
+                color: window.style.currentTheme.pinkWhiteAccent
                 font.pixelSize: button.height / 30 * 12
             }
         }
     ]
-    StyleSheet {id: style}
 }

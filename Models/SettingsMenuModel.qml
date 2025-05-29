@@ -24,6 +24,17 @@ ListModel {
         items: []
     }
     ListElement {
+        name: "Strict style"
+        type: "buttonSwitch"
+        category: "settings"
+        min1: 0
+        max1: 1
+        val1: 0
+        val2: 0
+        bval1: 0
+        items: []
+    }
+    ListElement {
         name: "Lights"
         type: "insertDropdown"
         category: "settings"
@@ -66,6 +77,22 @@ ListModel {
                 case 'default': newModel.push(this.get(i)); break
                 case 'index': newModel.push(i); break
                 }
+            }
+        }
+        return newModel
+    }
+    function getValues() {
+        const newModel = {
+            "theme": [],
+            "autosaves": [],
+            "effects": []
+        }
+        for (let i = 0; i < this.count; ++i) {
+            switch (this.get(i).name) {
+            case "Lights": newModel.theme = [i, this.get(i).val1]; break
+            case "Count of autosaves": newModel.autosaves = [i, this.get(i).val1]; break
+            case "UI Effects": newModel.effects = [i, this.get(i).val1]; break
+            case "Strict style": newModel.style = [i, this.get(i).val1]; break
             }
         }
         return newModel

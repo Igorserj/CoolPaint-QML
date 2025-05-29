@@ -4,8 +4,5 @@ import "../Controls"
 Rectangle {
     width: window.width
     height: window.height
-    color: style.currentTheme.lightDark
-    StyleSheet {
-        id: style
-    }
+    color: window.style.currentTheme.lightDark
 }

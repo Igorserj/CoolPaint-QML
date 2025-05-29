@@ -3,9 +3,9 @@ import QtQuick 2.15
 Rectangle {
     id: switchBlock
     property string text: ""
-    color: style.currentTheme.darkGlass
+    color: window.style.currentTheme.darkGlass
     width: window.width / 1280 * 240
-    radius: height / 4
+    radius: strictStyle ? 0 : height / 4
     state: category === "properties" ? "compact" : "default"
     states: [
         State {
@@ -13,7 +13,7 @@ Rectangle {
             PropertyChanges {
                 target: slider
                 x: slider.parent.width * 0.05
-                y: slider.parent.height - slider.height - slider.parent.radius / 2
+                y: slider.parent.height - slider.height - switchBlock.height / 8//slider.parent.radius / 2
             }
             PropertyChanges {
                 target: switchBlock
@@ -36,9 +36,9 @@ Rectangle {
             name: "compact"
             PropertyChanges {
                 target: slider
-                x: (slider.parent.width - width) - slider.parent.radius
+                x: (slider.parent.width - width) - switchBlock.height / 4//slider.parent.radius
                 y: (slider.parent.height - slider.height) / 2
-                width: (slider.parent.width - slider.parent.radius) / 2
+                width: (slider.parent.width - switchBlock.height / 4/*slider.parent.radius*/) / 2
             }
             PropertyChanges {
                 target: switchBlock
@@ -51,7 +51,7 @@ Rectangle {
             }
             PropertyChanges {
                 target: label
-                width: label.parent.width - slider.width - label.parent.radius
+                width: label.parent.width - slider.width - switchBlock.height / 4//label.parent.radius
                 x: label.parent.width * 0.05
                 y: (parent.height - label.height) / 2
                 text: parent.text
@@ -81,7 +81,6 @@ Rectangle {
     ButtonSwitch {
         id: slider
     }
-    StyleSheet {id: style}
 
     function updateAll(value) {
         val1 = value

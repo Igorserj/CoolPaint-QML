@@ -339,13 +339,19 @@ function open(spacer,
     for (; i < exportMenuModel.count; ++i) {
         exportMenuBlockModel.get(1).block.append(exportMenuModel.get(i))
     }
+    populateSettings(settingsMenuBlockModel, settingsMenuModel)
 
+    setState("export")
+}
+
+function populateSettings(settingsMenuBlockModel, settingsMenuModel) {
+    let i
     settingsMenuBlockModel.set(1, {
                                    'block': []
                                })
     for (i = 0; i < settingsMenuModel.count; ++i) {
         const model = settingsMenuModel.get(i)
-        const themes = ['Dark purple', 'Light purple', 'Dark classic']
+        const themes = ['Dark purple', 'Light purple', 'Dark classic', 'Light classic', 'Tranquil']
         if (model.name === "Lights") {
             model.items.clear()
             themes.forEach((theme) => {
@@ -357,7 +363,7 @@ function open(spacer,
                                                       bval1: 0,
                                                       max1: 1,
                                                       min1: 0,
-                                                      wdth: 240
+                                                      wdth: 230
                                                   })
                            }
                            )
@@ -378,8 +384,6 @@ function open(spacer,
             }
         }
     }
-
-    setState("export")
 }
 
 function close(spacer, parent, setState) {

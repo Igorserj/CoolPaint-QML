@@ -16,12 +16,12 @@ Rectangle {
             when: !stickArea.containsMouse && joystick.enabled
             PropertyChanges {
                 target: joystick
-                color: style.currentTheme.pinkWhite
-                radius: width / 8
+                color: window.style.currentTheme.pinkWhite
+                radius: strictStyle ? 0 : width / 8
             }
             PropertyChanges {
                 target: stick
-                radius: stick.width / 3
+                radius: strictStyle ? 0 : stick.width / 3
             }
         },
         State {
@@ -29,12 +29,12 @@ Rectangle {
             when: stickArea.containsMouse && joystick.enabled
             PropertyChanges {
                 target: joystick
-                color: style.currentTheme.pinkWhiteAccent
-                radius: width / 6
+                color: window.style.currentTheme.pinkWhiteAccent
+                radius: strictStyle ? 0 : width / 6
             }
             PropertyChanges {
                 target: stick
-                radius: stick.width / 2
+                radius: strictStyle ? 0 : stick.width / 2
             }
         }
     ]
@@ -54,8 +54,8 @@ Rectangle {
         id: stick
         width: height
         height: window.width / 1280 * 30
-        radius: width / 3
-        color: style.currentTheme.lightDark
+        radius: strictStyle ? 0 : width / 3
+        color: window.style.currentTheme.lightDark
         x: ((val1 - min1) / (max1 - min1)) * (parent.width - stick.width)
         y: ((val2 - min2) / (max2 - min2)) * (parent.height - stick.height)
         Behavior on radius {
@@ -78,7 +78,6 @@ Rectangle {
                         modelFunctions.autoSave()
                     }
     }
-    StyleSheet {id: style}
 
     function xStick(pressed, mouseX = 0) {
         if (pressed) {

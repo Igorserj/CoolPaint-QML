@@ -5,7 +5,7 @@ Rectangle {
     property double baseVal: 0
     property var contentItem
     property int w: 7
-    property double scaling: 1.
+    property double scaling: -1.
     property alias bar: bar
     property alias scrollerArea: scrollerArea
     color: "transparent"
@@ -65,6 +65,20 @@ Rectangle {
             wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
         }
     }
+    PropertyAction {
+        id: barXAction
+        property real pos: 0
+        target: bar
+        property: "x"
+        value: pos
+    }
+    PropertyAction {
+        id: barYAction
+        property real pos: 0
+        target: bar
+        property: "y"
+        value: pos
+    }
 
     function wheelScrollY(y) {
         scrollingY(-y/6 + (bar.y + bar.height / 2))
@@ -101,46 +115,69 @@ Rectangle {
     }
 
     function moveContentY() {
-        contentItem.y = Qt.binding(() => (-contentSize * (1 - height / contentSize) / (height * (1 - height / contentSize) / bar.y)) + ((1 - 1 / scaling) * (contentSize / 2)))
+        if (bar.visible) {
+            if (scaling === -1) {
+                contentItem.y = Qt.binding(() => (-contentSize * (1 - height / contentSize) / (height * (1 - height / contentSize) / bar.y)) + (0 * (contentSize / 2)))
+            } else {
+                contentItem.y = Qt.binding(() => (-contentSize * (1 - height / contentSize) / (height * (1 - height / contentSize) / bar.y)) + ((1 - 1 / scaling) * (contentSize / 2)))
+            }
+        }
     }
     function moveContentX() {
-        contentItem.x = Qt.binding(() => (-contentSize * (1 - width / contentSize) / (width * (1 - width / contentSize) / bar.x)) + ((1 - 1 / scaling) * (contentSize / 2)))
+        if (bar.visible) {
+            if (scaling === -1) {
+                contentItem.x = Qt.binding(() => (-contentSize * (1 - width / contentSize) / (width * (1 - width / contentSize) / bar.x)) + (0 * (contentSize / 2)))
+            } else {
+                contentItem.x = Qt.binding(() => (-contentSize * (1 - width / contentSize) / (width * (1 - width / contentSize) / bar.x)) + ((1 - 1 / scaling) * (contentSize / 2)))
+            }
+        }
     }
 
-    function resetPositionY() {
-        contentItem.y = 0
-    }
-    function resetPositionX() {
-        contentItem.x = 0
-    }
     function heightChange() {
-        if (scaling > 1 && visible) {
-            if (y + height > parent.height) {
-                y = parent.height - height
-            } else if (y < 0) {
-                y = 0
-            }
-        }
+        y = Math.min(Math.max(y, 0), Math.abs(parent.height - height))
+        scrollBarY()
     }
     function widthChange() {
-        if (scaling > 1 && visible) {
-            if (x + width > parent.width) {
-                x = parent.width - width
-            } else if (x < 0) {
-                x = 0
-            }
-        }
+        x = Math.min(Math.max(x, 0), Math.abs(parent.width - width))
+        scrollBarX()
     }
+
+    function scrollBarY() {
+        let pos
+        if (bar.y <= 0) {
+            pos = 0
+        } else if (bar.y + bar.height >= height) {
+            pos = height - bar.height
+        } else {
+            pos = bar.y
+        }
+        barYAction.pos = pos
+        barYAction.start()
+    }
+
+    function scrollBarX() {
+        let pos
+        if (bar.x <= 0) {
+            pos = 0
+        } else if (bar.x + bar.width >= width) {
+            pos = width - bar.width
+        } else {
+            pos = bar.x
+        }
+        barXAction.pos = pos
+        barXAction.start()
+    }
+
     function barPropertiesV() {
         bar.width = Qt.binding(() => w)
         bar.height = Qt.binding(() => height * height / contentSize)
         bar.visible = Qt.binding(() => contentSize > height)
-        bar.y = Qt.binding(() => scaling > 1 ? (height - height * height / contentSize) / 2 : 0)
+        if (scaling !== -1) bar.y = Qt.binding(() => scaling !== -1 && height < contentSize * scaling ? (height - height * height / contentSize) / 2 : 0)
     }
     function barPropertiesH() {
         bar.height = Qt.binding(() => w)
         bar.width = Qt.binding(() => width * width / contentSize)
         bar.visible = Qt.binding(() => contentSize > width)
-        bar.x = Qt.binding(() => scaling > 1 ? (width - width * width / contentSize) / 2 : 0)
+        if (scaling !== -1) bar.x = Qt.binding(() => scaling !== -1 && width < contentSize * scaling ? (width - width * width / contentSize) / 2 : 0)
     }
 }

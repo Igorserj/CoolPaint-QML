@@ -9,15 +9,15 @@ Button {
     states: [
         State {
             name: "enabled"
-            when: !area.containsMouse && button.enabled
+            when: !(area.containsMouse || label.containsMouse) && button.enabled
             PropertyChanges {
                 target: button
-                color: style.currentTheme.pinkWhite
-                radius: width / 4
+                color: window.style.currentTheme.pinkWhite
+                radius: strictStyle ? 0 : width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: style.currentTheme.lightDark
+                color: window.style.currentTheme.lightDark
                 font.pixelSize: button.height / 20 * 12
             }
         },
@@ -26,29 +26,28 @@ Button {
             when: !button.enabled
             PropertyChanges {
                 target: button
-                color: style.currentTheme.pinkWhiteDim
-                radius: width / 4
+                color: window.style.currentTheme.pinkWhiteDim
+                radius: strictStyle ? 0 : width / 4
             }
             PropertyChanges {
                 target: buttonText
-                color: style.currentTheme.lightDark
+                color: window.style.currentTheme.lightDark
                 font.pixelSize: button.height / 20 * 12
             }
         },
         State {
             name: "hovered"
-            when: area.containsMouse && button.enabled
+            when: (area.containsMouse || label.containsMouse) && button.enabled
             PropertyChanges {
                 target: button
-                color: style.currentTheme.pinkWhiteAccent
-                radius: width / 2
+                color: window.style.currentTheme.pinkWhiteAccent
+                radius: strictStyle ? 0 : width / 2
             }
             PropertyChanges {
                 target: buttonText
-                color: style.currentTheme.lightDark
+                color: window.style.currentTheme.lightDark
                 font.pixelSize: button.height / 20 * 12
             }
         }
     ]
-    StyleSheet {id: style}
 }

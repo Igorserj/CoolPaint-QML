@@ -1,7 +1,9 @@
 import QtQuick 2.15
 
 Rectangle {
-    id: exitDialog
+    id: dialog
+    property string name: ""
+    property var options: []
     color: window.style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     height: window.width / 1280 * 80
@@ -10,7 +12,7 @@ Rectangle {
     state: "hidden"
     Behavior on opacity {
         PropertyAnimation {
-            target: exitDialog
+            target: dialog
             property: "opacity"
             duration: 200
         }
@@ -19,14 +21,14 @@ Rectangle {
         State {
             name: "visible"
             PropertyChanges {
-                target: exitDialog
+                target: dialog
                 opacity: 1
             }
         },
         State {
             name: "hidden"
             PropertyChanges {
-                target: exitDialog
+                target: dialog
                 opacity: 0
             }
         }
@@ -37,71 +39,61 @@ Rectangle {
         z: -1
     }
     Label {
-        width: labelArea.width
+        width: Math.min(parent.width * 0.9, labelArea.width)
         height: parent.height / 2
         x: (parent.width - width) / 2
-        text: 'Do you wish to quit?'
+        text: name
     }
     Row {
         id: row
         x: (parent.width - width) / 2
         y: parent.height / 2
         spacing: parent.width / 40
-        ButtonWhite {
-            w: 50
-            text: "Quit"
-            function clickAction() {
-                buttonAction(text)
-            }
-        }
-        ButtonWhite {
-            w: 50
-            text: "Cancel"
-            function clickAction() {
-                buttonAction(text)
+        Repeater {
+            model: options
+            ButtonWhite {
+                w: 50
+                text: modelData.text
+                function clickAction() {
+                    if (typeof(modelData.func) === "string") {
+                        dialog[modelData.func]()
+                    } else {
+                        close()
+                        dialogCallback(modelData.type, modelData.text, modelData.func)
+                    }
+                }
             }
         }
     }
     SequentialAnimation {
         id: rejectClosing
         PropertyAnimation {
-            target: exitDialog
+            target: dialog
             property: "x"
-            to: (window.width * 1.015 - exitDialog.width) / 2
+            to: (window.width * 1.015 - dialog.width) / 2
             duration: 100
         }
         PropertyAnimation {
-            target: exitDialog
+            target: dialog
             property: "x"
-            to: (window.width / 1.015 - exitDialog.width) / 2
+            to: (window.width / 1.015 - dialog.width) / 2
             duration: 100
         }
         PropertyAnimation {
-            target: exitDialog
+            target: dialog
             property: "x"
-            to: (window.width - exitDialog.width) / 2
+            to: (window.width - dialog.width) / 2
             duration: 100
         }
     }
 
-    function buttonAction(text) {
-        if (text === 'Quit') {
-            exit()
-        } else if (text === 'Cancel') {
-            close()
-        }
-    }
-
-    function exit() {
-        Qt.quit()
-    }
-    function open() {
-        if (visible && enabled) rejectClosing.start()
-        else {
-            acrylicBackground.activate()
-            enabled = true
-            state = "visible"
-        }
+    function open(header = "", notificationText = "", optionList = []) {
+        name = header
+        options = optionList
+        acrylicBackground.activate()
+        enabled = true
+        state = "visible"
+        if (notificationText !== "") popUpFunctions.openNotification(notificationText, 0)
     }
     function close() {
         enabled = false

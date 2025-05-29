@@ -8,10 +8,13 @@ Item {
     property alias buttonDark: overlayControls.buttonDark
     property alias buttonLayers: overlayControls.buttonLayers
     property alias buttonSwitch: overlayControls.buttonSwitch
+    property alias buttonGoto: overlayControls.buttonGoto
     property alias header: overlayControls.header
     property alias empty: overlayControls.empty
     property alias insertButton: insertButton
     property alias insertDropdown: insertDropdown
+    property alias textBlock: overlayControls.textBlock
+    property alias slot: overlayControls.slot
     width: controlsLoader.width
     height: controlsLoader.height
     Loader {

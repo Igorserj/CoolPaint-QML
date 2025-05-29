@@ -7,7 +7,10 @@ Item {
     property alias buttonDark: buttonDark
     property alias buttonLayers: buttonLayers
     property alias buttonSwitch: buttonSwitch
+    property alias buttonGoto: buttonGoto
     property alias header: header
+    property alias textBlock: textBlock
+    property alias slot: slot
     property alias empty: empty
     Component {
         id: joystick
@@ -58,6 +61,25 @@ Item {
             w: wdth
             text: name
         }
+    }
+    Component {
+        id: textBlock
+        TextBlock {
+            w: wdth
+            text: name
+        }
+    }
+    Component {
+        id: buttonGoto
+        ButtonGoto {
+            w: wdth
+            text: name
+            function clickAction() {controlsAction({name, type, index, val1, val2})}
+        }
+    }
+    Component {
+        id: slot
+        Slot {}
     }
     Component {
         id: empty

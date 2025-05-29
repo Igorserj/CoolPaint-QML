@@ -2,34 +2,59 @@ import QtQuick 2.15
 
 ListModel {
     ListElement {
-        type: "buttonDark"
-        wdth: 180
+        type: "buttonWhite"
+        wdth: 80
+        name: "New"
+        val1: 0
+        val2: 0
+        icon: "newProj"
+    }
+    ListElement {
+        type: "buttonWhite"
+        wdth: 80
         name: "Open"
         val1: 0
         val2: 0
+        icon: "open"
     }
     ListElement {
-        type: "buttonDark"
-        wdth: 180
+        type: "buttonWhite"
+        wdth: 80
         name: "Open project"
         val1: 0
         val2: 0
+        icon: "openProj"
     }
     ListElement {
-        type: "buttonDark"
-        wdth: 180
+        type: "buttonWhite"
+        wdth: 80
         name: "Save as"
         val1: 0
         val2: 0
+        icon: "saveAs"
     }
     ListElement {
-        type: "buttonDark"
-        wdth: 180
+        type: "buttonWhite"
+        wdth: 80
+        name: "Save"
+        val1: 0
+        val2: 0
+        icon: "save"
+    }
+    ListElement {
+        type: "buttonWhite"
+        wdth: 80
         name: "Export"
         val1: 0
         val2: 0
+        icon: "exportImg"
     }
-    // onRowsInserted: {
-    //     console.log("Menu",Object.entries(this.get(count-1)))
-    // }
+    ListElement {
+        type: "buttonWhite"
+        wdth: 80
+        name: "Home"
+        val1: 0
+        val2: 0
+        icon: "home"
+    }
 }

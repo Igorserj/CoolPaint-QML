@@ -2,10 +2,12 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
+#include <QtGlobal>
 #include "fileio.h"
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setOrganizationName("CoolPaint");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QQuickWindow::setSceneGraphBackend(QSGRendererInterface::OpenGL);
     QApplication app(argc, argv);
@@ -15,6 +17,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<FileIO>("Coolpaint", 1, 0, "FileIO");
 
     engine.rootContext()->setContextProperty("baseDir", QGuiApplication::applicationDirPath());
+    engine.rootContext()->setContextProperty("version", qVersion());
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 
     qputenv("QML_XHR_ALLOW_FILE_READ", QByteArray("1"));

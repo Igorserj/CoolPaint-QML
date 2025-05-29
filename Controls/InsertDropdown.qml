@@ -6,16 +6,18 @@ Column {
     property int parentIndex: index
     readonly property int dropdownIndex: val1
     spacing: window.height * 0.005
-    width: childrenRect.width
     height: childrenRect.height
+    width: folder.width
+    anchors.horizontalCenter: parent.horizontalCenter
     Component.onCompleted: updating()
     OverlayFolder {
+        id: folder
         text: name
     }
     Item {
         id: foldableArea
-        width: childrenRect.width
         height: childrenRect.height
+        width: folder.width
         clip: true
         state: ""
         states: [
@@ -52,7 +54,17 @@ Column {
                 duration: 500
             }
         }
+        Rectangle {
+            width: parent.width
+            height: innerColumn.height + window.height * 0.02
+            anchors.horizontalCenter: innerColumn.horizontalCenter
+            color: window.style.currentTheme.whiteVeil
+            radius: strictStyle ? 0 : parent.width / 24
+        }
         Column {
+            id: innerColumn
+            y: window.height * 0.01
+            anchors.horizontalCenter: parent.horizontalCenter
             spacing: window.height * 0.005
             Repeater {
                 id: innerBlock
@@ -70,7 +82,7 @@ Column {
                     OverlayControls {
                         id: overlayControls
                         function controlsAction() {
-                            if (category !== "settings") {
+                            if (category !== "settings" && category !== "welcome") {
                                 Controller.dropdownChoose(name, index, setName, setVal, getVals, doNotLog, layersModel.get(leftPanelFunctions.getLayerIndex()).items, modelFunctions.autoSave, actionsLog, setStepIndex, canvaFunctions.layersModelUpdate)
                             } else {
                                 Controller.dropdownChoose(name, index, setName, setVal, getVals, doNotLog, settingsMenuModel.get(parentIndex).items, modelFunctions.autoSave, actionsLog, setStepIndex, canvaFunctions.layersModelUpdate)
@@ -82,16 +94,12 @@ Column {
             }
         }
     }
-    StyleSheet {id: style}
 
     function setName(newName) {
         name = newName
     }
     function setVal(value) {
         val1 = value
-    }
-    function setStepIndex(value) {
-        stepIndex = value
     }
     function getVals() {
         return {

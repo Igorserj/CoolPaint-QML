@@ -46,7 +46,7 @@
         <file>Effects/colorHighlight.fsh</file>
         <file>Models/ManipulatorModel.qml</file>
         <file>Models/ExportMenuModel.qml</file>
-        <file>Effects/gaussianBlur.fsh</file>
+        <file>Effects/blur.fsh</file>
         <file>Controllers/exportMenuController.js</file>
         <file>Models/ExportMenuBlockModel.qml</file>
         <file>Controls/Label.qml</file>
@@ -87,5 +87,14 @@
         <file>Controllers/effectsModelNormalisation.mjs</file>
         <file>Controls/Underscore.qml</file>
         <file>Effects/gridSection.fsh</file>
+        <file>Interface/WelcomeScreen.qml</file>
+        <file>Controllers/welcomeScreenController.js</file>
+        <file>Models/WelcomeBlockModel.qml</file>
+        <file>Models/WelcomeModel.qml</file>
+        <file>Controls/TextBlock.qml</file>
+        <file>Controls/ButtonGoto.qml</file>
+        <file>Controls/Dialog.qml</file>
+        <file>Controls/Slot.qml</file>
+        <file>Effects/gaussianBlur.fsh</file>
     </qresource>
 </RCC>
