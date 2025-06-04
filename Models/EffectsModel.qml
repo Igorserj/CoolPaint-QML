@@ -228,6 +228,32 @@ ListModel {
         ]
     }
     ListElement {
+        name: "Gaussian unblur"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Radius"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 2.
+                val1: 0.
+                bval1: 0.
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Amount"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 1.5
+                val1: 0.
+                bval1: 0.
+            }
+        ]
+    }
+    ListElement {
         name: "Tone map"
         isOverlay: true
         items: [
@@ -383,6 +409,24 @@ ListModel {
                 category: "layer"
                 type: "insertDropdown"
                 name: "Blending mode:"
+            },
+            ListElement {
+                category: "layer"
+                type: "buttonSwitch"
+                name: "Sharp mask"
+                min1: 0
+                max1: 1
+                val1: 1
+                bval1: 1
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Opacity"
+                min1: 0
+                max1: 1
+                val1: 1
+                bval1: 1
             }
         ]
     }
@@ -457,6 +501,32 @@ ListModel {
         ]
     }
     ListElement {
+        name: "Unblur"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Radius"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 2.
+                val1: 0.
+                bval1: 0.
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Amount"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 1.5
+                val1: 0.
+                bval1: 0.
+            }
+        ]
+    }
+    ListElement {
         name: "Rotation"
         isOverlay: false
         items: [
@@ -493,7 +563,7 @@ ListModel {
             ListElement {
                 category: "layer"
                 type: "slider"
-                name: "Opacity"
+                name: "Strength"
                 view: "normal,overlay"
                 min1: 0.
                 max1: 1.
@@ -530,6 +600,262 @@ ListModel {
                 category: "layer"
                 type: "insertDropdown"
                 name: "Blending mode:"
+            }
+        ]
+    }
+    ListElement {
+        name: "Color fill"
+        isOverlay: true
+        items: [
+            ListElement {
+                category: "layer"
+                type: "buttonSwitch"
+                name: "Color auto determination"
+                view: "normal"
+                min1: 0.
+                min2: 0.
+                max1: 1.
+                max2: 0.
+                val1: 0.
+                val2: 0.
+                bval1: 0.
+                bval2: 0.
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Red"
+                view: "normal"
+                min1: 0.
+                min2: 0.
+                max1: 255.
+                max2: 0.
+                val1: 255.
+                val2: 0.
+                bval1: 255.
+                bval2: 0.
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Green"
+                view: "normal"
+                min1: 0.
+                min2: 0.
+                max1: 255.
+                max2: 0.
+                val1: 255.
+                val2: 0.
+                bval1: 255.
+                bval2: 0.
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Blue"
+                view: "normal"
+                min1: 0.
+                min2: 0.
+                max1: 255.
+                max2: 0.
+                val1: 255.
+                val2: 0.
+                bval1: 255.
+                bval2: 0.
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Alpha"
+                view: "normal,overlay"
+                min1: 0.
+                min2: 0.
+                max1: 255.
+                max2: 0.
+                val1: 255.
+                val2: 0.
+                bval1: 255.
+                bval2: 0.
+            },
+            ListElement {
+                category: "layer"
+                type: "joystick"
+                name: "Pixel chooser"
+                view: "normal"
+                min1: 0.
+                min2: 0.
+                max1: 1.
+                max2: 1.
+                val1: 0.
+                val2: 0.
+                bval1: 0.
+                bval2: 0.
+            }
+        ]
+    }
+    ListElement {
+        name: "Gamma correction"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "buttonSwitch"
+                name: "Encode"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 1.
+                val1: 1.
+                bval1: 1.
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Gamma"
+                view: "normal,overlay"
+                min1: 1.
+                max1: 2.33
+                val1: 1.
+                bval1: 1.
+            }
+        ]
+    }
+    ListElement {
+        name: "Contrast correction"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Strength"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 5.
+                val1: 1.
+                bval1: 1.
+            }
+        ]
+    }
+    ListElement {
+        name: "Brightness correction"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Strength"
+                view: "normal,overlay"
+                min1: -1.
+                max1: 1.
+                val1: 0.
+                bval1: 0.
+            }
+        ]
+    }
+    ListElement {
+        name: "Color swap"
+        isOverlay: true
+        items: [
+            ListElement {
+                category: "layer"
+                type: "empty"
+                name: ""
+                view: ""
+                min1: 0
+                max1: 0
+                val1: 0
+                bval1: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "empty"
+                name: ""
+                view: ""
+                min1: 0
+                max1: 0
+                val1: 0
+                bval1: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "insertDropdown"
+                name: "Red channel"
+                view: "normal"
+                min1: 0
+                max1: 3
+                val1: 0
+                bval1: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "insertDropdown"
+                name: "Green channel"
+                view: "normal"
+                min1: 0
+                max1: 3
+                val1: 1
+                bval1: 1
+            },
+            ListElement {
+                category: "layer"
+                type: "insertDropdown"
+                name: "Blue channel"
+                view: "normal"
+                min1: 0
+                max1: 3
+                val1: 2
+                bval1: 2
+            },
+            ListElement {
+                category: "layer"
+                type: "insertDropdown"
+                name: "Alpha channel"
+                view: "normal,overlay"
+                min1: 0
+                max1: 3
+                val1: 3
+                bval1: 3
+            }
+        ]
+    }
+    ListElement {
+        name: "Pixelation"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Strength"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 1.
+                val1: 0.
+                bval1: 0.
+            }
+        ]
+    }
+    ListElement {
+        name: "Pixel sharpness"
+        isOverlay: false
+        items: [
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Strength"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 1.
+                val1: 0.
+                bval1: 0.
+            },
+            ListElement {
+                category: "layer"
+                type: "slider"
+                name: "Amount"
+                view: "normal,overlay"
+                min1: 0.
+                max1: 1.5
+                val1: 0.
+                bval1: 0.
             }
         ]
     }

@@ -82,9 +82,9 @@ Rectangle {
                         }
                     }
                 ]
-                Behavior on x { NumberAnimation { duration: 300 } }
-                Behavior on width { NumberAnimation { duration: 300 } }
-                Behavior on height { NumberAnimation { duration: 300 } }
+                Behavior on x { NumberAnimation { duration: strictStyle ? 0 : 300 } }
+                Behavior on width { NumberAnimation { duration: strictStyle ? 0 : 300 } }
+                Behavior on height { NumberAnimation { duration: strictStyle ? 0 : 300 } }
                 Text {
                     id: imgText
                     anchors.fill: parent
@@ -98,7 +98,6 @@ Rectangle {
                 }
                 Image {
                     id: img
-                    // anchors.fill: parent
                     width: parent.width * 0.9
                     height: parent.height * 0.9
                     anchors.centerIn: parent
@@ -120,13 +119,16 @@ Rectangle {
                 height: parent.width * 0.425
                 x: imageContainer.x + imageContainer.width + window.width * 0.005
                 y: parent.width * (0.5 - 0.4625)
-                Behavior on opacity { NumberAnimation { duration: 150 } }
+                Behavior on opacity { NumberAnimation { duration: strictStyle ? 0 : 150 } }
             }
             MouseArea {
                 anchors.fill: parent
                 cursorShape: "PointingHandCursor"
                 onClicked: {
                     overlayFolder.folderAction()
+                }
+                onDoubleClicked: {
+                    blockRect.clickAction(name, fileName, slotIndex, [path, img.source], true)
                 }
             }
             OverlayFolder {
@@ -169,7 +171,7 @@ Rectangle {
                     target: foldableArea
                     property: "height"
                     to: 0
-                    duration: 500
+                    duration: strictStyle ? 0 : 500
                 }
             }
             SequentialAnimation {
@@ -178,7 +180,7 @@ Rectangle {
                     target: foldableArea
                     property: "height"
                     to: foldableArea.childrenRect.height
-                    duration: 500
+                    duration: strictStyle ? 0 : 500
                 }
             }
             Repeater {
@@ -187,7 +189,7 @@ Rectangle {
                     text: name
                     w: 230
                     function clickAction() {
-                        blockRect.clickAction(name, fileName, slotIndex, [path, img.source])
+                        blockRect.clickAction(name, fileName, slotIndex, [path, img.source], false)
                     }
                 }
             }

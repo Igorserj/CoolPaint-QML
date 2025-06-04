@@ -15,20 +15,20 @@ Rectangle {
             target: underscore
             property: "opacity"
             to: 1
-            duration: 250
+            duration: strictStyle ? 0 : 250
         }
         SequentialAnimation {
             PropertyAnimation {
                 target: underscore
                 property: "x"
                 to: (underscore.parent.width - underscore.width) / 3
-                duration: 250
+                duration: strictStyle ? 0 : 250
             }
             PropertyAnimation {
                 target: underscore
                 property: "x"
                 to: (underscore.parent.width - underscore.width) / 2
-                duration: 250
+                duration: strictStyle ? 0 : 250
                 easing.type: Easing.OutExpo
             }
         }
@@ -39,21 +39,21 @@ Rectangle {
             target: underscore
             property: "opacity"
             to: 0
-            duration: 250
+            duration: strictStyle ? 0 : 250
         }
         SequentialAnimation {
             PropertyAnimation {
                 target: underscore
                 property: "x"
                 to: (underscore.parent.width - underscore.width) / 1.5
-                duration: 250
+                duration: strictStyle ? 0 : 250
                 easing.type: Easing.OutExpo
             }
             PropertyAnimation {
                 target: underscore
                 property: "x"
                 to: (underscore.parent.width - underscore.width) / 2
-                duration: 250
+                duration: strictStyle ? 0 : 250
             }
         }
     }

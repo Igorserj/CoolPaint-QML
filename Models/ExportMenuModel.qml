@@ -64,15 +64,4 @@ ListModel {
         min1: 0
         wdth: 240
     }
-    ListElement {
-        name: "Close"
-        type: "buttonDark"
-        category: "export"
-        val1: 0
-        val2: 0
-        bval1: 0
-        max1: 1
-        min1: 0
-        wdth: 240
-    }
 }

@@ -58,7 +58,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: window.height * 0.005
                     Behavior on y {
-                        NumberAnimation { duration: 250 }
+                        NumberAnimation { duration: strictStyle ? 0 : 250 }
                     }
                     Repeater {
                         model: block
@@ -88,19 +88,19 @@ Rectangle {
         if (blockRect.enabled) {
             switch (blockRect.state) {
             case "enabled": return true
-            case "insertion": return isOverlay && layerIndex !== -1 ? !["Overlay", "Combination mask"].includes(name) : false
-            case "insertion2": return !["Overlay", "Combination mask"].includes(name)
+            case "insertion": return isOverlay && layerIndex !== -1 ? !["Overlay", "Combination mask", "Color swap"].includes(name) : false
+            case "insertion2": return !["Overlay", "Combination mask", "Color swap"].includes(name)
             case "layerSwap": return true
             }
         }
         else return false
     }
 
-    function clickAction(name, type, index, val) {
+    function clickAction(name, type, index, val, doubleClick) {
         blockRect.name = name
         blockRect.type = type
         blockRect.index = index
         blockRect.val = val
-        blockAction(index)
+        blockAction(index, doubleClick)
     }
 }

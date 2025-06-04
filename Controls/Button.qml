@@ -13,7 +13,7 @@ Rectangle {
                            }
     Behavior on color {
         ColorAnimation {
-            duration: 200
+            duration: strictStyle ? 0 : 200
         }
     }
     Behavior on radius {

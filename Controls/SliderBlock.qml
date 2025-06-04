@@ -78,7 +78,7 @@ Rectangle {
                                   name: `Reset value of ${name}`,
                                   prevValue: {val: val1},
                                   value: {val: val0},
-                                  index: leftPanelFunctions.getLayerIndex, // layer number
+                                  index: leftPanelFunctions.getLayerIndex(), // layer number
                                   subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                                   propIndex: index, // sublayer property number
                                   valIndex: 0

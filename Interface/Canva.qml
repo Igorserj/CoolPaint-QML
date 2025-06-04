@@ -4,11 +4,12 @@ import "../Models"
 
 Item {
     property alias effectComponents: effectComponents
-    property Image finalImage
+    property var finalImage
     property bool mirroring: false
     property bool smoothing: false
     property bool preserveAspect: true
     property double scaling: 1.
+    property var srcList: []
     x: (window.width - width) / 2
     width: window.width / 1280 * (1280 - 2 * 260)
     height: window.height
@@ -21,14 +22,22 @@ Item {
             name: "manipulator"
         }
     ]
-    Component.onCompleted: setCanvaFunctions()
+    Component.onCompleted: {
+        checkerboardLoad()
+        setCanvaFunctions()
+    }
+    Loader {
+        id: checkerboardLoader
+        anchors.fill: baseImage
+        scale: scaling
+    }
     Image {
         id: baseImage
         readonly property double aspect: sourceSize.width / sourceSize.height
         property double w: parent.width
         property double h: parent.height
         width: preserveAspect ? aspect > 1 ? w : height * aspect : w
-        height: preserveAspect ? aspect > 1 ? width / aspect : h : h
+        height: preserveAspect ? aspect > 1 ? w / aspect : h : h
         scale: scaling
         mirror: mirroring
         smooth: smoothing
@@ -55,11 +64,15 @@ Item {
         }
         onWheel: {
             canvaVScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
+            canvaHScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
         }
         onContainsMouseChanged: {
             if (canvaArea.containsMouse) {
                 canvaArea.currentPos = Qt.point(canvaArea.mouseX, canvaArea.mouseY)
             }
+        }
+        onDoubleClicked: {
+            if (helperContainer.state === "enlarged") helperAreaAction(getPreview())
         }
     }
     Repeater {
@@ -68,6 +81,80 @@ Item {
     }
     EffectComponents {
         id: effectComponents
+    }
+    Rectangle {
+        id: helperContainer
+        color: window.style.currentTheme.lightDark
+        visible: false
+        x: (parent.width - width) - canvaVScroller.width
+        y: (parent.height - height) - canvaHScroller.height
+        state: "shrinked"
+        states: [
+            State {
+                name: "shrinked"
+                PropertyChanges {
+                    target: helperContainer
+                    width: baseImage.width / 8
+                    height: baseImage.height / 8
+                    color: window.style.currentTheme.lightDark
+                }
+                PropertyChanges {
+                    target: helperArea
+                    visible: true
+                    enabled: true
+                }
+            },
+            State {
+                name: "enlarged"
+                PropertyChanges {
+                    target: helperContainer
+                    width: baseImage.width
+                    height: baseImage.height
+                    x: baseImage.x
+                    y: baseImage.y
+                    scale: scaling
+                    color: "transparent"
+                }
+                PropertyChanges {
+                    target: helperArea
+                    visible: false
+                    enabled: false
+                }
+            },
+            State {
+                name: "disabled"
+                PropertyChanges {
+                    target: helperContainer
+                    width: 0
+                    height: 0
+                    scale: 1
+                    color: "transparent"
+                }
+                PropertyChanges {
+                    target: helperArea
+                    visible: false
+                    enabled: false
+                }
+            }
+        ]
+        onStateChanged: console.log('State', state)
+        Image {
+            id: helperImage
+            anchors.fill: parent
+        }
+        MouseArea {
+            id: helperArea
+            anchors.fill: parent
+            drag.target: helperContainer
+            drag.maximumX: helperContainer.parent.width - helperContainer.width - canvaVScroller.width
+            drag.minimumX: canvaVScroller.width
+            drag.maximumY: helperContainer.parent.height - helperContainer.height - canvaHScroller.height
+            drag.minimumY: canvaHScroller.height
+            cursorShape: Qt.SizeAllCursor
+            onDoubleClicked: {
+                helperAreaAction(getPreview())
+            }
+        }
     }
     Repeater {
         model: manipulatorModel
@@ -115,7 +202,64 @@ Item {
     ManipulatorModel {
         id: manipulatorModel
     }
+    Component {
+        id: checkerboard
+        ShaderEffect {
+            readonly property point u_resolution: Qt.point(parent.width, parent.height)
+            readonly property real density: window.density
+            fragmentShader: "qrc:/Effects/checkerboard.fsh"
+            Component.onCompleted: console.log(density)
+        }
+    }
 
+    function helperAreaAction() {
+        switch (helperContainer.state) {
+        case "enlarged": {
+            helperContainer.state = "shrinked"
+            if (finalImage !== null) finalImage.visible = true
+            break
+        }
+        case "shrinked": {
+            helperContainer.state = "enlarged"
+            if (finalImage !== null) finalImage.visible = false
+            break
+        }
+        default: {
+            helperContainer.state = "shrinked"
+            if (finalImage !== null) finalImage.visible = true
+            const index = !layersModel.get(leftPanelFunctions.getLayerIndex()).isRenderable ? leftPanelFunctions.getLayerIndex() : -1
+            setHelperImage(index)
+            break
+        }
+        }
+    }
+    function disableHelper() {
+        helperContainer.state = "disabled"
+        finalImage.visible = true
+    }
+    function srcListAppend(source, index, iteration = -1) {
+        let idx = -1
+        for (let i = 0; i < srcList.length; ++i) {
+            if (srcList[i].index === index && srcList[i].iteration === iteration) {
+                idx = i
+                break
+            }
+        }
+        if (idx !== -1) {
+            srcList[idx].source = source
+        } else {
+            srcList.push({ "index": index, "iteration": iteration, "source": source })
+        }
+    }
+    function checkerboardLoad() {
+        checkerboardLoader.sourceComponent = undefined
+        if (density >= 0) {
+            checkerboardLoader.sourceComponent = checkerboard
+            checkerboardLoader.visible = true
+        } else {
+            checkerboardLoader.visible = false
+        }
+    }
     function setCanvaState(newState) {
         state = newState
     }
@@ -214,19 +358,39 @@ Item {
         else console.log(`Wrong value. Value is not a number`)
     }
     function setMirroring(value) {
-        if (value === 0 || value === 1) mirroring = Boolean(value)
+        if (value === 0 || value === 1) mirroring = value === 1
         else {console.log(`Wrong value: ${value} for mirroring`)}
     }
     function setSmoothing(value) {
-        if (value === 0 || value === 1) smoothing = Boolean(value)
+        if (value === 0 || value === 1) smoothing = value === 1
         else {console.log(`Wrong value: ${value} for smoothing`)}
     }
     function setPreserveAspect(value) {
-        if (value === 0 || value === 1) preserveAspect = Boolean(value)
+        if (value === 0 || value === 1) preserveAspect = value === 1
         else {console.log(`Wrong value: ${value} for preserve aspect`)}
     }
     function getFinalImage() {
         return finalImage
+    }
+    function setHelperImage(index) {
+        if (index > -1) {
+            for (let i = 0; i < srcList.length; ++i) {
+                if (srcList[i].index === index && srcList[i].iteration === 0) {
+                    helperContainer.visible = true
+                    helperImage.source = srcList[i].source
+                    break
+                }
+            }
+        } else {
+            helperContainer.visible = false
+            helperContainer.state = "shrinked"
+            try {
+                finalImage.visible = true
+            } catch (error) {
+                console.log(error)
+            }
+            helperImage.source = ""
+        }
     }
     function setCanvaFunctions() {
         canvaFunctions = {
@@ -245,7 +409,11 @@ Item {
             getFinalImage,
             setImageSize,
             setCanvaState,
-            getCanvaState
+            getCanvaState,
+            checkerboardLoad,
+            setHelperImage,
+            helperAreaAction,
+            disableHelper
         }
     }
 }

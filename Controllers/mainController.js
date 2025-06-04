@@ -60,6 +60,7 @@ function settingsBlockAction(index, name, settingsMenuModel, settingsMenuBlockMo
         setStyle(settingsMenuBlockModel.get(1).block.get(settingsModel.style[0]).val1, settingsModel.style[0])
         setUiFx(settingsMenuBlockModel.get(1).block.get(settingsModel.effects[0]).val1, settingsModel.effects[0])
         setTheme(settingsMenuBlockModel.get(1).block.get(settingsModel.theme[0]).val1, settingsModel.theme[0])
+        setCheckerboard(settingsMenuBlockModel.get(1).block.get(settingsModel.density[0]).val1, settingsModel.density[0])
         console.log('Writing to', settingsFile, 'success:', result)
         break
     }

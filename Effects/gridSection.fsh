@@ -7,12 +7,14 @@ uniform lowp float rows;
 uniform lowp float columns;
 uniform lowp vec2 cellPosition;
 uniform lowp bool fixedPosition;
-uniform lowp bool isOverlay;
+// uniform lowp bool isOverlay;
+// uniform bool ;
 
 void main(void)
 {
     vec2 st = gl_FragCoord.xy/u_resolution;
     lowp vec4 tex = texture2D(src, vec2(st.x, 1.-st.y));
+    // tex.a = 1.0;
     float col = 1./columns;
     float row = 1./rows;
     float leftSide = 0.;

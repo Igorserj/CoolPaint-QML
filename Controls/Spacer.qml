@@ -33,7 +33,7 @@ Rectangle {
     Behavior on color {
         ColorAnimation {
             target: spacer
-            duration: 200
+            duration: strictStyle ? 0 : 200
         }
     }
 

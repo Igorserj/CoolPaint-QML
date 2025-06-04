@@ -16,7 +16,10 @@ Item {
                 const newVal = val[0] === 0 ? 1 : 0
                 leftPanelFunctions.switchRendering(layerIndex, newVal)
                 const blockModel = leftPanelFunctions.getLayersBlockModel().get(1).block
-                blockModel.setProperty(layerIndex, 'isRenderable', Boolean(val[0]))
+                blockModel.setProperty(layerIndex, 'isRenderable', val[0] === 1)
+                if (!layersModel.get(layerIndex).isRenderable && showPreview) canvaFunctions.setHelperImage(layerIndex)
+                else if (layersModel.get(layerIndex).isRenderable && showPreview) canvaFunctions.setHelperImage(-1)
+                else canvaFunctions.disableHelper()
             } else if (name === "Inversion") {
                 const newVal = val[0] === 0 ? 1 : 0
                 const blockModel = rightPanelFunctions.getPropertiesBlockModel()
@@ -29,7 +32,17 @@ Item {
         id: viewsBlock
         y: parent.height / 2 + window.height * 0.01
         blockModel: viewsBlockModel
-        function blockAction() {}
+        function blockAction() {
+            if (name === "Mirroring") {
+                canvaFunctions.setMirroring(val[0])
+            } else if (name === "Smoothing") {
+                canvaFunctions.setSmoothing(val[0])
+                canvaFunctions.reDraw()
+            } else if (name === "Show preview") {
+                console.log('val',val[0])
+                switchPreview(val[0])
+            }
+        }
     }
     Component.onCompleted: {
         spacer.upperBlock = propertiesBlock

@@ -3,7 +3,6 @@ import QtQuick 2.15
 Item {
     id: acrylicItem
     property Item background
-    // anchors.fill: parent
     width: parent.width
     height: parent.height
 
@@ -46,15 +45,13 @@ Item {
     Component {
         id: blur
         ShaderEffect {
-            property point u_resolution: Qt.point(window.width, window.height)
-            property double u_radius: 4.
-            property bool isOverlay: false
-            property variant src: img
+            readonly property point u_resolution: Qt.point(window.width, window.height)
+            readonly property double u_radius: 4.
+            readonly property variant src: img
             width: acrylicItem.width
             height: acrylicItem.height
             fragmentShader: "qrc:/Effects/blur.fsh"
 
-            // Monitor window size changes and regrab image
             onU_resolutionChanged: {
                 if (acrylicItem.state === "active") {
                     regrabTimer.restart()
@@ -67,7 +64,7 @@ Item {
         Rectangle {
             width: acrylicItem.width + 4
             height: acrylicItem.height + 4
-            color: "black"
+            color: style.currentTheme.pinkWhite
         }
     }
 
@@ -84,7 +81,6 @@ Item {
 
     function activate() {
         if (!!background && state !== "disabled") {
-            // First set to inactive to clear any existing shader
             state = "inactive"
             grabImg()
         }
@@ -97,11 +93,9 @@ Item {
     function grabImg() {
         if (!!background) {
             background.grabToImage(function(result) {
-                    // Clear old source and set new one
                     img.source = ""
                     img.source = result.url
 
-                    // Only activate after the image is successfully grabbed
                     if (state !== "disabled") {
                         state = "active"
                     }

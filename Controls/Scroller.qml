@@ -31,20 +31,20 @@ Rectangle {
             PropertyAnimation {
                 target: bar
                 property: "y"
-                duration: 50
+                duration: strictStyle ? 0 : 50
             }
         }
         Behavior on x {
             PropertyAnimation {
                 target: bar
                 property: "x"
-                duration: 50
+                duration: strictStyle ? 0 : 50
             }
         }
         Behavior on color {
             ColorAnimation {
                 target: bar
-                duration: 200
+                duration: strictStyle ? 0 : 200
             }
         }
         Behavior on radius {

@@ -21,7 +21,7 @@ Rectangle {
         PropertyAnimation {
             target: valueDialog
             property: "opacity"
-            duration: 200
+            duration: strictStyle ? 0 : 200
         }
     }
     states: [
@@ -44,6 +44,17 @@ Rectangle {
         id: acrylicBackground
         background: ui
         z: -1
+    }
+    MouseArea {
+        id: dialogArea
+        anchors.fill: parent
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Escape) {
+                close()
+            } else if (event.key === Qt.Key_Return) {
+                buttonAction("Apply")
+            }
+        }
     }
     Label {
         width: valueRect.width - row.width - row.spacing
@@ -111,6 +122,8 @@ Rectangle {
     }
 
     function open({value, name, updateFunc, category, index, propIndex, valIndex, subIndex, addName}) {
+        disableMainArea()
+        dialogArea.focus = true
         canvaFunctions.disableManipulator()
         valueDialog.value = value
         valueDialog.name = name
@@ -126,6 +139,7 @@ Rectangle {
         state = "visible"
     }
     function close() {
+        enableMainArea()
         value = 0.0
         name = ''
         enabled = false

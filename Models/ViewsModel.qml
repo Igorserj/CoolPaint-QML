@@ -37,4 +37,16 @@ ListModel {
         bval1: 0
         isOverlay: false
     }
+    ListElement {
+        type: "buttonSwitch"
+        wdth: 240
+        name: "Show preview"
+        category: "view"
+        val1: 1
+        val2: 0
+        min1: 0
+        max1: 1
+        bval1: 1
+        isOverlay: false
+    }
 }

@@ -9,7 +9,6 @@ uniform sampler2D src3;
 uniform lowp int overlayMode;
 uniform bool inversion2;
 uniform bool inversion3;
-uniform bool isOverlay;
 
 void main(void)
 {
@@ -28,6 +27,8 @@ void main(void)
         tex *= ((tex2.a - (tex2.a * tex3.a))) * (1.-opacity_str) + opacity_str;
     } else if (overlayMode == 3) {
         tex *= (tex2.a * tex3.a) * (1.-opacity_str) + opacity_str;
+    } else if (overlayMode == 4) {
+        tex *= (tex2.a + tex3.a - 2. * (tex2.a * tex3.a)) * (1.-opacity_str) + opacity_str;
     }
 
     gl_FragColor = vec4(tex);

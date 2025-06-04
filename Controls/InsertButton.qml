@@ -9,6 +9,7 @@ Column {
     height: childrenRect.height
     Component.onCompleted: updating()
     OverlayFolder {
+        id: overlayFolder
         text: name
     }
     Item {
@@ -39,7 +40,7 @@ Column {
                 target: foldableArea
                 property: "height"
                 to: 0
-                duration: 500
+                duration: strictStyle ? 0 : 500
             }
         }
         SequentialAnimation {
@@ -48,7 +49,7 @@ Column {
                 target: foldableArea
                 property: "height"
                 to: foldableArea.childrenRect.height
-                duration: 500
+                duration: strictStyle ? 0 : 500
             }
         }
         ButtonDark {
@@ -56,6 +57,7 @@ Column {
 
             SequentialAnimation {
                 id: flashAnimation
+                running: iterationIndex === index
                 loops: Animation.Infinite
                 PropertyAnimation {
                     target: insertButtonRect
@@ -63,7 +65,7 @@ Column {
                     from: style.currentTheme.darkGlassAccent
                     to: style.currentTheme.vinousGlass
                     duration: 1000
-                    easing.type: "InOutQuad"
+                    easing.type: strictStyle ? "OutExpo" : "InOutQuad"
                 }
                 PropertyAnimation {
                     target: insertButtonRect
@@ -71,10 +73,14 @@ Column {
                     from: style.currentTheme.vinousGlass
                     to: style.currentTheme.darkGlassAccent
                     duration: 1500
-                    easing.type: "OutQuad"
+                    easing.type: strictStyle ? "OutExpo" : "OutQuad"
+                }
+                onStopped: {
+                    insertButtonRect.color = style.currentTheme.darkGlass
                 }
             }
             function clickAction() {
+                console.log("click", flashAnimation.running)
                 Controller.activateInsertion(index, leftPanelFunctions, name, setIterationIndex, flashAnimation)
             }
         }
@@ -111,16 +117,25 @@ Column {
                     height: controlsLoader.height
                     Loader {
                         id: controlsLoader
-                        sourceComponent: {
-                            overlayControls[type]
-                        }
+                        sourceComponent: (typeof(view) !== "undefined" ?
+                                              overlayFolder.text === "Mask" ?
+                                                  view.includes("overlay") : view.includes("normal") : true) ?
+                                             type === "insertDropdown" ?
+                                                 insertDropdown : overlayControls[type] : overlayControls['empty']
                         onLoaded: {
                             width = Qt.binding(() => item.width)
                             height = Qt.binding(() => item.height)
+                            console.log("Loaded", type)
                         }
                     }
                     OverlayControls {
                         id: overlayControls
+                    }
+                    Component {
+                        id: insertDropdown
+                        InsertDropdown {
+                            function clickAction() {controlsAction({name, type, index, val1, val2})}
+                        }
                     }
                 }
             }

@@ -4,7 +4,7 @@ Rectangle {
     id: joystick
     property alias stickArea: stickArea
     property int w: 115
-    property var prevVal: [-1, -1]//[val1, val2]
+    property var prevVal: [-1, -1]
     property var isReleased: [true, true]
     width: window.width / 1280 * w
     height: window.width / 1280 * w
@@ -40,7 +40,7 @@ Rectangle {
     ]
     Behavior on color {
         ColorAnimation {
-            duration: 200
+            duration: strictStyle ? 0 : 200
         }
     }
     Behavior on radius {

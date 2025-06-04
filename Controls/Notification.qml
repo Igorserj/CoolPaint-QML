@@ -16,18 +16,21 @@ Rectangle {
             close()
         }
     }
+    Behavior on y {
+        PropertyAnimation {
+            target: notification
+            property: "y"
+            duration: strictStyle ? 0 : 400
+            easing.type: "OutBack"
+        }
+    }
     AcrylicBackground {
         id: acrylicBackground
         background: ui
         z: -1
     }
-    Behavior on y {
-        PropertyAnimation {
-            target: notification
-            property: "y"
-            duration: 400
-            easing.type: "OutBack"
-        }
+    MouseArea {
+        anchors.fill: parent
     }
     TextBlock {
         id: label

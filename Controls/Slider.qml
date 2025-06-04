@@ -33,7 +33,7 @@ Rectangle {
     ]
     Behavior on color {
         ColorAnimation {
-            duration: 200
+            duration: strictStyle ? 0 : 200
         }
     }
     Behavior on radius {
@@ -56,10 +56,13 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onMouseXChanged: if (containsPress) clickAction()
-        onReleased: if (!doNotLog.includes(category)) {
-                        logAction()
-                        modelFunctions.autoSave()
-                    }
+        onReleased: {
+            if (!doNotLog.includes(category) && prevVal !== val1) {
+                logAction()
+                modelFunctions.autoSave()
+            }
+            isReleased = true
+        }
     }
 
     function logAction() {
@@ -77,7 +80,6 @@ Rectangle {
                           })
         stepIndex += 1
         prevVal = parseFloat(val1)
-        isReleased = true
     }
     function clickAction() {
         if (isReleased) prevVal = parseFloat(val1)

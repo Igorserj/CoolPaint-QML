@@ -12,7 +12,7 @@ Rectangle {
         PropertyAnimation {
             target: exitDialog
             property: "opacity"
-            duration: 200
+            duration: strictStyle ? 0 : 200
         }
     }
     states: [
@@ -35,6 +35,17 @@ Rectangle {
         id: acrylicBackground
         background: ui
         z: -1
+    }
+    MouseArea {
+        id: dialogArea
+        anchors.fill: parent
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Escape) {
+                close()
+            } else if (event.key === Qt.Key_Return) {
+                exit()
+            }
+        }
     }
     Label {
         width: labelArea.width
@@ -68,19 +79,19 @@ Rectangle {
             target: exitDialog
             property: "x"
             to: (window.width * 1.015 - exitDialog.width) / 2
-            duration: 100
+            duration: strictStyle ? 0 : 100
         }
         PropertyAnimation {
             target: exitDialog
             property: "x"
             to: (window.width / 1.015 - exitDialog.width) / 2
-            duration: 100
+            duration: strictStyle ? 0 : 100
         }
         PropertyAnimation {
             target: exitDialog
             property: "x"
             to: (window.width - exitDialog.width) / 2
-            duration: 100
+            duration: strictStyle ? 0 : 100
         }
     }
 
@@ -98,12 +109,15 @@ Rectangle {
     function open() {
         if (visible && enabled) rejectClosing.start()
         else {
+            disableMainArea()
+            dialogArea.focus = true
             acrylicBackground.activate()
             enabled = true
             state = "visible"
         }
     }
     function close() {
+        enableMainArea()
         enabled = false
         state = "hidden"
         popUpFunctions.closeNotification()

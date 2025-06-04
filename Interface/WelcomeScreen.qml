@@ -66,7 +66,7 @@ Rectangle {
             target: welcomeScreen
             property: "x"
             to: -welcomeScreen.width
-            duration: 700
+            duration: strictStyle ? 0 : 700
             easing.type: Easing.InOutQuad
         }
         PropertyAction {
@@ -86,7 +86,8 @@ Rectangle {
             target: welcomeScreen
             property: "x"
             to: 0
-            duration: 400
+            duration: strictStyle ? 0 : 700
+            easing.type: Easing.OutQuad
         }
     }
 
@@ -132,7 +133,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         height: parent.height * 0.96
                         blockModel: module
-                        function blockAction() {
+                        function blockAction(_, doubleClick) {
                             if (moduleIndex === 0) {
                                 switch (getState()) {
                                 case "actions": {
@@ -169,7 +170,7 @@ Rectangle {
                                     Controller.welcomeModelPopulation(welcomeModel, welcomeBlockModel, undefined, getState)
                                 }
                             } else if (moduleIndex === 1 || moduleIndex === 2) {
-                                if (name === "Open project") {
+                                if (name === "Open project" || doubleClick) {
                                     const currentFile = val[0].startsWith('file://') ? val[0] : Qt.resolvedUrl(`file://${val[0]}`)
                                     const data = fileIO.read(currentFile)
                                     if (data !== "") {

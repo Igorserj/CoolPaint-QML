@@ -7,6 +7,7 @@ function addEffect(name) {
     case "Black and white": return blackAndWhite
     case "Motion blur": return motionBlur
     case "Gaussian blur": return gaussianBlur
+    case "Gaussian unblur": return gaussianUnblur
     case "Tone map": return toneMap
     case "Grid": return grid
     case "Grid section": return gridSection
@@ -15,9 +16,17 @@ function addEffect(name) {
     case "Mirror": return mirrorEffect
     case "Color highlight": return colorHighlight
     case "Blur": return blur
+    case "Unblur": return unblur
     case "Rotation": return rotationEffect
     case "Negative": return negativeEffect
     case "Combination mask": return combinationMask
+    case "Color fill": return colorFill
+    case "Gamma correction": return gammaCorrection
+    case "Contrast correction": return contrastCorrection
+    case "Brightness correction": return brightnessCorrection
+    case "Color swap": return colorSwap
+    case "Pixelation": return pixelation
+    case "Pixel sharpness": return depixelation
     }
 }
 
@@ -76,11 +85,13 @@ function reActivateLayer(layersModel, overlaysModel, idx, iteration, finalImage)
 function propertyPopulation(type, items, index) {
     let result;
     if (type === "one") {
-        if (items !== null && items.count > 0) result = items.get(index).val1
+        if (items !== null && !!items.get(index) && items.count > 0) result = items.get(index).val1
         else result =  0
     } else if (type === "two") {
-        if (items !== null && items.count > 0) result = Qt.point(items.get(index).val1, items.get(index).val2)
+        if (items !== null && !!items.get(index) && items.count > 1) result = Qt.point(items.get(index).val1, items.get(index).val2)
         else result = Qt.point(0, 0)
+    } else {
+        console.log(type, items, index)
     }
     return result
 }
@@ -88,8 +99,8 @@ function propertyPopulation(type, items, index) {
 function propertyPopulationDropdown(model, layerIndex, index) {
     const items = !!model.get(layerIndex) ? model.get(layerIndex).items : undefined;
     let result = -1;
-    if (!!items) {
-        if (items !== null && items.count > 0) result = items.get(index).val1
+    if (typeof(items) !== "undefined") {
+        if (items !== null && items.count > 0 && typeof(items.get(index)) !== "undefined") result = items.get(index).val1
         else result =  0
     }
     return result
@@ -99,7 +110,7 @@ function srcPopulation(repeater, index, baseImage, iteration = -1) {
     if (iteration === -1) {
         if (index === 0) return baseImage
         else if (repeater.itemAt(index-1) !== null) return repeater.itemAt(index-1).children[1]
-    } else { //if (overlayEffectsModel.count > index) {
+    } else {
         const items = overlayEffectsModel.get(index).items
         for (let i = 0; i < items.count; ++i) {
             const item = items.get(i)

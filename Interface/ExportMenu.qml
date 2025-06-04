@@ -23,10 +23,14 @@ Item {
                 exportFileDialog.open()
                 break
             }
-            case "Close": {
-                close()
+            case "Preserve aspect fit": {
+                canvaFunctions.setPreserveAspect(val[0])
                 break
             }
+            // case "Close": {
+            //     close()
+            //     break
+            // }
             }
         }
     }

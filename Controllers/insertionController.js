@@ -5,34 +5,35 @@ function activateInsertion(index, leftPanelFunctions, name, setIterationIndex, a
     case "Mask": {
         if (effectsBlockState !== "insertion") {
             setEffectsBlockState("insertion")
-            animation.start()
+            setIterationIndex(index)
         }
         else {
             setEffectsBlockState("enabled")
-            animation.stop()
+            setIterationIndex(-1)
         }
         break
     }
     case "Effect": {
         if (effectsBlockState !== "insertion2") {
             setEffectsBlockState("insertion2")
-            animation.start()
+            setIterationIndex(index)
         }
         else {
             setEffectsBlockState("enabled")
-            animation.stop()
+            setIterationIndex(-1)
         }
         break
     }
     }
-    setIterationIndex(index)
 }
 
 function dropdownChoose(optionName, optionIndex, setName, setVal, getVals, doNotLog, items, autoSave, actionsLog, setStepIndex, updateModel) {
     const { val1, idx, name, index, layerIndex, category } = getVals()
     const logging = !doNotLog.includes(category)
     if (category !== "settings") {
-        setName(`Blending mode: ${optionName}`)
+        console.log("Props", optionName, name)
+        if (["Red", "Green", "Blue", "Alpha"].includes(optionName)) setName(`${name.substring(0, name.indexOf(":") + 1)} ${optionName}`)
+        else setName(`Blending mode: ${optionName}`)
         if (logging) logAction(optionIndex, actionsLog, optionName, setStepIndex, getVals)
         setVal(optionIndex)
         items.setProperty(index, 'name', name)

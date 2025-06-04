@@ -19,8 +19,7 @@ Item {
     height: controlsLoader.height
     Loader {
         id: controlsLoader
-        visible: typeof(view) !== "undefined" ? (typeof(overlay) === "undefined" || !overlay) ? view.includes("normal") : view.includes("overlay") : true
-        sourceComponent: typeof(controls[type]) !== "undefined" ? controls[type] : empty
+        sourceComponent: (typeof(controls[type]) !== "undefined") ? controls[type] : empty
         onLoaded: {
             width = Qt.binding(() => item.width)
             height = Qt.binding(() => item.height)

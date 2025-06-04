@@ -269,7 +269,7 @@ Item {
     Component {
         id: triangle
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -322,7 +322,7 @@ Item {
     Component {
         id: mover
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -416,7 +416,7 @@ Item {
     Component {
         id: boxArrow
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -477,7 +477,7 @@ Item {
     Component {
         id: open
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -588,7 +588,7 @@ Item {
     Component {
         id: openProj
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -655,7 +655,7 @@ Item {
     Component {
         id: save
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -727,7 +727,7 @@ Item {
     Component {
         id: saveAs
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -825,7 +825,7 @@ Item {
     Component {
         id: exportImg
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -934,7 +934,7 @@ Item {
     Component {
         id: newProj
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent
@@ -1009,7 +1009,7 @@ Item {
     Component {
         id: home
         Shape {
-            readonly property int animationDuration: 250
+            readonly property int animationDuration: strictStyle ? 0 : 250
             width: 10 * scaleFactor
             height: 10 * scaleFactor
             anchors.centerIn: parent

@@ -17,6 +17,8 @@ Window {
     property var saveProj
     property bool uiFx: false
     property bool strictStyle: false
+    property bool showPreview: true
+    property int density: -1
     property url currentProjectPath: ""
     property url currentImagePath: ""
     property bool projectSaved: true
@@ -59,6 +61,7 @@ Window {
         UI {}
     }
     MouseArea {
+        id: mainArea
         acceptedButtons: "NoButton"
         focus: true
         Keys.onPressed: {
@@ -66,8 +69,6 @@ Window {
                 actionBarFunctions.redo()
             } else if (event.key === Qt.Key_Z && (event.modifiers & Qt.ControlModifier)) {
                 actionBarFunctions.undo()
-            } else if (event.key === Qt.Key_Escape) {
-                popUpFunctions.closeValueDialog()
             } else if (event.key === Qt.Key_S && (event.modifiers & (Qt.ControlModifier && Qt.ShiftModifier))) {
                 popUpFunctions.openSaveDialog()
             } else if (event.key === Qt.Key_S && (event.modifiers & Qt.ControlModifier)) {
@@ -123,7 +124,6 @@ Window {
                 break
             }
             case 'project': {
-                // eraseModels(parserCallback, [messageObject])
                 eraseModels()
                 projectPopulation(messageObject.result, messageObject.text)
                 if (typeof(messageObject.currentFile) !== "undefined" && !messageObject.currentFile.toString().includes(`${baseDir}/tmp`)) {
@@ -218,6 +218,8 @@ Window {
                     setUiFx(obj.val1, settingsModel.effects[0])
                 } else if (obj.name === "Strict style") {
                     setStyle(obj.val1, settingsModel.style[0])
+                } else if (obj.name === "Checkerboard density" && !!settingsModel.density) {
+                    setCheckerboard(obj.val1, settingsModel.density[0])
                 }
             }
         } else {
@@ -323,6 +325,11 @@ Window {
         settingsMenuModel.setProperty(index, 'val1', value)
         strictStyle = value
     }
+    function setCheckerboard(value, index) {
+        settingsMenuModel.setProperty(index, 'val1', value)
+        density = parseInt(value)
+        if (!!canvaFunctions.checkerboardLoad) canvaFunctions.checkerboardLoad()
+    }
     function createProject() {
         if (!projectSaved) {
             popUpFunctions.openDialog(
@@ -370,10 +377,28 @@ Window {
             fileIO.write(settingsFile, JSON.stringify(data, null, "\t"))
         }
     }
+    function switchPreview(value) {
+        showPreview = value === 1
+        console.log('prev',showPreview, layersModel.get(leftPanelFunctions.getLayerIndex()).isRenderable)
+        if (value === 1) canvaFunctions.helperAreaAction()
+        else canvaFunctions.disableHelper()
+    }
+    function getPreview() {
+        return showPreview
+    }
+    function disableMainArea() {
+        mainArea.focus = false
+        mainArea.enabled = false
+    }
+    function enableMainArea() {
+        mainArea.focus = true
+        mainArea.enabled = true
+    }
 
     function eraseModels(callback, props) {
         console.log("erasing")
         canvaFunctions.deactivateEffects(0)
+        if (typeof(canvaFunctions.setHelperImage) !== "undefined") canvaFunctions.setHelperImage(-1)
         canvaFunctions.resetImage()
         setStepIndex(-1)
         actionsLog.clear()

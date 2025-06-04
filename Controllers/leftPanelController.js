@@ -39,10 +39,10 @@ function layersBlockModelGeneration(model, blockModel) {
 function addLayer(name, type, effectsModel, layersModel, overlayModel, index) {
     if (type === "buttonDark") {
         const effect = JSON.parse(JSON.stringify(effectsModel.get(index)))
-        if (!["Overlay", "Combination mask"].includes(name)) {
+        if (!["Overlay", "Combination mask", "Color swap"].includes(name)) {
             effect.activated = true
         } else if (name === "Combination mask") {
-            const blends = ['Combination', 'Union', 'Subtract', 'Intersection']
+            const blends = ['Combination', 'Union', 'Subtract', 'Intersection', 'Symmetric Difference']
             const item = {
                 "bval1": 0,
                 "bval2": 0,
@@ -73,7 +73,7 @@ function addLayer(name, type, effectsModel, layersModel, overlayModel, index) {
             overlayModel.append(obj)
             effect.activated = false
         } else if (name === "Overlay") {
-            const blends = ['Addition', 'Subtract', 'Multiply', 'Divide']
+            const blends = ['Normal', 'Addition', 'Subtract', 'Difference', 'Multiply', 'Divide', 'Darken Only', 'Lighten Only', 'Dissolve', 'Smooth Dissolve', 'Screen', 'Overlay', 'Hard Light', 'Soft Light', 'Color Dodge', 'Color Burn', 'Linear Burn', 'Vivid Light', 'Linear Light', 'Hard Mix']
             const item = {
                 "bval1": 0,
                 "bval2": 0,
@@ -103,6 +103,42 @@ function addLayer(name, type, effectsModel, layersModel, overlayModel, index) {
             obj.items = items
             overlayModel.append(obj)
             effect.activated = false
+        }  else if (name === "Color swap") {
+            const options = ['Red', 'Green', 'Blue', 'Alpha']
+            const item = {
+                "bval1": 0,
+                "bval2": 0,
+                "val1": 1,
+                "val2": 0,
+                "max1": 1,
+                "max2": 1,
+                "min1": 0,
+                "min2": 0,
+                "name": '',
+                "type": "buttonDark",
+                "category": "layer"
+            }
+            const items = options.map((optionName) => {
+                                         const it = JSON.parse(JSON.stringify(item))
+                                         it.name = optionName
+                                         return it
+                                     })
+            const obj = {
+                "isOverlay": false,
+                "idx": layersModel.count,
+                "name": "channel",
+                "overlay": false,
+                "activated": false
+            }
+            const objs = options.map((optionName, index) => {
+                                         const newObj = JSON.parse(JSON.stringify(obj))
+                                         newObj.iteration = index + 2
+                                         newObj.name = `${optionName} channel`
+                                         newObj.items = JSON.parse(JSON.stringify(items))
+                                         return newObj
+                                     })
+            overlayModel.append(objs)
+            effect.activated = true
         }
         effect.isRenderable = true
         effect.idx = layersModel.count
@@ -123,12 +159,15 @@ function chooseLayer(type, layersModel, propertiesModel, overlayModel, canvaFunc
         propertiesUpdate(propertiesModel, layersModel, index, canvaFunctions)
         setEffectsBlockState("enabled")
         setLayerIndex(index)
+        const preview = getPreview()
+        if (!layersModel.get(index).isRenderable && preview) canvaFunctions.setHelperImage(index)
+        else if (layersModel.get(index).isRenderable && preview) canvaFunctions.setHelperImage(-1)
+        else canvaFunctions.disableHelper()
     } else if (type === "buttonLayers" && ["insertion", "insertion2"].includes(effectsBlockState)) {
         let i = 0
         let overlayIndex = overlayModel.getModel(getLayerIndex(), getIterationIndex(), 'index')
         console.log("LayerIndex:", getLayerIndex(), ', index:', index, ', overlayIndex:', overlayIndex)
         layer = JSON.parse(JSON.stringify(layersModel.get(index)))
-        // console.log(Object.entries(layer))
         layer.items = [
                     {
                         "bval1": 0,
@@ -158,7 +197,7 @@ function chooseLayer(type, layersModel, propertiesModel, overlayModel, canvaFunc
         }
         setEffectsBlockState("enabled")
         modelFunctions.autoSave()
-        // setLayerIndex(index)
+        setIterationIndex(-1)
     }
 }
 
@@ -187,21 +226,18 @@ function addOverlayEffect(state, effectsModel, overlayModel, index, insertionInd
             overlayIndex = i
         }
     }
+    const effect = JSON.parse(JSON.stringify(effectsModel.get(index)))
+    effect.idx = insertionIndex
+    effect.iteration = iterIndex
+    effect.overlay = state === "insertion"
+    effect.activated = false
     if (overlayIndex === -1) {
-        const effect = JSON.parse(JSON.stringify(effectsModel.get(index)))
-        effect.idx = insertionIndex
-        effect.iteration = iterIndex
-        effect.overlay = state === "insertion"
-        effect.activated = false
         overlayModel.append(effect)
     } else {
-        const effect = JSON.parse(JSON.stringify(effectsModel.get(index)))
-        effect.idx = insertionIndex
-        effect.iteration = iterIndex
-        effect.overlay = state === "insertion"
-        effect.activated = false
         overlayModel.set(overlayIndex, effect)
     }
+
+    setIterationIndex(-1)
     return "enabled"
 }
 
@@ -224,6 +260,7 @@ function addOverlayLayer(state, effectsModel, overlayModel, index, insertionInde
     } else {
         overlayModel.set(overlayIndex, effect)
     }
+    setIterationIndex(-1)
     return "enabled"
 }
 
@@ -493,6 +530,7 @@ function removeLayer({
     rightPanelFunctions.resetPropertiesBlock()
     canvaFunctions.disableManipulator()
     updateLayersBlockModel()
+    setIterationIndex(-1)
 }
 
 function switchRendering({
@@ -520,13 +558,13 @@ function setValue({
                   overlayEffectsModel
                   }) {
     if (name.includes("Visible")) {
-        layersModel.setProperty(index, "isRenderable", Boolean(value))
+        layersModel.setProperty(index, "isRenderable", value === 1)
         manualLayerChoose(index)
         rightPanelFunctions.propertiesBlockUpdate()
         updateLayersBlockModel()
         canvaFunctions.layersModelUpdate('', -1, index, valIndex)
     } else if (name.includes("Inversion")) {
-        layersModel.get(index).items.setProperty(subIndex, `val${valIndex+1}`, value === 0 ? 1 : 0)
+        layersModel.get(index).items.setProperty(subIndex, `val${valIndex+1}`, value)
         manualLayerChoose(index)
         rightPanelFunctions.propertiesBlockUpdate()
         canvaFunctions.layersModelUpdate('', -1, index, valIndex)

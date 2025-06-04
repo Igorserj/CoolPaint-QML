@@ -96,5 +96,15 @@
         <file>Controls/Dialog.qml</file>
         <file>Controls/Slot.qml</file>
         <file>Effects/gaussianBlur.fsh</file>
+        <file>Effects/checkerboard.fsh</file>
+        <file>Effects/colorFill.fsh</file>
+        <file>Effects/gammaCorrection.fsh</file>
+        <file>Effects/contrastCorrection.fsh</file>
+        <file>Effects/brightnessCorrection.fsh</file>
+        <file>Effects/colorSwap.fsh</file>
+        <file>Effects/gaussianUnblur.fsh</file>
+        <file>Effects/unblur.fsh</file>
+        <file>Effects/pixelation.fsh</file>
+        <file>Effects/depixelation.fsh</file>
     </qresource>
 </RCC>

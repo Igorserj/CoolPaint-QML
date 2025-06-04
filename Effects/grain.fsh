@@ -35,7 +35,8 @@ void main(void)
     vec2 pos = vec2(st*max(u_resolution.x, u_resolution.y)*(density/10.));
     float color = noise(pos)*.5+1.;
     if (isOverlay) {
-        tex = vec4(1.-smoothstep(lowerRange, upperRange, color));
+        tex.rgb = vec3(1.-smoothstep(lowerRange, upperRange, color));
+        tex.a *= 1.-smoothstep(lowerRange, upperRange, color);
     } else {
         tex *= vec4(1.-smoothstep(lowerRange, upperRange, color));
     }

@@ -42,7 +42,7 @@ Column {
                 target: foldableArea
                 property: "height"
                 to: 0
-                duration: 500
+                duration: strictStyle ? 0 : 500
             }
         }
         SequentialAnimation {
@@ -51,7 +51,7 @@ Column {
                 target: foldableArea
                 property: "height"
                 to: foldableArea.childrenRect.height
-                duration: 500
+                duration: strictStyle ? 0 : 500
             }
         }
         Rectangle {
@@ -124,7 +124,8 @@ Column {
             model = overlayEffectsModel.getModel(leftPanelFunctions.getLayerIndex(), index)
             if (model.length !== 0) {
                 innerBlock.model = model[0].items
-                name = `Blending mode: ${innerBlock.model.get(dropdownIndex).name}`
+                if (!model[0].name.includes("channel")) name = `Blending mode: ${innerBlock.model.get(dropdownIndex).name}`
+                else name = `${model[0].name}: ${innerBlock.model.get(dropdownIndex).name}`
             } else {
                 innerBlock.model = []
             }
@@ -132,7 +133,6 @@ Column {
             model = settingsMenuModel.get(index)
             if (model.length !== 0) {
                 innerBlock.model = model.items
-                // name = `Lights: ${innerBlock.model.get(dropdownIndex).name}`
                 name = 'Lights'
             } else {
                 innerBlock.model = []

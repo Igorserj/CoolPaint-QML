@@ -32,14 +32,14 @@ Rectangle {
     ]
     Behavior on color {
         ColorAnimation {
-            duration: 200
+            duration: strictStyle ? 0 : 200
         }
     }
     Behavior on radius {
         PropertyAnimation {
             target: buttonSwitch
             property: "radius"
-            duration: 200
+            duration: strictStyle ? 0 : 200
         }
     }
 
@@ -56,7 +56,7 @@ Rectangle {
             PropertyAnimation {
                 target: pill
                 properties: "x,width"
-                duration: 250
+                duration: strictStyle ? 0 : 250
                 easing.type: Easing.OutExpo
             }
         }

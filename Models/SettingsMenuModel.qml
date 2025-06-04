@@ -46,6 +46,17 @@ ListModel {
         items: []
     }
     ListElement {
+        name: "Checkerboard density"
+        type: "slider"
+        category: "settings"
+        min1: -1
+        max1: 100
+        val1: -1
+        val2: 0
+        bval1: -1
+        items: []
+    }
+    ListElement {
         name: "Revert"
         type: "buttonDark"
         category: "settings"
@@ -93,6 +104,7 @@ ListModel {
             case "Count of autosaves": newModel.autosaves = [i, this.get(i).val1]; break
             case "UI Effects": newModel.effects = [i, this.get(i).val1]; break
             case "Strict style": newModel.style = [i, this.get(i).val1]; break
+            case "Checkerboard density": newModel.density = [i, this.get(i).val1]; break
             }
         }
         return newModel

@@ -12,6 +12,10 @@ Item {
                 enabled: (name === "Undo" && stepIndex === -1) ? false : (name === "Redo" && stepIndex === actionsLog.count - 1) ? false : true
                 function controlsAction() {
                     if (name === "History") {
+                        name = "Properties"
+                        history()
+                    } else if (name === "Properties") {
+                        name = "History"
                         history()
                     } else if (name === "Undo") {
                         undo()

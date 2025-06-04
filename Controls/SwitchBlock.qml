@@ -3,6 +3,7 @@ import QtQuick 2.15
 Rectangle {
     id: switchBlock
     property string text: ""
+    property double prevVal: -1
     color: window.style.currentTheme.darkGlass
     width: window.width / 1280 * 240
     radius: strictStyle ? 0 : height / 4
@@ -58,6 +59,9 @@ Rectangle {
             }
         }
     ]
+    Component.onCompleted: {
+        prevVal = val1
+    }
     Label {
         id: label
         text: parent.text
@@ -71,7 +75,7 @@ Rectangle {
             function clickAction() {
                 val1 = bval1
                 updateAll(bval1)
-                if (!doNotLog.includes(category)) {
+                if (!doNotLog.includes(category) && prevVal !== (val1 === 0 ? 1 : 0)) {
                     logAction()
                     modelFunctions.autoSave()
                 }
@@ -90,17 +94,6 @@ Rectangle {
     function updateVal(val1) {
         if (category === "layer") {
             canvaFunctions.layersModelUpdate('val1', val1, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
-        } else if (category === "view") {
-            if (name === "Mirroring") {
-                canvaFunctions.setMirroring(val1)
-            } else if (name === "Smoothing") {
-                canvaFunctions.setSmoothing(val1)
-                canvaFunctions.reDraw()
-            }
-        } else if (category === "export") {
-            if (name === "Preserve aspect fit") {
-                canvaFunctions.setPreserveAspect(val1)
-            }
         }
     }
     function logAction() {
