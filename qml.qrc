@@ -106,5 +106,11 @@
         <file>Effects/unblur.fsh</file>
         <file>Effects/pixelation.fsh</file>
         <file>Effects/depixelation.fsh</file>
+        <file>Models/MetadataMenuBlockModel.qml</file>
+        <file>Controllers/modelsPopulation.mjs</file>
+        <file>Controllers/historyBlockModelGeneration.mjs</file>
+        <file>Controls/PageChooser.qml</file>
+        <file>Controls/TextField.qml</file>
+        <file>Controls/ButtonReplace.qml</file>
     </qresource>
 </RCC>

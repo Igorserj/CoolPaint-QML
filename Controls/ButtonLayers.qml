@@ -1,7 +1,7 @@
 import QtQuick 2.15
 
 ButtonDark {
-    property string swapState: blockRect.state === "layerSwap" && layerIndex === index ? "layerSwap" : "enabled"
+    readonly property string name: typeof(nickname) !== "undefined" ? nickname : ""
     label.width: crossButton.x - (swapButton.x + swapButton.width) - width / 12
 
     Underscore {}
@@ -10,14 +10,23 @@ ButtonDark {
         w: parent.w / 6
         x: (parent.width / 24)
         y: (parent.height - height) / 2
-        property string icon: "mover"
-        property string type: blockRect.state
+        readonly property string icon: "mover"
+        readonly property string type: blockRect.state
         function clickAction() {
+            setIterationIndex(-1)
+            let i
             if (blockRect.state !== "layerSwap") {
-                layerIndex = index
+                setLayerIndex(idx)
                 blockRect.state = "layerSwap"
             }
-            else blockRect.state = "enabled"
+            else {
+                for (i = layersModel.count * 2 - 2; i > 0; --i) {
+                    if (layersBlockModel.get(1).block.get(i).type === "buttonReplace") {
+                        layersBlockModel.get(1).block.remove(i)
+                    }
+                }
+                blockRect.state = "enabled"
+            }
         }
     }
     ButtonWhite {

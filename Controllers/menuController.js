@@ -12,7 +12,6 @@ function menuActions(name, createProj, openDialog, openProjectDialog, saveFileDi
 
 function openDialogAccept(canvaFunctions, source, layersModel, exportModel) {
     canvaFunctions.setImage(source)
-    if (layersModel.count > 0) canvaFunctions.reDraw()
     const sizes = canvaFunctions.getBaseImageDims()
     exportModel.set(0, {
                         'bval1': sizes.aspectW,
@@ -55,7 +54,7 @@ function saveProj(currentFile, fileIO, modelFunctions, temporary, openNotificati
         if (!temporary) {
             const img = getFinalImage()
             const name = path.substring(path.lastIndexOf('/') + 1)
-            const maxSize = Math.max(img.width, img.height)
+            const maxSize = img !== null ? Math.max(img.width, img.height) : 0
             img.grabToImage(result => {
                                 result.saveToFile(`${baseDir}/thumbs/${name}.png`)
                             }, Qt.size((img.width / maxSize) * 200, (img.height / maxSize) * 200))

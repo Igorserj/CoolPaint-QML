@@ -24,12 +24,13 @@ public:
     Q_INVOKABLE QList<QString> sort(const QList<QString> &files);
     Q_INVOKABLE void removeThumbsWithoutProject(const QList<QString> &filePathes, const QString &dirPath);
     Q_INVOKABLE bool createDirectory(const QString &dirPath);
-    Q_INVOKABLE QString getParentDir(const QString &filePath);
-    Q_INVOKABLE QString getFileName(const QString &filePath);
-    Q_INVOKABLE QString getAbsolutePath(const QString &relativePath);
     Q_INVOKABLE QVariant getTemporaryFiles(const QString &dirPath);
+    Q_INVOKABLE QString getMetadata(const QString &filePath);
 
 private:
+    QString getAbsolutePath(const QString &relativePath);
+    QString getFileName(const QString &filePath);
+    QString getParentDir(const QString &filePath);
     QString resolveFilePath(const QString &filePath);
 };
 

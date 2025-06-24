@@ -1,4 +1,5 @@
 function effectsBlockModelGeneration(model, blockModel) {
+    const filters = ["All", "Masks", "Color", "Blur & Unblur"]
     blockModel.clear()
     blockModel.append({block: []})
     blockModel.append({block: []})
@@ -7,7 +8,37 @@ function effectsBlockModelGeneration(model, blockModel) {
                                        wdth: 240,
                                        name: "Effects",
                                        val1: 0,
-                                       val2: 0
+                                       val2: 0,
+                                       isOverlay: false,
+                                       items: []
+                                   })
+    const item = {
+        "bval1": 0,
+        "bval2": 0,
+        "val1": 1,
+        "val2": 0,
+        "max1": 1,
+        "max2": 1,
+        "min1": 0,
+        "min2": 0,
+        "name": '',
+        "wdth": 40,
+        "type": "buttonWhite",
+        "category": "filter"
+    }
+    const items = filters.map((filter) => {
+                                 const it = JSON.parse(JSON.stringify(item))
+                                 it.name = filter
+                                 return it
+                             })
+    blockModel.get(0).block.append({
+                                       type: "pageChooser",
+                                       wdth: 240,
+                                       name: "Filter",
+                                       val1: 0,
+                                       val2: 0,
+                                       isOverlay: false,
+                                       items
                                    })
     for (let i = 0; i < model.count; ++i) {
         const effect = JSON.parse(JSON.stringify(model.get(i)))
@@ -29,121 +60,52 @@ function layersBlockModelGeneration(model, blockModel) {
                                            "type": "buttonLayers",
                                            "wdth": 240,
                                            "name": model.get(i).name,
+                                           "nickname": model.get(i).nickname,
                                            "val1": 0,
                                            "val2": 0,
+                                           "idx": model.get(i).idx,
                                            "isRenderable": model.get(i).isRenderable
                                        })
     }
 }
 
 function addLayer(name, type, effectsModel, layersModel, overlayModel, index) {
-    if (type === "buttonDark") {
+    if (type === 'buttonDark') {
         const effect = JSON.parse(JSON.stringify(effectsModel.get(index)))
-        if (!["Overlay", "Combination mask", "Color swap"].includes(name)) {
+        if (!['Overlay', 'Combination mask', 'Color swap', 'Saturation'].includes(name)) {
             effect.activated = true
-        } else if (name === "Combination mask") {
+        } else if (name === 'Combination mask') {
             const blends = ['Combination', 'Union', 'Subtract', 'Intersection', 'Symmetric Difference']
-            const item = {
-                "bval1": 0,
-                "bval2": 0,
-                "val1": 1,
-                "val2": 0,
-                "max1": 1,
-                "max2": 1,
-                "min1": 0,
-                "min2": 0,
-                "name": '',
-                "type": "buttonDark",
-                "category": "layer"
-            }
-            const items = blends.map((blendName) => {
-                                         const it = JSON.parse(JSON.stringify(item))
-                                         it.name = blendName
-                                         return it
-                                     })
-            const obj = {
-                "isOverlay": false,
-                "name": `Blending mode: ${blends[0]}`,
-                "idx": layersModel.count,
-                "iteration": 3,
-                "overlay": false,
-                "activated": false
-            }
-            obj.items = items
-            overlayModel.append(obj)
+            dropdownPopulation(blends, layersModel.count, effect, 'Blending mode:')
             effect.activated = false
-        } else if (name === "Overlay") {
+        } else if (name === 'Overlay') {
             const blends = ['Normal', 'Addition', 'Subtract', 'Difference', 'Multiply', 'Divide', 'Darken Only', 'Lighten Only', 'Dissolve', 'Smooth Dissolve', 'Screen', 'Overlay', 'Hard Light', 'Soft Light', 'Color Dodge', 'Color Burn', 'Linear Burn', 'Vivid Light', 'Linear Light', 'Hard Mix']
-            const item = {
-                "bval1": 0,
-                "bval2": 0,
-                "val1": 1,
-                "val2": 0,
-                "max1": 1,
-                "max2": 1,
-                "min1": 0,
-                "min2": 0,
-                "name": '',
-                "type": "buttonDark",
-                "category": "layer"
-            }
-            const items = blends.map((blendName) => {
-                                         const it = JSON.parse(JSON.stringify(item))
-                                         it.name = blendName
-                                         return it
-                                     })
-            const obj = {
-                "isOverlay": false,
-                "name": `Blending mode: ${blends[0]}`,
-                "idx": layersModel.count,
-                "iteration": 2,
-                "overlay": false,
-                "activated": false
-            }
-            obj.items = items
-            overlayModel.append(obj)
+            dropdownPopulation(blends, layersModel.count, effect, 'Blending mode:')
             effect.activated = false
-        }  else if (name === "Color swap") {
-            const options = ['Red', 'Green', 'Blue', 'Alpha']
-            const item = {
-                "bval1": 0,
-                "bval2": 0,
-                "val1": 1,
-                "val2": 0,
-                "max1": 1,
-                "max2": 1,
-                "min1": 0,
-                "min2": 0,
-                "name": '',
-                "type": "buttonDark",
-                "category": "layer"
-            }
-            const items = options.map((optionName) => {
-                                         const it = JSON.parse(JSON.stringify(item))
-                                         it.name = optionName
-                                         return it
-                                     })
-            const obj = {
-                "isOverlay": false,
-                "idx": layersModel.count,
-                "name": "channel",
-                "overlay": false,
-                "activated": false
-            }
-            const objs = options.map((optionName, index) => {
-                                         const newObj = JSON.parse(JSON.stringify(obj))
-                                         newObj.iteration = index + 2
-                                         newObj.name = `${optionName} channel`
-                                         newObj.items = JSON.parse(JSON.stringify(items))
-                                         return newObj
-                                     })
-            overlayModel.append(objs)
+        } else if (name === 'Color swap') {
+            const options = ['Red', 'Green', 'Blue', 'Alpha', 'Null', 'Blank']
+            dropdownPopulation(options, layersModel.count, effect, 'Red channel')
+            dropdownPopulation(options, layersModel.count, effect, 'Green channel')
+            dropdownPopulation(options, layersModel.count, effect, 'Blue channel')
+            dropdownPopulation(options, layersModel.count, effect, 'Alpha channel')
+            effect.activated = true
+        } else if (name === 'Saturation') {
+            const options = ['Average', 'Medium', 'Light', 'Dark', 'Saddle point']
+            dropdownPopulation(options, layersModel.count, effect, 'Tone:')
             effect.activated = true
         }
         effect.isRenderable = true
         effect.idx = layersModel.count
         effect.overlay = false
         layersModel.append(effect)
+
+        layersBlockModel.get(1).block.append(Object.assign({
+                                           "type": "buttonLayers",
+                                           "wdth": 240,
+                                           "val1": 0,
+                                           "val2": 0
+                                       }, effect))
+        canvaFunctions.layersModelUpdate('', -1, layersModel.count-1, 0)
     }
 }
 
@@ -160,8 +122,7 @@ function chooseLayer(type, layersModel, propertiesModel, overlayModel, canvaFunc
         setEffectsBlockState("enabled")
         setLayerIndex(index)
         const preview = getPreview()
-        if (!layersModel.get(index).isRenderable && preview) canvaFunctions.setHelperImage(index)
-        else if (layersModel.get(index).isRenderable && preview) canvaFunctions.setHelperImage(-1)
+        if (preview) canvaFunctions.setHelperImage(index)
         else canvaFunctions.disableHelper()
     } else if (type === "buttonLayers" && ["insertion", "insertion2"].includes(effectsBlockState)) {
         let i = 0
@@ -207,6 +168,7 @@ function propertiesUpdate(propertiesModel, layersModel, index, canvaFunctions) {
     canvaFunctions.disableManipulator()
     const newModel = {
         "isRenderable": layersModel.get(index).isRenderable,
+        "nickname": layersModel.get(index).nickname,
         "items": []
     }
     for (; i < layersModel.get(index).items.count; ++i) {
@@ -267,13 +229,17 @@ function addOverlayLayer(state, effectsModel, overlayModel, index, insertionInde
 function swapLayers(model, blockModel, overlayEffectsModel, index1, index2) {
     let isSwappable = true
     let i = 0
+    console.log("SWAP0", layerIndex, index1, index2)
     for (i = 0; i < overlayEffectsModel.count; ++i) {
-        if ((overlayEffectsModel.get(i).idx === index1
-                && overlayEffectsModel.get(i).items.get(0).name === "Open link"
-                && overlayEffectsModel.get(i).items.get(0).val1 >= index2) ||
-                (overlayEffectsModel.get(i).idx === index2
-                                && overlayEffectsModel.get(i).items.get(0).name === "Open link"
-                                && overlayEffectsModel.get(i).items.get(0).val1 >= index1)
+        console.log("Swapping", index1, index2, overlayEffectsModel.get(i).idx
+                    , overlayEffectsModel.get(i).items.get(0).name
+                    , overlayEffectsModel.get(i).items.get(0).val1, overlayEffectsModel.get(i).idx)
+        if ((overlayEffectsModel.get(i).items.get(0).name === "Open link"
+             && overlayEffectsModel.get(i).items.get(0).val1 >= index2
+             && overlayEffectsModel.get(i).idx <= index1) ||
+                (overlayEffectsModel.get(i).items.get(0).name === "Open link"
+                 && overlayEffectsModel.get(i).items.get(0).val1 >= index1
+                 && overlayEffectsModel.get(i).idx <= index2)
                 ) {
             isSwappable = false
             break
@@ -284,14 +250,21 @@ function swapLayers(model, blockModel, overlayEffectsModel, index1, index2) {
         popUpFunctions.openNotification(notificationText, notificationText.length * 100)
         return false
     } else {
-        rightPanelFunctions.resetPropertiesBlock()
-        canvaFunctions.deactivateEffects(Math.min(index1, index2))
+        for (i = layersModel.count * 2 - 2; i > 0; --i) {
+            if (layersBlockModel.get(1).block.get(i).type === "buttonReplace") {
+                layersBlockModel.get(1).block.remove(i)
+            }
+        }
+        canvaFunctions.deactivateEffects(Math.min(index1, index2), false)
         const item = JSON.parse(JSON.stringify(model.get(index1)))
+        const item2 = JSON.parse(JSON.stringify(model.get(index2)))
+        item.idx = index2
+        item2.idx = index1
         const overlayItemsIndex1 = overlayEffectsModel.getModel(index1, -1, 'index')
         const overlayItemsIndex2 = overlayEffectsModel.getModel(index2, -1, 'index')
         const overlayLinkIndices1 = []
         const overlayLinkIndices2 = []
-        model.set(index1, JSON.parse(JSON.stringify(model.get(index2))))
+        model.set(index1, item2)
         model.set(index2, item)
         console.log(overlayItemsIndex1, overlayItemsIndex2)
         for (i = 0; i < overlayItemsIndex1.length; ++i) {
@@ -315,10 +288,13 @@ function swapLayers(model, blockModel, overlayEffectsModel, index1, index2) {
         for (i = 0; i < overlayLinkIndices2.length; ++i) {
             overlayEffectsModel.get(overlayLinkIndices2[i]).items.setProperty(0, "val1", index1)
         }
-
-        layersBlockModelGeneration(model, blockModel)
-        if (layersModel.count > 0) canvaFunctions.layersModelUpdate('', 0, 0, Math.min(index1, index2))
-        updateLayersBlockModel()
+        blockModel.get(1).block.set(
+                    index1, item2
+                    )
+        blockModel.get(1).block.set(
+                    index2, item
+                    )
+        if (layersModel.count > 0) canvaFunctions.layersModelUpdate('', 0, Math.min(index1, index2))
         return true
     }
 }
@@ -463,7 +439,7 @@ function layerRecovery({
     let i = layerIndex
     const overlayModel = value.overlayEffectsModel
     const layersModelValue = value.layersModel
-    canvaFunctions.deactivateEffects(layerIndex)
+    canvaFunctions.deactivateEffects(layerIndex, false)
     for (; i < layersModel.count; ++i) {
         layersModel.setProperty(i, "idx", i + 1)
     }
@@ -484,10 +460,19 @@ function layerRecovery({
         overlayEffectsModel.insert(value.indices[i], overlayModel[i])
     }
     layersModel.insert(layerIndex, layersModelValue)
+
+    const item = {
+        "type": "buttonLayers",
+        "wdth": 240,
+        "val1": 0,
+        "val2": 0
+    }
+
+    layersBlockModel.get(1).block.insert(layerIndex, Object.assign(item, layersModelValue))
     manualLayerChoose(layerIndex)
     rightPanelFunctions.propertiesBlockUpdate()
-    canvaFunctions.layersModelUpdate('', -1, 0, 0)
-    updateLayersBlockModel()
+    canvaFunctions.setHelperImage(layerIndex)
+    canvaFunctions.layersModelUpdate('', -1, layerIndex, 0)
 }
 
 function removeLayer({
@@ -519,8 +504,11 @@ function removeLayer({
             else if (idx === index) overlayIndices.push(i)
         }
     }
-    canvaFunctions.deactivateEffects(index)
+    canvaFunctions.deactivateEffects(index, false)
     layersModel.remove(index)
+    canvaFunctions.setHelperImage(-1)
+    layersBlockModel.get(1).block.remove(index)
+
     for (i = 0; i < overlayIndices.length; ++i) {
         overlayEffectsModel.remove(overlayIndices[i] - i)
     }
@@ -529,8 +517,9 @@ function removeLayer({
     leftPanelFunctions.setEffectsBlockState("enabled")
     rightPanelFunctions.resetPropertiesBlock()
     canvaFunctions.disableManipulator()
-    updateLayersBlockModel()
     setIterationIndex(-1)
+    rightPanelFunctions.resetPropertiesBlock()
+    canvaFunctions.srcListRemove(index, 0)
 }
 
 function switchRendering({
@@ -559,27 +548,35 @@ function setValue({
                   }) {
     if (name.includes("Visible")) {
         layersModel.setProperty(index, "isRenderable", value === 1)
-        manualLayerChoose(index)
-        rightPanelFunctions.propertiesBlockUpdate()
-        updateLayersBlockModel()
+        layersBlockModel.get(1).block.setProperty(index, 'isRenderable', value === 1)
+        if (getLayerIndex() === index) {
+            const propertiesBlockModel = rightPanelFunctions.getPropertiesBlockModel().get(0).block
+            for (let i = 0; i < propertiesBlockModel.count; ++i) {
+                if (propertiesBlockModel.get(i).name === "Visible") {
+                    propertiesBlockModel.setProperty(i, "val1", value)
+                }
+            }
+        }
         canvaFunctions.layersModelUpdate('', -1, index, valIndex)
     } else if (name.includes("Inversion")) {
         layersModel.get(index).items.setProperty(subIndex, `val${valIndex+1}`, value)
-        manualLayerChoose(index)
-        rightPanelFunctions.propertiesBlockUpdate()
+        // layersBlockModel.get(1).block.get(index).items.setProperty(subIndex, `val${valIndex+1}`, value)
+        if (getLayerIndex() === index) {
+            const propertiesBlockModel = rightPanelFunctions.getPropertiesBlockModel().get(1).block
+            propertiesBlockModel.setProperty(subIndex, `val${valIndex+1}`, value)
+        }
         canvaFunctions.layersModelUpdate('', -1, index, valIndex)
     } else {
         if (subIndex === -1) {
             layersModel.get(index).items.setProperty(propIndex, `val${valIndex+1}`, value)
-            manualLayerChoose(index)
-            rightPanelFunctions.propertiesBlockUpdate()
+            if (getLayerIndex() === index) {
+                const propertiesBlockModel = rightPanelFunctions.getPropertiesBlockModel().get(1).block
+                propertiesBlockModel.setProperty(propIndex, `val${valIndex+1}`, value)
+            }
             canvaFunctions.layersModelUpdate('', -1, index, valIndex)
         } else {
             const overlayIndex = overlayEffectsModel.getModel(index, subIndex, 'index')[0]
-            console.log(`Setting prop val${valIndex+1} to ${value}`)
             overlayEffectsModel.get(overlayIndex).items.setProperty(propIndex, `val${valIndex+1}`, value)
-            manualLayerChoose(index)
-            rightPanelFunctions.propertiesBlockUpdate()
             canvaFunctions.layersModelUpdate('', -1, index, valIndex)
         }
     }
@@ -596,8 +593,11 @@ function setBlendingMode({
                          canvaFunctions
                          }) {
     layersModel.get(index).items.setProperty(subIndex, `val${valIndex+1}`, value)
-    manualLayerChoose(index)
-    rightPanelFunctions.propertiesBlockUpdate()
+    if (getLayerIndex() === index) {
+        const propertiesBlockModel = rightPanelFunctions.getPropertiesBlockModel().get(1).block
+        propertiesBlockModel.setProperty(subIndex, `val${valIndex+1}`, value)
+        propertiesBlockModel.setProperty(subIndex, `name`, overlayEffectsModel.getModel(index, subIndex)[0].items.get(value).name)
+    }
     canvaFunctions.layersModelUpdate('', -1, index, valIndex)
 }
 
@@ -640,4 +640,5 @@ function logRemove({
                           "valIndex": -1
                       })
     setStepIndex(stepIndex + 1)
+    actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
 }

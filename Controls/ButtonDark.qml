@@ -10,7 +10,7 @@ Button {
         State {
             name: "active"
             when: button.enabled && typeof(blockRect) !== "undefined"
-                  && ((type === "buttonLayers" && layerIndex === index)
+                  && ((type === "buttonLayers" && layerIndex === idx/*index*/)
                   || (typeof(dropdownIndex) !== "undefined" && index === dropdownIndex)
                       || (typeof(category) !== "undefined" && category === "history" && index === (actionsLog.count - 1) - stepIndex)
                       )
@@ -22,7 +22,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.lightDark
-                font.pixelSize: button.height / 30 * 12
+                font.pixelSize: window.width / 1280 * w / 8 / 30 * 12
             }
         },
         State {
@@ -36,7 +36,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.pinkWhiteAccent
-                font.pixelSize: button.height / 30 * 12
+                font.pixelSize: window.width / 1280 * w / 8 / 30 * 12
             }
         },
         State {
@@ -50,7 +50,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.pinkWhite
-                font.pixelSize: button.height / 30 * 12
+                font.pixelSize: window.width / 1280 * w / 8 / 30 * 12
             }
         },
         State {
@@ -64,7 +64,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.pinkWhiteAccent
-                font.pixelSize: button.height / 30 * 12
+                font.pixelSize: window.width / 1280 * w / 8 / 30 * 12
             }
         }
     ]

@@ -29,11 +29,18 @@ Item {
     ActionsBarModel {
         id: actionsBarModel
     }
-    function includes({str = '', subStrs = ['']}) {
-        let result = false
+    function includes({str = '', subStrs = []}) {
+        let result = true
         for (const subStr of subStrs) {
-            if (RegExp(subStr).test(str)) {
-                result = true
+            result = true
+            for (let j = 0; j < subStr.length; ++j) {
+                if (subStr[j] !== str[j]) {
+                    result = false
+                    break
+                }
+            }
+            if (result) {
+                console.log("Starts with", str, subStr)
                 break
             }
         }
@@ -62,19 +69,37 @@ Item {
                 leftPanelFunctions.layerRecovery(item.index, item.prevValue)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['value of', 'Set state of']
+                                    subStrs: ['Set value of', 'Set state of', 'Reset value of']
                                 })) {
                 leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.prevValue.val, item.name)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStr: ['Set blending mode']
+                                    subStrs: ['Swap layers']
+                                })) {
+                if (item.prevValue.val !== -1 && item.prevValue.val < layersModel.count && item.value.val !== -1 && item.value.val < layersModel.count) {
+                    leftPanelFunctions.setLayersBlockState("layerSwap")
+                    leftPanelFunctions.setLayersOrder(item.prevValue.val, item.value.val)
+                } else {
+                    const notificationText = "Can't undo: Incorrect layer index"
+                    popUpFunctions.openNotification(notificationText, notificationText.length * 100)
+                    setStepIndex(getStepIndex() + 1)
+                }
+            } else if (includes({
+                                    str: actionsLog.get(stepIndex).name,
+                                    subStrs: ['Renamed layer']
+                                })) {
+                leftPanelFunctions.renamingLayer(item.index, item.prevValue.val)
+            } else if (includes({
+                                    str: actionsLog.get(stepIndex).name,
+                                    subStrs: ['Set blending mode']
                                 })) {
                 leftPanelFunctions.setBlendingMode(item.index, item.subIndex, item.valIndex, item.prevValue.val)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['Swap layers']
+                                    subStrs: ['Replaced effect']
                                 })) {
-                leftPanelFunctions.setLayersOrder(item.prevValue.val, item.value.val)
+                leftPanelFunctions.removeLayer(item.index, false)
+                leftPanelFunctions.layerRecovery(item.index, item.prevValue)
             }
             setStepIndex(getStepIndex() - 1)
         } else {
@@ -110,19 +135,36 @@ Item {
                 leftPanelFunctions.removeLayer(item.index, false)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['value of', 'Set state of']
+                                    subStrs: ['Set value of', 'Set state of', 'Reset value of']
                                 })) {
                 leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.value.val, item.name)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStr: ['Set blending mode']
+                                    subStrs: ['Swap layers']
+                                })) {
+                if (item.prevValue.val !== -1 && item.prevValue.val < layersModel.count && item.value.val !== -1 && item.value.val < layersModel.count) {
+                    leftPanelFunctions.setLayersBlockState("layerSwap")
+                    leftPanelFunctions.setLayersOrder(item.value.val, item.prevValue.val)
+                } else {
+                    const notificationText = "Can't redo: Incorrect layer index"
+                    popUpFunctions.openNotification(notificationText, notificationText.length * 100)
+                    setStepIndex(getStepIndex() - 1)
+                }
+            } else if (includes({
+                                    str: actionsLog.get(stepIndex).name,
+                                    subStrs: ['Set blending mode']
                                 })) {
                 leftPanelFunctions.setBlendingMode(item.index, item.subIndex, item.valIndex, item.value.val)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['Swap layers']
+                                    subStrs: ['Renamed layer']
                                 })) {
-                leftPanelFunctions.setLayersOrder(item.value.val, item.prevValue.val)
+                leftPanelFunctions.renamingLayer(item.index, item.value.val)
+            } else if (includes({
+                                    str: actionsLog.get(stepIndex).name,
+                                    subStrs: ['Replaced effect']
+                                })) {
+                leftPanelFunctions.replacingLayer(item.index, item.value.val)
             }
         } else {
             const notificationText = "Reached limit"

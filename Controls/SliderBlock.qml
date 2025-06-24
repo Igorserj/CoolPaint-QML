@@ -15,7 +15,7 @@ Rectangle {
     Slider {
         id: slider
         x: parent.width * 0.05
-        y: parent.height - height - height / 2//parent.radius / 2
+        y: parent.height - height - height / 2
     }
     Row {
         id: row
@@ -70,7 +70,7 @@ Rectangle {
         }
     }
     function logAction(val0 = -1) {
-        console.log(val0, val1)
+        console.log(val0, val1, leftPanelFunctions.getLayerIndex(), typeof(parentIndex) !== 'undefined' ? parentIndex : -1, index)
         if (val0 !== val1) {
             actionsLog.trimModel(stepIndex)
             actionsLog.append({
@@ -84,6 +84,7 @@ Rectangle {
                                   valIndex: 0
                               })
             stepIndex += 1
+            actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
         }
     }
 }

@@ -9,6 +9,7 @@ Item {
     property bool smoothing: false
     property bool preserveAspect: true
     property double scaling: 1.
+    property int deactivateLayer: 0
     property var srcList: []
     x: (window.width - width) / 2
     width: window.width / 1280 * (1280 - 2 * 260)
@@ -54,12 +55,12 @@ Item {
                                                                                                   : Qt.OpenHandCursor : Qt.ArrowCursor
         onMouseXChanged: {
             if (parent.state === 'default' && canvaHScroller.state === "enabled") {
-                canvaHScroller.wheelScroll((mouseX - currentPos.x) / 2, (mouseY - currentPos.y) / 2)
+                canvaHScroller.dragging((mouseX - currentPos.x) / 6, (mouseY - currentPos.y) / 6)
             }
         }
         onMouseYChanged: {
             if (parent.state === 'default' && canvaVScroller.state === "enabled") {
-                canvaVScroller.wheelScroll((mouseX - currentPos.x) / 2, (mouseY - currentPos.y) / 2)
+                canvaVScroller.dragging((mouseX - currentPos.x) / 6, (mouseY - currentPos.y) / 6)
             }
         }
         onWheel: {
@@ -94,8 +95,8 @@ Item {
                 name: "shrinked"
                 PropertyChanges {
                     target: helperContainer
-                    width: baseImage.width / 8
-                    height: baseImage.height / 8
+                    width: Math.min(canvaArea.width, canvaArea.height) / 8
+                    height: Math.min(canvaArea.width, canvaArea.height) / 8
                     color: window.style.currentTheme.lightDark
                 }
                 PropertyChanges {
@@ -141,6 +142,8 @@ Item {
         Image {
             id: helperImage
             anchors.fill: parent
+            smooth: smoothing
+            fillMode: Image.PreserveAspectFit
         }
         MouseArea {
             id: helperArea
@@ -227,17 +230,38 @@ Item {
         default: {
             helperContainer.state = "shrinked"
             if (finalImage !== null) finalImage.visible = true
-            const index = !layersModel.get(leftPanelFunctions.getLayerIndex()).isRenderable ? leftPanelFunctions.getLayerIndex() : -1
+            const index = leftPanelFunctions.getLayerIndex()
             setHelperImage(index)
             break
         }
         }
     }
+    function setHelperImage(index) {
+        if (index > -1) {
+            for (let i = 0; i < srcList.length; ++i) {
+                if (srcList[i].index === index && srcList[i].iteration === 0) {
+                    helperContainer.visible = true
+                    helperImage.source = srcList[i].source
+                    break
+                }
+            }
+        } else {
+            helperContainer.visible = false
+            helperContainer.state = "shrinked"
+            if (typeof(finalImage) !== "undefined" && finalImage !== null) finalImage.visible = true
+            helperImage.source = ""
+        }
+    }
     function disableHelper() {
         helperContainer.state = "disabled"
-        finalImage.visible = true
+        if (typeof(finalImage) !== "undefined" && finalImage !== null) finalImage.visible = true
     }
     function srcListAppend(source, index, iteration = -1) {
+        srcListRemove(index, iteration)
+        srcList.push({ "index": index, "iteration": iteration, "source": source })
+        console.log('Src list', JSON.stringify(srcList))
+    }
+    function srcListRemove(index, iteration = -1) {
         let idx = -1
         for (let i = 0; i < srcList.length; ++i) {
             if (srcList[i].index === index && srcList[i].iteration === iteration) {
@@ -246,9 +270,7 @@ Item {
             }
         }
         if (idx !== -1) {
-            srcList[idx].source = source
-        } else {
-            srcList.push({ "index": index, "iteration": iteration, "source": source })
+            srcList.splice(idx, 1)
         }
     }
     function checkerboardLoad() {
@@ -275,12 +297,14 @@ Item {
         imageAssigned = false
     }
     function layersModelUpdate(key, value, idx, index, subIndex = -1) {
+        deactivateLayer = layersModel.count
+        console.log("Updating", idx, deactivateLayer)
         if (layersModel.count > 0) {
             if (key !== '') {
                 if (subIndex === -1) layersModel.get(idx).items.setProperty(index, key, value)
                 else overlayEffectsModel.getModel(idx, subIndex)[0].items.setProperty(index, key, value)
             }
-            deactivateEffects(idx)
+            deactivateEffects(idx, false)
             if (!["Overlay", "Combination mask"].includes(layersModel.get(idx).name)) {
                 layersModel.setProperty(idx, "activated", true)
             } else {
@@ -291,7 +315,8 @@ Item {
             }
         }
     }
-    function deactivateEffects(idx) {
+    function deactivateEffects(idx, layer = true) {
+        if (layer) deactivateLayer = idx
         let i = idx
         for (; i < layersModel.count; ++i) {
             layersModel.setProperty(i, "activated", false)
@@ -351,6 +376,7 @@ Item {
                               valIndex: 1
                           })
         stepIndex += 1
+        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
         console.log(Object.entries(actionsLog.get(actionsLog.count-2)), Object.entries(actionsLog.get(actionsLog.count-1)))
     }
     function setScaling(value) {
@@ -371,26 +397,6 @@ Item {
     }
     function getFinalImage() {
         return finalImage
-    }
-    function setHelperImage(index) {
-        if (index > -1) {
-            for (let i = 0; i < srcList.length; ++i) {
-                if (srcList[i].index === index && srcList[i].iteration === 0) {
-                    helperContainer.visible = true
-                    helperImage.source = srcList[i].source
-                    break
-                }
-            }
-        } else {
-            helperContainer.visible = false
-            helperContainer.state = "shrinked"
-            try {
-                finalImage.visible = true
-            } catch (error) {
-                console.log(error)
-            }
-            helperImage.source = ""
-        }
     }
     function setCanvaFunctions() {
         canvaFunctions = {
@@ -413,7 +419,8 @@ Item {
             checkerboardLoad,
             setHelperImage,
             helperAreaAction,
-            disableHelper
+            disableHelper,
+            srcListRemove
         }
     }
 }

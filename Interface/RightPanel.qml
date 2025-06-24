@@ -47,6 +47,10 @@ Rectangle {
         id: spacer
         y: (parent.height - height) / 2
     }
+    WorkerScript {
+        id: historyWorker
+        source: "../Controllers/historyBlockModelGeneration.mjs"
+    }
 
     PropertiesModel {
         id: propertiesModel
@@ -59,6 +63,9 @@ Rectangle {
     }
     HistoryMenuBlockModel {
         id: historyMenuBlockModel
+    }
+    MetadataMenuBlockModel {
+        id: metadataMenuBlockModel
     }
 
     function propertiesBlockUpdate() {
@@ -82,11 +89,25 @@ Rectangle {
             open()
         }
     }
+    function getState() {
+        return state
+    }
     function getPropertiesModel() {
         return propertiesModel
     }
+    function metadataBlockModelGeneration() {
+        if (rightPanelFunctions.getState() === "history") {
+            Controller.metadataBlockModelGeneration(metadataMenuBlockModel, currentImagePath, currentProjectPath)
+        }
+    }
+    function historyBlockModelGeneration(pageNo) {
+        if (rightPanelFunctions.getState() === "history") {
+            Controller.historyBlockModelGeneration(actionsLog, historyMenuBlockModel, pageNo)
+        }
+    }
     function open() {
-        Controller.historyBlockModelGeneration(actionsLog, historyMenuBlockModel, stepIndex)
+        Controller.historyBlockModelGeneration(actionsLog, historyMenuBlockModel)
+        metadataBlockModelGeneration()
         spacer.spacerReset()
         spacer.y = (parent.height - spacer.height) / 2
         spacer.upperBlock = undefined
@@ -94,6 +115,7 @@ Rectangle {
         state = "history"
     }
     function close() {
+        propertiesBlockUpdate()
         spacer.spacerReset()
         spacer.y = (parent.height - spacer.height) / 2
         spacer.upperBlock = undefined
@@ -106,7 +128,9 @@ Rectangle {
             switchState,
             propertiesBlockUpdate,
             getPropertiesModel,
-            getPropertiesBlockModel
+            getPropertiesBlockModel,
+            getState,
+            metadataBlockModelGeneration
         }
     }
 }

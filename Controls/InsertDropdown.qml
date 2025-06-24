@@ -124,8 +124,7 @@ Column {
             model = overlayEffectsModel.getModel(leftPanelFunctions.getLayerIndex(), index)
             if (model.length !== 0) {
                 innerBlock.model = model[0].items
-                if (!model[0].name.includes("channel")) name = `Blending mode: ${innerBlock.model.get(dropdownIndex).name}`
-                else name = `${model[0].name}: ${innerBlock.model.get(dropdownIndex).name}`
+                name = `${model[0].name.substring(0, name.indexOf(":") + 1)} ${innerBlock.model.get(dropdownIndex).name}`
             } else {
                 innerBlock.model = []
             }

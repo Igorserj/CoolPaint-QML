@@ -79,6 +79,7 @@ Rectangle {
                               valIndex: 0
                           })
         stepIndex += 1
+        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
         prevVal = parseFloat(val1)
     }
     function clickAction() {

@@ -18,6 +18,11 @@ Scroller {
                 target: contentItem
                 x: baseVal
             }
+            PropertyChanges {
+                target: scrollerArea
+                enabled: false
+                hoverEnabled: false
+            }
         },
         State {
             name: "enabled"
@@ -26,6 +31,11 @@ Scroller {
                 target: bar
                 color: window.style.currentTheme.pinkWhite
                 radius: strictStyle ? 0 : bar.height / 3
+            }
+            PropertyChanges {
+                target: scrollerArea
+                enabled: true
+                hoverEnabled: true
             }
         },
         State {
@@ -36,11 +46,16 @@ Scroller {
                 color: window.style.currentTheme.pinkWhiteAccent
                 radius: strictStyle ? 0 : bar.height / 2
             }
+            PropertyChanges {
+                target: scrollerArea
+                enabled: true
+                hoverEnabled: true
+            }
         }
     ]
 
     function wheelScroll(angleDeltaX, angleDeltaY) {
-        wheelScrollX(angleDeltaX)
+        wheelScrollX(angleDeltaX || angleDeltaY)
     }
     function scrolling(mouseX, mouseY) {
         scrollingX(mouseX)
@@ -53,5 +68,9 @@ Scroller {
     }
     function barProperties() {
         barPropertiesH()
+    }
+    function dragging(x, y) {
+        const dx = -x/6 + (bar.x + bar.width / 2)
+        draggingX(dx)
     }
 }

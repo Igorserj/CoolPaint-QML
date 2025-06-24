@@ -27,8 +27,8 @@ Rectangle {
         drag.minimumX: spacer.parent.width * 0.2
         drag.maximumX: spacer.parent.width * 0.8
         hoverEnabled: true
-        onMouseYChanged: if (containsPress && type === "vertical") resizeBlocksV()
-        onMouseXChanged: if (containsPress && type === "horizontal") resizeBlocksH()
+        onMouseYChanged: if (pressed && type === "vertical") resizeBlocksV()
+        onMouseXChanged: if (pressed && type === "horizontal") resizeBlocksH()
     }
     Behavior on color {
         ColorAnimation {

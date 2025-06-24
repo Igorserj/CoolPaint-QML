@@ -15,6 +15,7 @@ Item {
             height: parent.height
             visible: index === layersModel.count - 1
             Loader {
+                active: (typeof(index) !== "undefined" && typeof(activated) !== "undefined") && (index < deactivateLayer) && activated
                 property var itemList: items
                 property int layerIndex: index
                 property bool overLay: overlay
@@ -22,7 +23,6 @@ Item {
                 width: parent.width
                 height: parent.height
                 visible: false
-                active: activated
                 sourceComponent: Controller.addEffect(name)
                 onLoaded: Controller.setImage(this, img, img3, isRenderable, index, parent.visible)
             }
@@ -51,9 +51,7 @@ Item {
                 onSourceChanged: {
                     Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
                     srcListAppend(source, index, 0)
-                    if (index === leftPanelFunctions.getLayerIndex()) {
-                        helperImage.source = Qt.binding(() => source)
-                    }
+                    if (index === leftPanelFunctions.getLayerIndex() && showPreview) setHelperImage(index)
                 }
             }
         }
@@ -73,7 +71,7 @@ Item {
                 width: parent.width
                 height: parent.height
                 visible: false
-                active: activated
+                active: (typeof(idx) !== "undefined" && typeof(activated) !== "undefined") && idx < deactivateLayer && activated
                 sourceComponent: Controller.addEffect(name)
                 onLoaded: Controller.setImage(this, img2, undefined, true, index, false)
             }
@@ -121,7 +119,8 @@ Item {
         id: saturation
         ShaderEffect {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
-            readonly property point strength: Controller.propertyPopulation("two", itemList, 0)
+            readonly property double strength: Controller.propertyPopulation("one", itemList, 0)
+            readonly property real tone: Controller.propertyPopulation("one", itemList, 1)
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/saturation.fsh"

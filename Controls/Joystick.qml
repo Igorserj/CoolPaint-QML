@@ -151,5 +151,6 @@ Rectangle {
             stepIndex += 1
             isReleased[1] = true
         }
+        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
     }
 }

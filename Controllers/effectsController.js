@@ -31,6 +31,7 @@ function addEffect(name) {
 }
 
 function setImage(ldr, img, img2, isRenderable, index, isLastIndex) {
+    console.log("Set img",ldr, img, img2, isRenderable, index, isLastIndex)
     if (ldr.width !== 0 && ldr.height !== 0) {
         if (isRenderable) {
             ldr.grabToImage(result => {
@@ -76,7 +77,9 @@ function reActivateLayer(layersModel, overlaysModel, idx, iteration, finalImage)
     if (iteration === 0) {
         overlayIndex = overlaysModel.getModel(idx, 1, 'index')
         if (overlayIndex.length > 0 && overlaysModel.get(overlayIndex[0]).name !== "") overlaysModel.setProperty(overlayIndex[0], 'activated', true)
-        else finalImage.source = ""
+        else if (finalImage !== null) {
+            finalImage.source = ""
+        }
     } else if (iteration === 1) {
         layersModel.setProperty(idx, "activated", true)
     }

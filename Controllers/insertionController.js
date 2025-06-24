@@ -32,8 +32,7 @@ function dropdownChoose(optionName, optionIndex, setName, setVal, getVals, doNot
     const logging = !doNotLog.includes(category)
     if (category !== "settings") {
         console.log("Props", optionName, name)
-        if (["Red", "Green", "Blue", "Alpha"].includes(optionName)) setName(`${name.substring(0, name.indexOf(":") + 1)} ${optionName}`)
-        else setName(`Blending mode: ${optionName}`)
+        setName(`${name.substring(0, name.indexOf(":") + 1)} ${optionName}`)
         if (logging) logAction(optionIndex, actionsLog, optionName, setStepIndex, getVals)
         setVal(optionIndex)
         items.setProperty(index, 'name', name)
@@ -59,4 +58,5 @@ function logAction(val2, actionsLog, optionName, setStepIndex, getVals) {
                           valIndex: 0
                       })
     setStepIndex(stepIndex + 1)
+    actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
 }

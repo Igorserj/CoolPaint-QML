@@ -73,7 +73,7 @@ Rectangle {
             font.family: "Helvetica"
             font.bold: true
             color: window.style.currentTheme.pinkWhiteAccent
-            font.pixelSize: parent.height / 40 * 12
+            font.pixelSize: window.width / 1280 * w / 7.3 / 40 * 12
             x: strictStyle ? 0 : parent.radius / 3
             y: strictStyle ? 0 : parent.radius / 3
             verticalAlignment: Text.AlignVCenter
@@ -110,5 +110,6 @@ Rectangle {
                           })
         console.log(Object.entries(actionsLog.get(actionsLog.count-1).prevValue), Object.entries(actionsLog.get(actionsLog.count-1).value))
         stepIndex += 1
+        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
     }
 }

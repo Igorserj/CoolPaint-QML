@@ -11,7 +11,7 @@ import "./Controllers/mainController.js" as Controller
 Window {
     id: window
     property alias style: style
-    property var doNotLog: ['view', 'export', 'settings', 'welcome']
+    property var doNotLog: ['view', 'export', 'settings', 'welcome', 'metadata', 'filter']
     property int stepIndex: -1
     property int iterationIndex: -1
     property var saveProj
@@ -125,14 +125,27 @@ Window {
             }
             case 'project': {
                 eraseModels()
-                projectPopulation(messageObject.result, messageObject.text)
-                if (typeof(messageObject.currentFile) !== "undefined" && !messageObject.currentFile.toString().includes(`${baseDir}/tmp`)) {
-                    setCurrentProjectPath(messageObject.currentFile)
-                    addSavedProject(messageObject.currentFile)
-                }
+                parserCallback(messageObject)
                 break
             }
             }
+        }
+    }
+    WorkerScript {
+        id: populationWorker
+        source: "./Controllers/modelsPopulation.mjs"
+        onMessage: {
+            const funcs = messageObject.funcList
+            if (funcs.setStepIndex !== -1) setStepIndex(funcs.setStepIndex)
+            if (funcs.setCurrentImagePath !== -1) setCurrentImagePath(funcs.setCurrentImagePath)
+            if (funcs.openDialogAccept !== -1) popUpFunctions.openDialogAccept(funcs.openDialogAccept)
+            if (funcs.historyBlockModelGeneration !== -1) {
+                actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+                rightPanelFunctions.metadataBlockModelGeneration()
+            }
+            if (funcs.updateLayersBlockModel !== -1) leftPanelFunctions.updateLayersBlockModel()
+            if (funcs.reDraw !== -1) canvaFunctions.reDraw()
+            if (funcs.openNotification !== -1) popUpFunctions.openNotification(funcs.openNotification, funcs.openNotification.length * 100)
         }
     }
     function parserCallback(messageObject) {
@@ -171,7 +184,7 @@ Window {
         id: actionsLog
     }
 
-    //Range of categories 'layer', 'history', 'export', 'view', 'settings', 'welcome', ''
+    //Range of categories 'layer', 'history', 'export', 'view', 'settings', 'welcome', 'metadata', ''
     function checkFolders() {
         fileIO.createDirectory(`${baseDir}/tmp`)
         fileIO.createDirectory(`${baseDir}/thumbs`)
@@ -228,37 +241,22 @@ Window {
         settingsLoaded = true
     }
     function projectPopulation(result, text) {
-        if (result) {
-            let k = 0
-            if (!!text.layers) {
-                for (k = 0; k < text.layers.length; ++k) {
-                    layersModel.append(text.layers[k])
-                }
-            }
-            if (!!text.overlays) {
-                for (k = 0; k < text.overlays.length; ++k) {
-                    overlayEffectsModel.append(text.overlays[k])
-                }
-            }
-            if (!!text.history) {
-                for (k = 0; k < text.history.length; ++k) {
-                    actionsLog.append(text.history[k])
-                }
-                if (!!text.stepIndex) setStepIndex(text.stepIndex)
-            }
-            if (!!text.image) {
-                if (!!text.temporary && text.temporary) {
-                    setCurrentProjectPath('')
-                }
-                setCurrentImagePath(text.image)
-                popUpFunctions.openDialogAccept(text.image)
-            }
-            leftPanelFunctions.updateLayersBlockModel()
-            canvaFunctions.reDraw()
-        } else {
-            const notificationText = "Can't open the project: corrupted project file"
-            popUpFunctions.openNotification(notificationText, notificationText.length * 100)
-        }
+        console.log("POPULATE!")
+        canvaFunctions.deactivateEffects(0)
+        rightPanelFunctions.resetPropertiesBlock()
+        if (typeof(canvaFunctions.setHelperImage) !== "undefined") canvaFunctions.setHelperImage(-1)
+        canvaFunctions.resetImage()
+        setStepIndex(-1)
+        setCurrentProjectPath("")
+        setCurrentImagePath("")
+        modelFunctions.createNewTmp()
+        populationWorker.sendMessage({
+                                         layersModel,
+                                         overlayEffectsModel,
+                                         actionsLog,
+                                         result,
+                                         text
+                                     })
     }
     function settingsBlockAction(index, name, settingsMenuModel, settingsMenuBlockModel) {
         Controller.settingsBlockAction(index, name, settingsMenuModel, settingsMenuBlockModel)
@@ -344,17 +342,23 @@ Window {
         }
     }
     function dialogCallback(type, value, func) {
-        if (type === "New project") {
+        switch (type) {
+        case "New project": {
             switch (value) {
             case "Create new": {
+                popUpFunctions.setWelcomeState("disabled")
                 eraseModels()
                 const notificationText = "Created new project"
                 popUpFunctions.openNotification(notificationText, notificationText.length * 100)
                 break
             }
             }
-        } else if (type === "Delete project") {
+            break
+        }
+        case "Delete project": {
             popUpFunctions.deleteProject(...func)
+        }
+        break
         }
     }
     function addSavedProject(path) {
@@ -379,8 +383,7 @@ Window {
     }
     function switchPreview(value) {
         showPreview = value === 1
-        console.log('prev',showPreview, layersModel.get(leftPanelFunctions.getLayerIndex()).isRenderable)
-        if (value === 1) canvaFunctions.helperAreaAction()
+        if (showPreview) canvaFunctions.helperAreaAction()
         else canvaFunctions.disableHelper()
     }
     function getPreview() {

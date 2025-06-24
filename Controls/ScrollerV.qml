@@ -16,7 +16,7 @@ Scroller {
             }
             PropertyChanges {
                 target: contentItem
-                y: baseVal// < 0 ? 0 : baseVal > scrollbar.height - contentSize ? scrollbar.height - contentSize : baseVal
+                y: baseVal
             }
         },
         State {
@@ -53,5 +53,9 @@ Scroller {
     }
     function barProperties() {
         barPropertiesV()
+    }
+    function dragging(x, y) {
+        const dy = -y/6 + (bar.y + bar.height / 2)
+        draggingY(dy)
     }
 }

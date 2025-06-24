@@ -160,5 +160,6 @@ Rectangle {
                               valIndex: valIndex
                           })
         stepIndex += 1
+        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
     }
 }

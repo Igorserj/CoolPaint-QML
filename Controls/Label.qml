@@ -55,12 +55,12 @@ Item {
         x: 0
         y: (label.height - labelText.contentHeight) / 2
         text: parent.text
-        font.family: "Helvetica"
-        font.bold: true
         elide: label.elide
         width: label.elide === 0 ? label.width : contentWidth
         color: window.style.currentTheme.pinkWhiteAccent
-        font.pixelSize: parent.height / 27 * 12
+        font.bold: true
+        font.family: "Helvetica"
+        font.pixelSize: window.width / 1280 * w / 27 * 12
         verticalAlignment: Text.AlignVCenter
     }
     MouseArea {

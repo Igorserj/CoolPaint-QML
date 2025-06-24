@@ -34,7 +34,9 @@ Item {
         nameFilters: ["Project file (*.json)"]
         fileMode: FileDialog.SaveFile
         onAccepted: {
+            projectSaved = false
             saveProj(currentFile, false)
+            rightPanelFunctions.metadataBlockModelGeneration()
         }
     }
     FileDialog {

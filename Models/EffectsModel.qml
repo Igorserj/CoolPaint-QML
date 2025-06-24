@@ -105,12 +105,26 @@ ListModel {
         items: [
             ListElement {
                 category: "layer"
-                type: "joystick"
+                type: "slider"
                 name: "Strength"
                 view: "normal,overlay"
                 min1: -1
                 min2: -1
                 max1: 1
+                max2: 1
+                val1: 0
+                val2: 0
+                bval1: 0
+                bval2: 0
+            },
+            ListElement {
+                category: "layer"
+                type: "insertDropdown"
+                name: "Tone:"
+                view: "normal"
+                min1: -1
+                min2: -1
+                max1: 2
                 max2: 1
                 val1: 0
                 val2: 0
@@ -416,8 +430,8 @@ ListModel {
                 name: "Sharp mask"
                 min1: 0
                 max1: 1
-                val1: 1
-                bval1: 1
+                val1: 0
+                bval1: 0
             },
             ListElement {
                 category: "layer"

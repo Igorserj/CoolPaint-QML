@@ -7,10 +7,19 @@ Item {
         y: window.height * 0.01
         blockModel: historyMenuBlockModel
         function blockAction(index) {
-            console.log(Object.entries(historyMenuBlockModel.get(1).block.get(index)))
+            if (type === "filter") {
+                historyBlockModelGeneration(index)
+            }
         }
+    }
+    Block {
+        id: metadataMenuBlock
+        y: 0.5 * parent.height + window.height * 0.01
+        blockModel: metadataMenuBlockModel
+        function blockAction(index) {}
     }
     Component.onCompleted: {
         spacer.upperBlock = historyMenuBlock
+        spacer.lowerBlock = metadataMenuBlock
     }
 }

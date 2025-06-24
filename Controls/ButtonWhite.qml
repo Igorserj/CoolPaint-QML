@@ -18,7 +18,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.lightDark
-                font.pixelSize: button.height / 20 * 12
+                font.pixelSize: window.width / 1280 * w / 2 / 20 * 12
             }
         },
         State {
@@ -32,7 +32,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.lightDark
-                font.pixelSize: button.height / 20 * 12
+                font.pixelSize: window.width / 1280 * w / 2 / 20 * 12
             }
         },
         State {
@@ -46,7 +46,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.lightDark
-                font.pixelSize: button.height / 20 * 12
+                font.pixelSize: window.width / 1280 * w / 2 / 20 * 12
             }
         }
     ]

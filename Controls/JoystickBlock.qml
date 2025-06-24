@@ -17,7 +17,7 @@ Rectangle {
     Joystick {
         id: joystick
         x: parent.width * 0.05
-        y: parent.height - height - height / 12//parent.radius / 2
+        y: parent.height - height - height / 12
     }
     Column {
         x: parent.width * 0.95 - width
@@ -31,9 +31,7 @@ Rectangle {
                     w: 40
                     text: index === 0 ? val1.toFixed(2) : index === 1 ? val2.toFixed(2) : "+"
                     function clickAction() {
-                        console.log("blockIndex", blockIndex)
                         const layerIndex = leftPanelFunctions.getLayerIndex()
-                        // console.log("name", name)
                         if (index === 0) {
                             popUpFunctions.openValueDialog({
                                                  value: val1,
@@ -96,6 +94,7 @@ Rectangle {
                     text: "↺"
                     function clickAction() {
                         const logging = !doNotLog.includes(category)
+                        const vals = [val1, val2]
                         if (index === 0) {
                             if (logging) logActionX(bval1)
                             updateVal1(bval1)
@@ -104,7 +103,7 @@ Rectangle {
                             updateVal2(bval2)
                         }
                         joystick.updating()
-                        if (logging) modelFunctions.autoSave()
+                        if (logging && !(val1 === vals[0] && val2 === vals[1])) modelFunctions.autoSave()
                     }
                 }
             }
@@ -133,6 +132,7 @@ Rectangle {
                               valIndex: 0
                           })
         stepIndex += 1
+        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
     }
     function logActionY(val0) {
         console.log(val2, val0)
@@ -148,5 +148,6 @@ Rectangle {
                               valIndex: 1
                           })
         stepIndex += 1
+        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
     }
 }

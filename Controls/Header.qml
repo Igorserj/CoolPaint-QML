@@ -20,7 +20,7 @@ Rectangle {
             PropertyChanges {
                 target: headerText
                 color: window.style.currentTheme.pinkWhiteAccent
-                font.pixelSize: header.height / 40 * 16
+                font.pixelSize: window.width / 1280 * w / 6 / 40 * 16
             }
         }
     ]

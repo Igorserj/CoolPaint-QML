@@ -67,13 +67,32 @@ Rectangle {
     SequentialAnimation {
         id: idleAnimation
         running: false
-
         PauseAnimation {
             duration: idleTime
         }
         ScriptAction {
             script: {
-                isHidden = true
+                if (typeof(leftPanelFunctions.getEffectsBlockState) !== "undefined") {
+                    console.log(leftPanelFunctions.getEffectsBlockState())
+                    if (leftPanelFunctions.getEffectsBlockState() === "insertion" || leftPanelFunctions.getEffectsBlockState() === "insertion2") {
+                        const notificationText = "Insertion mode\nChoose effect or layer"
+                        name = notificationText
+                        state = "visible"
+                        isHidden = false
+                    } else if (leftPanelFunctions.getEffectsBlockState() === "layerSwap") {
+                        const notificationText = "Swap mode\nChoose layer to swap with"
+                        name = notificationText
+                        state = "visible"
+                        isHidden = false
+                    } else if (leftPanelFunctions.getEffectsBlockState() === "replacement") {
+                        const notificationText = "Replacement mode\nChoose effect"
+                        name = notificationText
+                        state = "visible"
+                        isHidden = false
+                    } else {
+                        isHidden = true
+                    }
+                } else isHidden = true
             }
         }
     }

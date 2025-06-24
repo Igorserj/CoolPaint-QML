@@ -292,3 +292,23 @@ QVariant FileIO::getTemporaryFiles(const QString &dirPath)
     }
     return QVariant::fromValue(fileNames);
 }
+
+QString FileIO::getMetadata(const QString &filePath) {
+    QDateTime modifiedDate;
+    QDateTime createdDate;
+    QString fileName = "";
+    QString resolvedPath = resolveFilePath(filePath);
+    QFileInfo fileInfo(resolvedPath);
+    fileName = fileInfo.baseName();
+    modifiedDate = fileInfo.lastModified();
+    createdDate = fileInfo.birthTime();
+    const QString metadata = "{\"name\":\"Name: " +
+                             fileName +
+                             "\" , \"lastMod\":\"Last modified" +
+                             "\\nDate: " +
+                             modifiedDate.toString("dd.MM.yyyy") +
+                             "\\nTime: " +
+                             modifiedDate.toString("hh:mm:ss") +
+                             "\"}";
+    return metadata;
+}

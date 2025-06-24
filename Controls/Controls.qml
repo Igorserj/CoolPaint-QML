@@ -9,12 +9,15 @@ Item {
     property alias buttonLayers: overlayControls.buttonLayers
     property alias buttonSwitch: overlayControls.buttonSwitch
     property alias buttonGoto: overlayControls.buttonGoto
+    property alias buttonReplace: overlayControls.buttonReplace
     property alias header: overlayControls.header
     property alias empty: overlayControls.empty
     property alias insertButton: insertButton
     property alias insertDropdown: insertDropdown
     property alias textBlock: overlayControls.textBlock
+    property alias textField: overlayControls.textField
     property alias slot: overlayControls.slot
+    property alias pageChooser: pageChooser
     width: controlsLoader.width
     height: controlsLoader.height
     Loader {
@@ -36,6 +39,14 @@ Item {
         id: insertDropdown
         InsertDropdown {
             function clickAction() {controlsAction({name, type, index, val1, val2})}
+        }
+    }
+    Component {
+        id: pageChooser
+        PageChooser {
+            w: wdth
+            text: name
+            // function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
     function controlsAction(item) {}

@@ -8,8 +8,10 @@ Item {
     property alias buttonLayers: buttonLayers
     property alias buttonSwitch: buttonSwitch
     property alias buttonGoto: buttonGoto
+    property alias buttonReplace: buttonReplace
     property alias header: header
     property alias textBlock: textBlock
+    property alias textField: textField
     property alias slot: slot
     property alias empty: empty
     Component {
@@ -75,6 +77,19 @@ Item {
             w: wdth
             text: name
             function clickAction() {controlsAction({name, type, index, val1, val2})}
+        }
+    }
+    Component {
+        id: buttonReplace
+        ButtonReplace {
+            w: wdth
+        }
+    }
+    Component {
+        id: textField
+        TextField {
+            w: wdth
+            text: name
         }
     }
     Component {

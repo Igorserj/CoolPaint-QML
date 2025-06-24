@@ -31,14 +31,14 @@ Rectangle {
             PropertyAnimation {
                 target: bar
                 property: "y"
-                duration: strictStyle ? 0 : 50
+                duration: strictStyle ? 0 : 25
             }
         }
         Behavior on x {
             PropertyAnimation {
                 target: bar
                 property: "x"
-                duration: strictStyle ? 0 : 50
+                duration: strictStyle ? 0 : 25
             }
         }
         Behavior on color {
@@ -59,8 +59,8 @@ Rectangle {
         id: scrollerArea
         anchors.fill: parent
         hoverEnabled: true
-        onMouseYChanged: if (containsPress) scrolling(mouseX, mouseY)
-        onMouseXChanged: if (containsPress) scrolling(mouseX, mouseY)
+        onMouseXChanged: if (pressed) draggingX(mouseX)
+        onMouseYChanged: if (pressed) draggingY(mouseY)
         onWheel: {
             wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
         }
@@ -87,28 +87,53 @@ Rectangle {
         scrollingX(-x/6 + (bar.x + bar.width / 2))
     }
 
-    function scrollingY(y) {
+    function scrollingY(dy) {
         if (bar.visible) {
+            const unit = bar.height / 8
             let pos
-            if (y - bar.height / 2 < 0) {
-                pos = 0
-            } else if (y + bar.height / 2 > height) {
-                pos = height - bar.height
-            } else {
-                pos = y - bar.height / 2
+            if (bar.y < dy - bar.height / 2) {
+                pos = Math.min(height - bar.height, bar.y + unit)
+            } else if (bar.y > dy - bar.height / 2) {
+                pos = Math.max(0, bar.y - unit)
             }
             bar.y = pos
         }
     }
-    function scrollingX(x) {
+    function scrollingX(dx) {
+        if (bar.visible) {
+            const unit = bar.width / 8
+            let pos
+            if (bar.x < dx - bar.width / 2) {
+                pos = Math.min(width - bar.width, bar.x + unit)
+            } else if (bar.x > dx - bar.width / 2) {
+                pos = Math.max(0, bar.x - unit)
+            }
+            bar.x = pos
+        }
+    }
+
+    function draggingY(dy) {
         if (bar.visible) {
             let pos
-            if (x - bar.width / 2 < 0) {
+            if (dy - bar.height / 2 < 0) {
                 pos = 0
-            } else if (x + bar.width / 2 > width) {
+            } else if (dy + bar.height / 2 > height) {
+                pos = height - bar.height
+            } else {
+                pos = dy - bar.height / 2
+            }
+            bar.y = pos
+        }
+    }
+    function draggingX(dx) {
+        if (bar.visible) {
+            let pos
+            if (dx - bar.width / 2 < 0) {
+                pos = 0
+            } else if (dx + bar.width / 2 > width) {
                 pos = width - bar.width
             } else {
-                pos = x - bar.width / 2
+                pos = dx - bar.width / 2
             }
             bar.x = pos
         }
