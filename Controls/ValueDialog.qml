@@ -12,8 +12,8 @@ Rectangle {
     property int valIndex: -1
     property int subIndex: -1
     color: window.style.currentTheme.darkGlass
-    width: window.width / 1280 * 240
-    height: window.width / 1280 * 80
+    width: biggerSide * 240
+    height: biggerSide * 80
     enabled: false
     radius: strictStyle ? 0 : height / 4
     state: "hidden"
@@ -64,8 +64,8 @@ Rectangle {
     }
     Rectangle {
         id: valueRect
-        width: window.width / 1280 * 220
-        height: window.width / 1280 * 30
+        width: biggerSide * 220
+        height: biggerSide * 30
         x: parent.width * 0.05
         y: parent.height - height - valueDialog.height / 12//parent.radius / 3
         color: window.style.currentTheme.pinkWhite
@@ -114,7 +114,7 @@ Rectangle {
             if (logging) logAction(val0)
             value = val0
             updateFunc(parseFloat(value))
-            if (logging) modelFunctions.autoSave()
+            if (logging) window.modelFunctions.autoSave()
             close()
         } else if (text === 'Close') {
             close()
@@ -160,6 +160,6 @@ Rectangle {
                               valIndex: valIndex
                           })
         stepIndex += 1
-        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+        actionsLog.historyBlockModelGeneration()
     }
 }

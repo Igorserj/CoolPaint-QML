@@ -4,6 +4,7 @@ function activateInsertion(index, leftPanelFunctions, name, setIterationIndex, a
     switch (name) {
     case "Mask": {
         if (effectsBlockState !== "insertion") {
+            leftPanelFunctions.setLayersBlockState("enabled")
             setEffectsBlockState("insertion")
             setIterationIndex(index)
         }
@@ -15,6 +16,7 @@ function activateInsertion(index, leftPanelFunctions, name, setIterationIndex, a
     }
     case "Effect": {
         if (effectsBlockState !== "insertion2") {
+            leftPanelFunctions.setLayersBlockState("enabled")
             setEffectsBlockState("insertion2")
             setIterationIndex(index)
         }
@@ -37,9 +39,9 @@ function dropdownChoose(optionName, optionIndex, setName, setVal, getVals, doNot
         setVal(optionIndex)
         items.setProperty(index, 'name', name)
         updateModel('val1', optionIndex, idx, index, -1)
-        if (logging) modelFunctions.autoSave()
+        if (logging) window.modelFunctions.autoSave()
     } else {
-        setName('Lights')
+        setName('Color scheme')
         setVal(optionIndex)
     }
 }
@@ -58,5 +60,5 @@ function logAction(val2, actionsLog, optionName, setStepIndex, getVals) {
                           valIndex: 0
                       })
     setStepIndex(stepIndex + 1)
-    actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+    actionsLog.historyBlockModelGeneration()
 }

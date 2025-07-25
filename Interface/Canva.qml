@@ -12,7 +12,7 @@ Item {
     property int deactivateLayer: 0
     property var srcList: []
     x: (window.width - width) / 2
-    width: window.width / 1280 * (1280 - 2 * 260)
+    width: biggerSide * (1280 - 2 * 260)
     height: window.height
     state: "default"
     states: [
@@ -63,10 +63,6 @@ Item {
                 canvaVScroller.dragging((mouseX - currentPos.x) / 6, (mouseY - currentPos.y) / 6)
             }
         }
-        onWheel: {
-            canvaVScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
-            canvaHScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
-        }
         onContainsMouseChanged: {
             if (canvaArea.containsMouse) {
                 canvaArea.currentPos = Qt.point(canvaArea.mouseX, canvaArea.mouseY)
@@ -74,6 +70,25 @@ Item {
         }
         onDoubleClicked: {
             if (helperContainer.state === "enlarged") helperAreaAction(getPreview())
+        }
+        onWheel: {
+            if (mainArea.ctrl && !mainArea.shift) {
+                const val = scaling + wheel.angleDelta.y / 1000 / 12 * 10
+                if (val > 0) {
+                    canvaFunctions.setScaling(val)
+                    const viewsBlockModel = rightPanelFunctions.getViewsBlockModel()
+                    for (let i = 0; i < viewsBlockModel.get(1).block.count; ++i) {
+                        const it = viewsBlockModel.get(1).block.get(i)
+                        if (it.name === "Scale") {
+                            it.val1 = val
+                        }
+                    }
+                }
+            } else if (!mainArea.ctrl && mainArea.shift) {
+                canvaHScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
+            } else if (!mainArea.ctrl && !mainArea.shift) {
+                canvaVScroller.wheelScroll(wheel.angleDelta.x, wheel.angleDelta.y)
+            }
         }
     }
     Repeater {
@@ -86,6 +101,9 @@ Item {
     Rectangle {
         id: helperContainer
         color: window.style.currentTheme.lightDark
+        border.width: width / 30
+        border.color: window.style.currentTheme.vinous
+        radius: strictStyle ? 0 : width / 12
         visible: false
         x: (parent.width - width) - canvaVScroller.width
         y: (parent.height - height) - canvaHScroller.height
@@ -98,6 +116,7 @@ Item {
                     width: Math.min(canvaArea.width, canvaArea.height) / 8
                     height: Math.min(canvaArea.width, canvaArea.height) / 8
                     color: window.style.currentTheme.lightDark
+                    border.width: helperContainer.width / 30
                 }
                 PropertyChanges {
                     target: helperArea
@@ -115,6 +134,7 @@ Item {
                     y: baseImage.y
                     scale: scaling
                     color: "transparent"
+                    border.width: 0
                 }
                 PropertyChanges {
                     target: helperArea
@@ -130,6 +150,7 @@ Item {
                     height: 0
                     scale: 1
                     color: "transparent"
+                    border.width: 0
                 }
                 PropertyChanges {
                     target: helperArea
@@ -141,7 +162,10 @@ Item {
         onStateChanged: console.log('State', state)
         Image {
             id: helperImage
-            anchors.fill: parent
+            x: parent.border.width
+            y: parent.border.width
+            width: parent.width - parent.border.width * 2
+            height: parent.height - parent.border.width * 2
             smooth: smoothing
             fillMode: Image.PreserveAspectFit
         }
@@ -170,13 +194,11 @@ Item {
             Component.onCompleted: prevVal = [val1, val2]
             function xStick() {
                 const vals = joy.xStick(stickArea.pressed, stickArea.mouseX/stickArea.width*joy.stickArea.width)
-                val1 = vals.value
-                return {coord: vals.coord}
+                val1 = vals
             }
             function yStick() {
                 const vals = joy.yStick(stickArea.pressed, stickArea.mouseY/stickArea.height*joy.stickArea.height)
-                val2 = vals.value
-                return {coord: vals.coord}
+                val2 = vals
             }
             function logAction() {
                 logJoystick(category, index, val1, val2, prevVal, parentIndex, propIndex, name)
@@ -242,7 +264,10 @@ Item {
                 if (srcList[i].index === index && srcList[i].iteration === 0) {
                     helperContainer.visible = true
                     helperImage.source = srcList[i].source
+                    helperImage.smooth = Qt.binding(() => smoothing || layersModel.get(index).isSmooth)
                     break
+                } else {
+                    helperImage.source = ""
                 }
             }
         } else {
@@ -259,7 +284,6 @@ Item {
     function srcListAppend(source, index, iteration = -1) {
         srcListRemove(index, iteration)
         srcList.push({ "index": index, "iteration": iteration, "source": source })
-        console.log('Src list', JSON.stringify(srcList))
     }
     function srcListRemove(index, iteration = -1) {
         let idx = -1
@@ -298,7 +322,6 @@ Item {
     }
     function layersModelUpdate(key, value, idx, index, subIndex = -1) {
         deactivateLayer = layersModel.count
-        console.log("Updating", idx, deactivateLayer)
         if (layersModel.count > 0) {
             if (key !== '') {
                 if (subIndex === -1) layersModel.get(idx).items.setProperty(index, key, value)
@@ -376,12 +399,15 @@ Item {
                               valIndex: 1
                           })
         stepIndex += 1
-        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+        actionsLog.historyBlockModelGeneration()
         console.log(Object.entries(actionsLog.get(actionsLog.count-2)), Object.entries(actionsLog.get(actionsLog.count-1)))
     }
     function setScaling(value) {
         if (!isNaN(parseFloat(scaling))) scaling = value
         else console.log(`Wrong value. Value is not a number`)
+    }
+    function getScaling() {
+        return scaling
     }
     function setMirroring(value) {
         if (value === 0 || value === 1) mirroring = value === 1
@@ -409,6 +435,7 @@ Item {
             reDraw,
             getBaseImageDims,
             setScaling,
+            getScaling,
             setMirroring,
             setSmoothing,
             setPreserveAspect,

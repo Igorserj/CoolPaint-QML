@@ -7,8 +7,8 @@ Item {
     property int w: 240
     property int elide: Text.ElideNone
     state: "down"
-    width: window.width / 1280 * w
-    height: window.width / 1280 * w / 8
+    width: biggerSide * w
+    height: biggerSide * w / 8
     Item {
         x: parent.width * 0.05
         width: foldButton.x - x

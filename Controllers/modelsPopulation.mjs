@@ -25,11 +25,14 @@ WorkerScript.onMessage = function(message) {
                 funcList.setCurrentImagePath = text.image
                 funcList.openDialogAccept = text.image
             }
+            if (!!text.version) {
+                funcList.setProjectVersion = text.version
+            }
             funcList.historyBlockModelGeneration = 0
             funcList.updateLayersBlockModel = 0
             funcList.reDraw = 0
         } else {
-            const notificationText = "Can't open the project: corrupted project file"
+            const notificationText = "Can't open the project: corrupted project file or unsupported version"
             funcList.openNotification = notificationText
         }
     }
@@ -44,20 +47,18 @@ WorkerScript.onMessage = function(message) {
 
     const funcList = {
         "setStepIndex": -1,
-        // "setCurrentProjectPath": -1,
         "setCurrentImagePath": -1,
         "openDialogAccept": -1,
         "historyBlockModelGeneration": -1,
         "updateLayersBlockModel": -1,
         "reDraw": -1,
-        "openNotification": -1
+        "openNotification": -1,
+        "setProjectVersion": -1
     }
     projectPopulation(message.result, message.text)
     layersModel.sync()
     overlayEffectsModel.sync()
     actionsLog.sync()
-
-    console.log(funcList)
     WorkerScript.sendMessage({
                                  'result': true,
                                  funcList

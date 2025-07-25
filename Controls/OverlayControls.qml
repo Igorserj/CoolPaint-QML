@@ -12,18 +12,25 @@ Item {
     property alias header: header
     property alias textBlock: textBlock
     property alias textField: textField
+    property alias insertDropdown: insertDropdown
     property alias slot: slot
     property alias empty: empty
     Component {
         id: joystick
         JoystickBlock {
+            w: wdth
             text: name
         }
     }
     Component {
         id: slider
         SliderBlock {
+            w: wdth
             text: name
+            function clickAction() {
+                let pi = -1
+                if (typeof(parentIndex) !== "undefined") pi = parentIndex
+                controlsAction({name, type, index, val1, "val2": pi})}
         }
     }
     Component {
@@ -53,8 +60,13 @@ Item {
     Component {
         id: buttonSwitch
         SwitchBlock {
+            w: wdth
             text: name
-            function clickAction() {controlsAction({name, type, index, val1, val2})}
+            function clickAction() {
+                let pi = -1
+                if (typeof(parentIndex) !== "undefined") pi = parentIndex
+                controlsAction({name, type, index, val1, "val2": pi})
+            }
         }
     }
     Component {
@@ -83,6 +95,7 @@ Item {
         id: buttonReplace
         ButtonReplace {
             w: wdth
+            function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
     Component {
@@ -90,6 +103,14 @@ Item {
         TextField {
             w: wdth
             text: name
+        }
+    }
+    Component {
+        id: insertDropdown
+        InsertDropdown {
+            w: wdth
+            text: name
+            function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
     Component {

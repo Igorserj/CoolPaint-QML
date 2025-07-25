@@ -3,8 +3,8 @@ import QtQuick 2.15
 Button {
     id: button
     property int w: 240
-    width: window.width / 1280 * w
-    height: window.width / 1280 * w / 8
+    width: biggerSide * w
+    height: biggerSide * w / 8
     state: "enabled"
     states: [
         State {
@@ -22,7 +22,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.lightDark
-                font.pixelSize: window.width / 1280 * w / 8 / 30 * 12
+                font.pixelSize: biggerSide * w / 8 / 30 * 12
             }
         },
         State {
@@ -36,7 +36,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.pinkWhiteAccent
-                font.pixelSize: window.width / 1280 * w / 8 / 30 * 12
+                font.pixelSize: biggerSide * w / 8 / 30 * 12
             }
         },
         State {
@@ -50,7 +50,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.pinkWhite
-                font.pixelSize: window.width / 1280 * w / 8 / 30 * 12
+                font.pixelSize: biggerSide * w / 8 / 30 * 12
             }
         },
         State {
@@ -64,7 +64,7 @@ Button {
             PropertyChanges {
                 target: buttonText
                 color: window.style.currentTheme.pinkWhiteAccent
-                font.pixelSize: window.width / 1280 * w / 8 / 30 * 12
+                font.pixelSize: biggerSide * w / 8 / 30 * 12
             }
         }
     ]

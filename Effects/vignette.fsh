@@ -7,6 +7,7 @@ uniform lowp float lowerRange;
 uniform lowp float roundness;
 uniform lowp vec2 center;
 uniform sampler2D src;
+uniform float transparency;
 uniform lowp bool isOverlay;
 
 void main(void)
@@ -16,6 +17,7 @@ void main(void)
     vec2 st = gl_FragCoord.xy/u_resolution;
     vec2 st2 = gl_FragCoord.xy/side;
     lowp vec4 tex = texture2D(src, vec2(st.x, 1.-st.y));
+    vec4 tex1 = tex;
     vec2 recenter = vec2(center.x * (u_resolution.x/side), ((1.-center.y)*(u_resolution.y/side)));
     float dist = 0.;
     if (roundness != 1.) {
@@ -27,9 +29,10 @@ void main(void)
     }
 
     if (isOverlay) {
-        tex = vec4(dist);
+        tex1 = vec4(dist);
     } else {
-        tex *= dist;
+        tex1 *= dist;
     }
-    gl_FragColor = vec4(tex);
+    tex = tex * transparency + tex1 * (1.-transparency);
+    gl_FragColor = tex;
 }

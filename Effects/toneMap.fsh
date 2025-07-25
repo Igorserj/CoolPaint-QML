@@ -4,8 +4,9 @@ precision lowp float;
 uniform lowp vec2 u_resolution;
 uniform lowp float lowerRange;
 uniform lowp float upperRange;
-uniform lowp bool isOverlay;
 uniform sampler2D src;
+uniform float transparency;
+uniform lowp bool isOverlay;
 
 void main(void)
 {
@@ -14,10 +15,10 @@ void main(void)
     lowp vec4 tex1 = texture2D(src, vec2(st.x+1./st.x, 1.-st.y+1./st.y));
     float edge = smoothstep(lowerRange, upperRange, abs((tex.r + tex.g + tex.b) / 3. - (tex1.r + tex1.g + tex1.b) / 3.));
     if (isOverlay) {
-        tex = vec4(edge);
+        tex1 = vec4(edge);
     } else {
-        tex.rgb += edge;
-        // tex.a *= edge;
+        tex1 = tex * edge;
     }
-    gl_FragColor = vec4(tex);
+    tex = tex * transparency + tex1 * (1.-transparency);
+    gl_FragColor = tex;
 }

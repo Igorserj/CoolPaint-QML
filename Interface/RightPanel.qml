@@ -5,12 +5,12 @@ import "../Controllers/rightPanelController.js" as Controller
 
 Rectangle {
     x: window.width - width
-    width: window.width / 1280 * 260
+    width: biggerSide * 260
     height: window.height
     color: window.style.currentTheme.vinous
     Component.onCompleted: {
         viewsBlockPopulate()
-        logAssign(historyMenuBlockModel, Controller.historyBlockModelGeneration)
+        logAssign(historyMenuBlockModel, historyBlockModelGeneration)
         setRightPanelFunctions()
     }
     state: "default"
@@ -72,7 +72,7 @@ Rectangle {
         Controller.propertiesBlockModelGeneration(propertiesModel, propertiesBlockModel)
     }
     function resetPropertiesBlock() {
-        Controller.flushPropertiesBlockModel(propertiesBlockModel)
+        Controller.flushPropertiesBlockModel(propertiesModel, propertiesBlockModel)
         leftPanelFunctions.setLayerIndex(-1)
     }
     function getPropertiesBlockModel() {
@@ -80,6 +80,9 @@ Rectangle {
     }
     function viewsBlockPopulate() {
         Controller.viewsBlockModelGeneration(viewsModel, viewsBlockModel)
+    }
+    function getViewsBlockModel() {
+        return viewsBlockModel
     }
     function switchState() {
         if (state === "history") {
@@ -97,7 +100,7 @@ Rectangle {
     }
     function metadataBlockModelGeneration() {
         if (rightPanelFunctions.getState() === "history") {
-            Controller.metadataBlockModelGeneration(metadataMenuBlockModel, currentImagePath, currentProjectPath)
+            Controller.metadataBlockModelGeneration(metadataMenuBlockModel, projectData.imagePath, projectData.projectPath)
         }
     }
     function historyBlockModelGeneration(pageNo) {
@@ -105,14 +108,22 @@ Rectangle {
             Controller.historyBlockModelGeneration(actionsLog, historyMenuBlockModel, pageNo)
         }
     }
+    function addReplacerToHistory() {
+        if (rightPanelFunctions.getState() === "history") {
+            Controller.addReplacerToHistory(actionsLog, historyMenuBlockModel)
+        }
+    }
+    function metadataFilterChoose(index) {
+        Controller.metadataFilterChoose(metadataMenuBlockModel, index, projectData.imagePath, projectData.projectPath)
+    }
     function open() {
         Controller.historyBlockModelGeneration(actionsLog, historyMenuBlockModel)
-        metadataBlockModelGeneration()
         spacer.spacerReset()
         spacer.y = (parent.height - spacer.height) / 2
         spacer.upperBlock = undefined
         spacer.lowerBlock = undefined
         state = "history"
+        metadataBlockModelGeneration()
     }
     function close() {
         propertiesBlockUpdate()
@@ -130,7 +141,9 @@ Rectangle {
             getPropertiesModel,
             getPropertiesBlockModel,
             getState,
-            metadataBlockModelGeneration
+            getViewsBlockModel,
+            metadataBlockModelGeneration,
+            addReplacerToHistory
         }
     }
 }

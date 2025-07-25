@@ -6,8 +6,8 @@ Rectangle {
     property alias headerText: headerText
     property alias area: area
     property int w: 240
-    height: window.width / 1280 * w / 6
-    width: window.width / 1280 * w
+    height: biggerSide * w / 6
+    width: biggerSide * w
     state: "enabled"
     states: [
         State {
@@ -20,7 +20,7 @@ Rectangle {
             PropertyChanges {
                 target: headerText
                 color: window.style.currentTheme.pinkWhiteAccent
-                font.pixelSize: window.width / 1280 * w / 6 / 40 * 16
+                font.pixelSize: biggerSide * w / 6 / 40 * 16
             }
         }
     ]

@@ -9,6 +9,7 @@ uniform bool inversion2;
 uniform bool sharpMask2;
 uniform lowp int overlayMode;
 uniform float opacity_level;
+uniform float transparency;
 
 float random (vec2 st) {
     return fract(sin(dot(st.xy,
@@ -36,7 +37,7 @@ void main(void)
     else if (overlayMode == 6) tex = vec4(min(effect.r, tex.r), min(effect.g, tex.g), min(effect.b, tex.b), tex.a + effect.a); //darken only
     else if (overlayMode == 7) tex = vec4(max(effect.r, tex.r), max(effect.g, tex.g), max(effect.b, tex.b), tex.a + effect.a); //lighten only
     else if (overlayMode == 8) {
-        float rnd = step(0.5, random( st ));
+        float rnd = smoothstep(0.5, 0.5+(0.5-opacity_level/2.), random( st ));
         tex = tex * rnd + effect * (1.-rnd);
     } //dissolve
     else if (overlayMode == 9) {
@@ -80,6 +81,6 @@ void main(void)
         tex = smoothstep(1.0, 1.+(1.-opacity_level), tex + effect);
     }//hard mix
     else tex = effect + mask;
-    tex = clamp(tex * opacity_level + tex1 * (1.-opacity_level), 0., 1.) * tex2.a + mask;
+    tex = tex1 * (transparency) + (clamp(tex * opacity_level + tex1 * (1.-opacity_level), 0., 1.) * tex2.a + mask) * (1.-transparency);
     gl_FragColor = vec4(tex);
 }

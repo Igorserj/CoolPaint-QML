@@ -4,8 +4,8 @@ Item {
     id: pageChooserItem
     property string text: ""
     property int w: 240
-    width: window.width / 1280 * w
-    height: window.width / 1280 * 60 / 2
+    width: biggerSide * w
+    height: biggerSide * 60 / 2
     Item {
         x: parent.width * 0.05
         width: parent.width / 4.5

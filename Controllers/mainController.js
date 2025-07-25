@@ -60,7 +60,10 @@ function settingsBlockAction(index, name, settingsMenuModel, settingsMenuBlockMo
         setStyle(settingsMenuBlockModel.get(1).block.get(settingsModel.style[0]).val1, settingsModel.style[0])
         setUiFx(settingsMenuBlockModel.get(1).block.get(settingsModel.effects[0]).val1, settingsModel.effects[0])
         setTheme(settingsMenuBlockModel.get(1).block.get(settingsModel.theme[0]).val1, settingsModel.theme[0])
+        setRender(settingsMenuBlockModel.get(1).block.get(settingsModel.render[0]).val1, settingsModel.render[0])
         setCheckerboard(settingsMenuBlockModel.get(1).block.get(settingsModel.density[0]).val1, settingsModel.density[0])
+        const notificationText = "Settings saved"
+        popUpFunctions.openNotification(notificationText, notificationText.length * 100)
         console.log('Writing to', settingsFile, 'success:', result)
         break
     }
@@ -78,9 +81,11 @@ function settingsBlockAction(index, name, settingsMenuModel, settingsMenuBlockMo
                 }
             }
         }
+        const notificationText = "Settings reverted"
+        popUpFunctions.openNotification(notificationText, notificationText.length * 100)
         break
     }
-    case "Lights": {
+    case "Color scheme": {
         // lightTheme = settingsMenuBlockModel.get(1).block.get(index).val1
         break
     }

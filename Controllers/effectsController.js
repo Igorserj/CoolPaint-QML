@@ -27,18 +27,20 @@ function addEffect(name) {
     case "Color swap": return colorSwap
     case "Pixelation": return pixelation
     case "Pixel sharpness": return depixelation
+    case "Scale": return scaleEffect
+    case "Translate": return translate
+    case "HDR": return hdr
     }
 }
 
 function setImage(ldr, img, img2, isRenderable, index, isLastIndex) {
-    console.log("Set img",ldr, img, img2, isRenderable, index, isLastIndex)
     if (ldr.width !== 0 && ldr.height !== 0) {
         if (isRenderable) {
             ldr.grabToImage(result => {
                                 img.source = result.url
                                 img2.source = result.url
-                                if (isLastIndex && fileIO.exists(modelFunctions.getTmp())) {
-                                    const path = modelFunctions.getTmp().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2')
+                                if (isLastIndex && fileIO.exists(window.modelFunctions.getTmp())) {
+                                    const path = window.modelFunctions.getTmp().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2')
                                     const name = path.substring(path.lastIndexOf('/') + 1)
                                     const maxSize = Math.max(img.width, img.height)
                                     img.grabToImage(result => {
@@ -67,8 +69,10 @@ function reActivateLoader(layersModel, overlaysModel, index) {
         layersModel.setProperty(index + 1, "activated", true)
     } else if (index + 1 < layersModel.count && ["Overlay", "Combination mask"].includes(layersModel.get(index + 1).name)) {
         let overlayIndex = []
-        if (index + 1 <= overlaysModel.count) overlayIndex = overlaysModel.getModel(index + 1, 0, 'index')
+        /*if (index + 1 <= overlaysModel.count)*/ overlayIndex = overlaysModel.getModel(index + 1, 0, 'index')
         if (overlayIndex.length > 0) overlaysModel.setProperty(overlayIndex[0], 'activated', true)
+        // console.log("OI", JSON.stringify(overlaysModel.getModel(index + 1, 0, 'index')) )
+        // console.log("OI2", JSON.stringify(overlaysModel.get(overlayIndex[0])), overlayIndex )
     }
 }
 
@@ -76,8 +80,9 @@ function reActivateLayer(layersModel, overlaysModel, idx, iteration, finalImage)
     let overlayIndex = []
     if (iteration === 0) {
         overlayIndex = overlaysModel.getModel(idx, 1, 'index')
-        if (overlayIndex.length > 0 && overlaysModel.get(overlayIndex[0]).name !== "") overlaysModel.setProperty(overlayIndex[0], 'activated', true)
-        else if (finalImage !== null) {
+        if (overlayIndex.length > 0 && overlaysModel.get(overlayIndex[0]).name !== "") {
+            overlaysModel.setProperty(overlayIndex[0], 'activated', true)
+        } else if (finalImage !== null) {
             finalImage.source = ""
         }
     } else if (iteration === 1) {

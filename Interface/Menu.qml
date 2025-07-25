@@ -12,15 +12,15 @@ Item {
         setPopUpFunctions()
     }
     Row {
-        spacing: window.width * 0.005
+        spacing: biggerSide * 6.5
         Repeater {
             model: menuModel
             delegate: Controls {
                 enabled: name === "Save as" ? imageAssigned
-                                            : name === "Save" ? (currentProjectPath.toString() !== "" && !projectSaved && imageAssigned)
+                                            : name === "Save" ? (projectData.projectPath.toString() !== "" && !projectSaved && imageAssigned)
                                                               : true
                 function controlsAction() {
-                    console.log(name, currentProjectPath.toString() !== "", !projectSaved, imageAssigned)
+                    console.log(name, projectData.projectPath.toString() !== "", !projectSaved, imageAssigned)
                     Controller.menuActions(name, createProject, openDialog, openProjDialog, saveDialog, leftPanelFunctions, saveProj, popUpFunctions.goHome)
                 }
             }
@@ -79,7 +79,7 @@ Item {
             popUpFunctions.openNotification(notificationText, notificationText.length * 100)
             return
         }
-        parserWorker.sendMessage({ text, currentFile, 'type': 'project' })
+        parserWorker.sendMessage({ text, currentFile, 'type': 'project', build })
     }
     function saveProj(currentFile, temporary) {
         console.log(getCurrentProjectPath(), currentFile)

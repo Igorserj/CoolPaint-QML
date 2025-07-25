@@ -4,7 +4,7 @@ Scroller {
     id: scrollbar
     contentSize: parent.height
     height: parent.height
-    width: window.width / 1280 * w
+    width: biggerSide * w
     states: [
         State {
             name: "disabled"

@@ -5,11 +5,12 @@ ListModel {
     function getModel(idx, iteration = -1, mode = 'default') {
         const newModel = []
         for (let i = 0; i < this.count; ++i) {
-            if (this.get(i).idx === idx && this.get(i).iteration === iteration) {
+            if (this.get(i).iteration === iteration && this.get(i).idx === idx) {
                 switch (mode) {
                 case 'default': newModel.push(this.get(i)); break
                 case 'index': newModel.push(i); break
                 }
+                break
             } else if (iteration === -1 && this.get(i).idx === idx) {
                 switch (mode) {
                 case 'default': newModel.push(this.get(i)); break

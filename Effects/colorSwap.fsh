@@ -7,7 +7,7 @@ uniform lowp float color_r;
 uniform lowp float color_g;
 uniform lowp float color_b;
 uniform lowp float color_a;
-// uniform bool isOverlay;
+uniform float transparency;
 
 void main(void)
 {
@@ -62,5 +62,5 @@ void main(void)
         tex1.a = 1.;
     }
 
-    gl_FragColor = vec4(tex1);
+    gl_FragColor = tex * transparency + tex1 * (1.-transparency);
 }

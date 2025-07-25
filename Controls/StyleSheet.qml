@@ -3,7 +3,6 @@ import QtQuick 2.15
 QtObject {
     property var listOfThemes: ['darkPurple', 'lightPurple', 'darkClassic', 'lightClassic', 'tranquil']
     property var currentTheme: this[listOfThemes[0]]
-    //`#33${style.currentTheme.pinkWhiteDim.toString().substring(1)}`
 
     readonly property var darkPurple: {
         "pinkWhite": "#AF9FAF",
@@ -48,31 +47,44 @@ QtObject {
     }
 
     readonly property var lightClassic: {
-        "pinkWhite": "#3F3F3F",
-        "pinkWhiteAccent": "#5A5A5A",
+        "pinkWhite": "#656565",
+        "pinkWhiteAccent": "#464646",
         "pinkWhiteDim": "#242424",
         "lightDark": "#E6E6E6",
-        "darkGlass": strictStyle ? "#C3C3C3" : "#5DF4F4F4",
-        "darkGlassAccent": strictStyle ? "#B5B5B5" : "#5DCDCDCD",
-        "darkGlassDim": strictStyle ? "#B4B4B4" : "#4DD4D4D4",
+        "darkGlass": strictStyle ? "#C3C3C3" : "#8DF4F4F4",
+        "darkGlassAccent": strictStyle ? "#B5B5B5" : "#8DCDCDCD",
+        "darkGlassDim": strictStyle ? "#B4B4B4" : "#8DD4D4D4",
         "dark": "#DFDFDF",
         "vinous": "#C4C4C4",
         "vinousGlass": strictStyle ? "#ACACAC" : "#5CAFAFAF",
         "whiteVeil": strictStyle ? "#A7A7A7" : "#24000000"
     }
 
+    // readonly property var tranquil: {
+    //     "pinkWhite": "#3F4F3F",
+    //     "pinkWhiteAccent": "#556555",
+    //     "pinkWhiteDim": "#253525",
+    //     "lightDark": "#C9B5A9",//"#F5F5DC",// "#D2B48C",//"#A09589",
+    //     "darkGlass": strictStyle ? "#B6B4A9" : "#5DDCDCDC",
+    //     "darkGlassAccent": strictStyle ? "#BAC7AD" : "#5DE3FFE3",
+    //     "darkGlassDim": strictStyle ? "#B1AFA3" : "#4DC5C5C5",
+    //     "dark": "#C7CFC7",//"#BCC4BC",
+    //     "vinous": "#AA9F94",
+    //     "vinousGlass": strictStyle ? "#D0C5B9" : "#5DD0C5B9",
+    //     "whiteVeil": strictStyle ? "#A19E8C" : "#8992BA81"
+    // }
     readonly property var tranquil: {
-        "pinkWhite": "#3F4F3F",
-        "pinkWhiteAccent": "#556555", //
-        "pinkWhiteDim": "#253525", //
-        "lightDark": "#A09589", //
-        "darkGlass": strictStyle ? "#B6B4A9" : "#5DDCDCDC", //
-        "darkGlassAccent": strictStyle ? "#BAC7AD" : "#5DE3FFE3", //
-        "darkGlassDim": strictStyle ? "#B1AFA3" : "#4DC5C5C5",
-        "dark": "#BCC4BC", //
-        "vinous": "#AA9F94",
-        "vinousGlass": strictStyle ? "#D0C5B9" : "#5DD0C5B9",
-        "whiteVeil": strictStyle ? "#A19E8C" : "#24b2daa1" //
+        "pinkWhite": "#A9BA9D",
+        "pinkWhiteAccent": "#83B9A3",
+        "pinkWhiteDim": "#6C7C59",
+        "lightDark": "#F0FFF0",
+        "darkGlass": strictStyle ? "#76714F" : "#CA6F714E",
+        "darkGlassAccent": strictStyle ? "#414335" : "#CA354230",
+        "darkGlassDim": strictStyle ? "#857254" : "#344B6F44",
+        "dark": "#634127",
+        "vinous": "#826644",
+        "vinousGlass": strictStyle ? "#275538" : "#CA0D5C33",
+        "whiteVeil": strictStyle ? "#967359" : "#CA866449"
     }
 
     function setTheme(index) {

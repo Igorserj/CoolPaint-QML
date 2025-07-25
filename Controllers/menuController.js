@@ -30,7 +30,7 @@ function openDialogAccept(canvaFunctions, source, layersModel, exportModel) {
 
 function saveProj(currentFile, fileIO, modelFunctions, temporary, openNotification, setCurrentProjectPath, getCurrentImagePath, getFinalImage) {
     if ((temporary || !currentFile.toString().includes("/tmp/")) && !projectSaved) {
-        const model = { 'layers': [], 'overlays': [], 'history': [], stepIndex, temporary, 'image': getCurrentImagePath() }
+        const model = { 'layers': [], 'overlays': [], 'history': [], stepIndex, temporary, 'image': getCurrentImagePath(), 'version': projectData.version }
         let k = 0
         for (k = 0; k < modelFunctions.getLayersModelLength(); ++k) {
             model.layers.push(modelFunctions.getLayersModel(k))
@@ -47,7 +47,6 @@ function saveProj(currentFile, fileIO, modelFunctions, temporary, openNotificati
             projectSaved = true
             setCurrentProjectPath(currentFile)
         }
-        // Write using the C++ helper
         const path = currentFile.toString().replace(/^(.+?)\.[^.]*$|^([^.]+)$/, '$1$2')
         fileIO.write(path + '.json', jsonData)
 
@@ -60,7 +59,6 @@ function saveProj(currentFile, fileIO, modelFunctions, temporary, openNotificati
                             }, Qt.size((img.width / maxSize) * 200, (img.height / maxSize) * 200))
             addSavedProject(path + '.json')
         }
-
     } else if ((temporary || !currentFile.toString().includes("/tmp/")) && projectSaved) {
         const notificationText = "Project already saved"
         openNotification(notificationText, notificationText.length * 100)

@@ -17,10 +17,15 @@ Window {
     property var saveProj
     property bool uiFx: false
     property bool strictStyle: false
+    property bool asyncRender: true
     property bool showPreview: true
     property int density: -1
-    property url currentProjectPath: ""
-    property url currentImagePath: ""
+    readonly property int build: 190725
+    property var projectData: {
+        "projectPath": "",
+        "imagePath": "",
+        "version": 190725
+    }
     property bool projectSaved: true
     property bool settingsLoaded: false
     property var popUpFunctions: ({})
@@ -28,6 +33,7 @@ Window {
     property var canvaFunctions: ({})
     property var leftPanelFunctions: ({})
     property var rightPanelFunctions: ({})
+    readonly property real biggerSide: window.width / 1280 > window.height / 720 ? window.width / 1280 : window.height / 720
     property var modelFunctions: {
         const ClassModel = Controller.modelFunctions
         return new ClassModel(layersModel, overlayEffectsModel, actionsLog, saveProj)
@@ -36,6 +42,7 @@ Window {
     height: 720
     visible: true
     title: qsTr("Cool Paint")
+    // @disable-check M16
     onClosing: {
         close.accepted = false
         closeWindow()
@@ -62,26 +69,41 @@ Window {
     }
     MouseArea {
         id: mainArea
+        property bool ctrl: false
+        property bool shift: false
         acceptedButtons: "NoButton"
         focus: true
         Keys.onPressed: {
-            if (event.key === Qt.Key_Z && (event.modifiers & (Qt.ControlModifier && Qt.ShiftModifier))) {
+            const listOfScanCodes = {
+                "key_z": 52,
+                "key_s": 39,
+                "key_o": 32,
+                "key_q": 24,
+                "key_n": 57
+            }
+            if (event.modifiers & Qt.ControlModifier) ctrl = true
+            if (event.modifiers & Qt.ShiftModifier) shift = true
+            if (event.nativeScanCode === listOfScanCodes.key_z && (event.modifiers & (Qt.ControlModifier && Qt.ShiftModifier))) {
                 actionBarFunctions.redo()
-            } else if (event.key === Qt.Key_Z && (event.modifiers & Qt.ControlModifier)) {
+            } else if (event.nativeScanCode === listOfScanCodes.key_z && (event.modifiers & Qt.ControlModifier)) {
                 actionBarFunctions.undo()
-            } else if (event.key === Qt.Key_S && (event.modifiers & (Qt.ControlModifier && Qt.ShiftModifier))) {
+            } else if (event.nativeScanCode === listOfScanCodes.key_s && (event.modifiers & (Qt.ControlModifier && Qt.ShiftModifier))) {
                 popUpFunctions.openSaveDialog()
-            } else if (event.key === Qt.Key_S && (event.modifiers & Qt.ControlModifier)) {
-                saveProj(currentProjectPath, false)
-            } else if (event.key === Qt.Key_O && (event.modifiers & (Qt.ControlModifier && Qt.ShiftModifier))) {
+            } else if (event.nativeScanCode === listOfScanCodes.key_s && (event.modifiers & Qt.ControlModifier)) {
+                saveProj(projectData.projectPath, false)
+            } else if (event.nativeScanCode === listOfScanCodes.key_o && (event.modifiers & (Qt.ControlModifier && Qt.ShiftModifier))) {
                 popUpFunctions.openImageDialog()
-            } else if (event.key === Qt.Key_O && (event.modifiers & Qt.ControlModifier)) {
+            } else if (event.nativeScanCode === listOfScanCodes.key_o && (event.modifiers & Qt.ControlModifier)) {
                 popUpFunctions.openProjectDialog((currentFile) => popUpFunctions.openProj(currentFile))
-            } else if (event.key === Qt.Key_Q && (event.modifiers & Qt.ControlModifier)) {
+            } else if (event.nativeScanCode === listOfScanCodes.key_q && (event.modifiers & Qt.ControlModifier)) {
                 closeWindow()
-            } else if (event.key === Qt.Key_N && (event.modifiers & Qt.ControlModifier)) {
+            } else if (event.nativeScanCode === listOfScanCodes.key_n && (event.modifiers & Qt.ControlModifier)) {
                 createProject()
             }
+        }
+        Keys.onReleased: {
+            if (Qt.ControlModifier) ctrl = false
+            if (Qt.ShiftModifier) shift = false
         }
     }
     ValueDialog {
@@ -101,17 +123,17 @@ Window {
             popUpFunctions.openDialog = open
         }
     }
+    ExitDialog {
+        id: exitDialog
+        x: (window.width - width) / 2
+        y: (window.height - height) / 2
+    }
     Notification {
         id: notification
         Component.onCompleted: {
             popUpFunctions.openNotification = open
             popUpFunctions.closeNotification = close
         }
-    }
-    ExitDialog {
-        id: exitDialog
-        x: (window.width - width) / 2
-        y: (window.height - height) / 2
     }
     StyleSheet {id: style}
     WorkerScript {
@@ -139,8 +161,9 @@ Window {
             if (funcs.setStepIndex !== -1) setStepIndex(funcs.setStepIndex)
             if (funcs.setCurrentImagePath !== -1) setCurrentImagePath(funcs.setCurrentImagePath)
             if (funcs.openDialogAccept !== -1) popUpFunctions.openDialogAccept(funcs.openDialogAccept)
+            if (funcs.setProjectVersion !== -1) projectData.version = funcs.setProjectVersion
             if (funcs.historyBlockModelGeneration !== -1) {
-                actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+                actionsLog.historyBlockModelGeneration(0)
                 rightPanelFunctions.metadataBlockModelGeneration()
             }
             if (funcs.updateLayersBlockModel !== -1) leftPanelFunctions.updateLayersBlockModel()
@@ -149,6 +172,7 @@ Window {
         }
     }
     function parserCallback(messageObject) {
+        canvaFunctions.deactivateEffects(messageObject.text.layers.length)
         projectPopulation(messageObject.result, messageObject.text)
         if (typeof(messageObject.currentFile) !== "undefined" && !messageObject.currentFile.toString().includes(`${baseDir}/tmp`)) {
             setCurrentProjectPath(messageObject.currentFile)
@@ -203,6 +227,8 @@ Window {
             } catch (error) {
                 const notificationText = error.toString()
                 console.log(notificationText)
+                loadSettingsDeafaults()
+                settingsLoaded = true
                 return
             }
             if (!!!jsonData.settings || (!!jsonData.layers || !!jsonData.overlays || !!jsonData.history)) { // ADD jsonData.saves
@@ -225,12 +251,14 @@ Window {
                 if (obj.name === 'Count of autosaves') {
                     setSaves(parseInt(obj.val1), settingsModel.autosaves[0])
                     fileIO.remove(baseDir, parseInt(obj.val1))
-                } else if (obj.name === 'Lights') {
+                } else if (obj.name === 'Color scheme') {
                     setTheme(obj.val1, settingsModel.theme[0])
                 } else if (obj.name === "UI Effects") {
                     setUiFx(obj.val1, settingsModel.effects[0])
                 } else if (obj.name === "Strict style") {
                     setStyle(obj.val1, settingsModel.style[0])
+                } else if (obj.name === "WIP: async render") {
+                    setRender(obj.val1, settingsModel.render[0])
                 } else if (obj.name === "Checkerboard density" && !!settingsModel.density) {
                     setCheckerboard(obj.val1, settingsModel.density[0])
                 }
@@ -241,7 +269,6 @@ Window {
         settingsLoaded = true
     }
     function projectPopulation(result, text) {
-        console.log("POPULATE!")
         canvaFunctions.deactivateEffects(0)
         rightPanelFunctions.resetPropertiesBlock()
         if (typeof(canvaFunctions.setHelperImage) !== "undefined") canvaFunctions.setHelperImage(-1)
@@ -297,16 +324,16 @@ Window {
         stepIndex = newStepIndex
     }
     function getCurrentProjectPath() {
-        return currentProjectPath
+        return projectData.projectPath
     }
     function setCurrentProjectPath(newPath) {
-        currentProjectPath = newPath
+        projectData.projectPath = newPath
     }
     function getCurrentImagePath() {
-        return currentImagePath
+        return projectData.imagePath
     }
     function setCurrentImagePath(newPath) {
-        currentImagePath = newPath
+        projectData.imagePath = newPath
     }
     function setTheme(newTheme, index) {
         settingsMenuModel.setProperty(index, 'val1', newTheme)
@@ -323,6 +350,10 @@ Window {
         settingsMenuModel.setProperty(index, 'val1', value)
         strictStyle = value
     }
+    function setRender(value, index) {
+        settingsMenuModel.setProperty(index, 'val1', value)
+        asyncRender = value
+    }
     function setCheckerboard(value, index) {
         settingsMenuModel.setProperty(index, 'val1', value)
         density = parseInt(value)
@@ -335,21 +366,22 @@ Window {
                         "All unsaved progress will be lost!",
                         [{text: "Create new", type: "New project"}, {text: "Cancel", func: "close"}])
         } else {
-            popUpFunctions.setWelcomeState("disabled")
-            eraseModels()
-            const notificationText = "Created new project"
-            popUpFunctions.openNotification(notificationText, notificationText.length * 100)
+            projectPreparation()
         }
+    }
+    function projectPreparation() {
+        popUpFunctions.setWelcomeState("disabled")
+        eraseModels()
+        projectData.version = build
+        const notificationText = "Created new project"
+        popUpFunctions.openNotification(notificationText, notificationText.length * 100)
     }
     function dialogCallback(type, value, func) {
         switch (type) {
         case "New project": {
             switch (value) {
             case "Create new": {
-                popUpFunctions.setWelcomeState("disabled")
-                eraseModels()
-                const notificationText = "Created new project"
-                popUpFunctions.openNotification(notificationText, notificationText.length * 100)
+                projectPreparation()
                 break
             }
             }
@@ -396,6 +428,33 @@ Window {
     function enableMainArea() {
         mainArea.focus = true
         mainArea.enabled = true
+    }
+    function updateSettingsBlock(menuModel, blockModel, category) {
+        blockModel.set(1, {
+                                       'block': []
+                                   })
+        for (let i = 0; i < menuModel.count; ++i) {
+            const model = menuModel.get(i)
+            model.wdth = 240
+            const themes = ['Dark purple', 'Light purple', 'Dark classic', 'Light classic', 'Tranquil']
+            if (model.name === "Color scheme") {
+                model.items.clear()
+                themes.forEach((theme) => {
+                                   model.items.append({
+                                                          name: theme,
+                                                          type: "buttonDark",
+                                                          category/*: "settings"*/,
+                                                          val1: 0,
+                                                          bval1: 0,
+                                                          max1: 1,
+                                                          min1: 0,
+                                                          wdth: 230
+                                                      })
+                               }
+                               )
+            }
+            blockModel.get(1).block.append(model)
+        }
     }
 
     function eraseModels(callback, props) {

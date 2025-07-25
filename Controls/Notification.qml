@@ -6,8 +6,8 @@ Rectangle {
     property int idleTime: 0
     property bool isHidden: true
     color: window.style.currentTheme.darkGlass
-    width: window.width / 1280 * 240
-    height: window.width / 1280 * 80
+    width: biggerSide * 240
+    height: biggerSide * 80
     enabled: false
     radius: strictStyle ? 0 : height / 4
     state: "hidden"

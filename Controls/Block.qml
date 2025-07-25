@@ -32,46 +32,33 @@ Rectangle {
         let i
         switch (state) {
         case "insertion": {
+            leftPanelFunctions.removeReplacers()
             const notificationText = "Insertion mode\nChoose an effect or layer"
             popUpFunctions.openNotification(notificationText, 0)
             break
         }
         case "insertion2": {
+            leftPanelFunctions.removeReplacers()
             const notificationText = "Insertion mode\nChoose an effect or layer"
             popUpFunctions.openNotification(notificationText, 0)
             break
         }
         case "layerSwap": {
-            const length = layersModel.count
-            const obj = {
-                "type": "buttonReplace",
-                "wdth": 240,
-                "name": "",
-                "nickname": "",
-                "val1": 0,
-                "val2": 0,
-                "idx": -1,
-                "isRenderable": true
-            }
-            for (i = 1; i < length; ++i) {
-                layersBlockModel.get(1).block.insert(i * 2 - 1, obj)
-            }
+            leftPanelFunctions.populateReplacers()
             const notificationText = "Swap mode\nChoose a layer to swap with"
             popUpFunctions.openNotification(notificationText, 0)
             break
         }
         case "replacement": {
+            leftPanelFunctions.removeReplacers()
             const notificationText = "Replacement mode\nChoose an effect"
             popUpFunctions.openNotification(notificationText, 0)
             break
         }
         case "enabled": {
-            // for (i = layersModel.count * 2 - 2; i > 0; --i) {
-            //     if (layersBlockModel.get(1).block.get(i).type === "buttonReplace") {
-            //         layersBlockModel.get(1).block.remove(i)
-            //     }
-            // }
-            popUpFunctions.closeNotification()
+            console.log('State', state)
+            !!leftPanelFunctions.removeReplacers && leftPanelFunctions.removeReplacers()
+            !!popUpFunctions.closeNotification && popUpFunctions.closeNotification()
             break
         }
         }
@@ -95,7 +82,7 @@ Rectangle {
                 property bool blockIndex: index
                 clip: true
                 height: col.height
-                width: window.width / 1280 * 260
+                width: biggerSide * 260
                 z: -index + blockModel.count
                 MouseArea {
                     id: colArea
@@ -116,7 +103,6 @@ Rectangle {
                         delegate: Controls {
                             enabled: type === "header" || enableByState(type, name, index, isOverlay)
                             function controlsAction(item) {
-                                console.log('controlsAction',Object.entries(item))
                                 clickAction(item.name, item.type, item.index, [item.val1, item.val2])
                             }
                         }

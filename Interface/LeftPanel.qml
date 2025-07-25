@@ -10,7 +10,11 @@ Rectangle {
     property var effectsBlockItem
     property var layersBlockItem
     property int layerIndex: -1
-    width: window.width / 1280 * 260
+    property var modelFunctions: {
+        const ClassModel = Controller.leftPanelProps
+        return new ClassModel()
+    }
+    width: biggerSide * 260
     height: window.height
     color: window.style.currentTheme.vinous
     state: "default"
@@ -81,13 +85,25 @@ Rectangle {
     }
 
     function removeLayer(index, logging = true) {
-        const pattern = Object.assign(propsAndFuncsPattern(), { index, logging })
+        // leftPanelFunctions.setEffectsBlockState("enabled")
+        const pattern = Object.assign(propsAndFuncsPattern(), { "index1": index, logging })
         Controller.removeLayer(pattern)
+        // leftPanelFunctions.setLayersBlockState("enabled")
     }
 
     function switchRendering(index, isRenderable) {
         const pattern = Object.assign(propsAndFuncsPattern(), { index, isRenderable })
         Controller.switchRendering(pattern)
+    }
+
+    function switchSmoothing(index, isSmooth) {
+        const pattern = Object.assign(propsAndFuncsPattern(), { index, isSmooth })
+        Controller.switchSmoothing(pattern)
+    }
+
+    function setLayerTransparency(index, transparency) {
+        const pattern = Object.assign(propsAndFuncsPattern(), { index, transparency })
+        Controller.setLayerTransparency(pattern)
     }
 
     function setValue(index, subIndex, propIndex, valIndex, value, name) {
@@ -102,6 +118,9 @@ Rectangle {
 
     function setLayersOrder(prevValue, value) {
         Controller.swapLayers(layersModel, layersBlockModel, overlayEffectsModel, prevValue, value)
+        manualLayerChoose(prevValue)
+        setLayerIndex(prevValue)
+        rightPanelFunctions.propertiesBlockUpdate()
         setLayersBlockState("enabled")
     }
 
@@ -155,6 +174,7 @@ Rectangle {
     }
 
     function setEffectsBlockState(state = "") {
+        console.log('Set effects state', state, effectsBlockItem)
         if (typeof(effectsBlockItem) !== "undefined" && effectsBlockItem !== null) effectsBlockItem.state = state
     }
 
@@ -184,15 +204,20 @@ Rectangle {
     }
 
     function renamingLayer(index, value) {
+        const layerIndex = getLayerIndex()
+        let propertiesBlockModel
+        let propertiesModel
         layersModel.setProperty(index, "nickname", value)
-        layersBlockModel.get(1).block.setProperty(index, "nickname", value)
-        const propertiesBlockModel = rightPanelFunctions.getPropertiesBlockModel()
+        layersBlockModel.get(1).block.setProperty(index, 'nickname', value)
         if (index === layerIndex) {
-            for (let i = 0; i < propertiesBlockModel.get(0).block.count; ++i) {
-                if (propertiesBlockModel.get(0).block.get(i).name.includes("Alias")) {
-                    propertiesBlockModel.get(0).block.setProperty(i, "name", `Alias ${value}`)
+            propertiesBlockModel = rightPanelFunctions.getPropertiesBlockModel().get(0).block
+            propertiesModel = rightPanelFunctions.getPropertiesModel()
+            for (let i = 0; i < propertiesBlockModel.count; ++i) {
+                if (propertiesBlockModel.get(i).name.includes("Alias")) {
+                    propertiesBlockModel.setProperty(i, "name", `Alias ${value}`)
                 }
             }
+            propertiesModel.setProperty(0, "nickname", value)
         }
     }
     function dropdownPopulation(blends, idx, effect, name) {
@@ -228,9 +253,9 @@ Rectangle {
             "overlay": false,
             "activated": false,
             idx,
-            iteration
+            iteration,
+            items
         }
-        obj.items = items
         overlayEffectsModel.append(obj)
     }
 
@@ -239,35 +264,52 @@ Rectangle {
         for (let i = 0; i < overlayIndices.length; ++i) {
             overlayEffectsModel.remove(overlayIndices[i] - i)
         }
-        const effect = JSON.parse(JSON.stringify(effectsModel.get(effectIndex)))
+        const effectProps = {
+            "isRenderable": true,
+            "isSmooth": false,
+            "transparency": 0,
+            "idx": idx,
+            "overlay": false
+        }
+        const effect = Object.assign(JSON.parse(JSON.stringify(effectsModel.get(effectIndex))), effectProps)
         const name = effect.name
-        if (!['Overlay', 'Combination mask', 'Color swap', 'Saturation'].includes(name)) {
+        console.log(modelFunctions)
+        const dropdowns = modelFunctions.getDropDowns()
+        if (!Object.values(dropdowns).includes(name)) {
             effect.activated = true
-        } else if (name === 'Combination mask') {
-            const blends = ['Combination', 'Union', 'Subtract', 'Intersection', 'Symmetric Difference']
+        } else if (name === dropdowns.mask) {
+            const blends = modelFunctions.combinationModes
             dropdownPopulation(blends, idx, effect, 'Blending mode:')
             effect.activated = false
-        } else if (name === 'Overlay') {
-            const blends = ['Normal', 'Addition', 'Subtract', 'Difference', 'Multiply', 'Divide', 'Darken Only', 'Lighten Only', 'Dissolve', 'Smooth Dissolve', 'Screen', 'Overlay', 'Hard Light', 'Soft Light', 'Color Dodge', 'Color Burn', 'Linear Burn', 'Vivid Light', 'Linear Light', 'Hard Mix']
+        } else if (name === dropdowns.overlay) {
+            const blends = modelFunctions.overlayModes
             dropdownPopulation(blends, idx, effect, 'Blending mode:')
             effect.activated = false
-        } else if (name === 'Color swap') {
-            const options = ['Red', 'Green', 'Blue', 'Alpha', 'Null', 'Blank']
+        } else if (name === dropdowns.colorSwap) {
+            const options = modelFunctions.colorPresets
             dropdownPopulation(options, idx, effect, 'Red channel')
             dropdownPopulation(options, idx, effect, 'Green channel')
             dropdownPopulation(options, idx, effect, 'Blue channel')
             dropdownPopulation(options, idx, effect, 'Alpha channel')
             effect.activated = true
-        } else if (name === 'Saturation') {
-            const options = ['Average', 'Medium', 'Light', 'Dark', 'Saddle point']
+        } else if (name === dropdowns.saturation) {
+            const options = modelFunctions.toneModes
             dropdownPopulation(options, idx, effect, 'Tone:')
             effect.activated = true
+        } else if (name === dropdowns.blackAndWhite) {
+            const options = modelFunctions.toneModes
+            dropdownPopulation(options, idx, effect, 'Tone:')
+            effect.activated = true
+        } else if (name === dropdowns.colorHighlight) {
+            const options = modelFunctions.colorChannels
+            dropdownPopulation(options, idx, effect, 'Mode:')
+            effect.activated = true
+        } else if (name === dropdowns.rotation) {
+            const options = modelFunctions.axisList
+            dropdownPopulation(options, idx, effect, 'Rotating axis:')
+            effect.activated = true
         }
-        effect.isRenderable = true
-        effect.idx = idx
-        effect.overlay = false
         layersModel.set(idx, effect)
-
         layersBlockModel.get(1).block.set(idx, Object.assign({
                                            "type": "buttonLayers",
                                            "wdth": 240,
@@ -277,6 +319,20 @@ Rectangle {
         manualLayerChoose(idx)
         rightPanelFunctions.propertiesBlockUpdate()
         canvaFunctions.layersModelUpdate('', -1, idx, 0)
+    }
+
+    function removeReplacers() {
+        Controller.removeReplacers()
+    }
+
+    function moveLayer(idx, index, logging = true) {
+        console.log('Moving', idx, index)
+        const result = Controller.moveLayer(idx, index, logging)
+        if (result) setLayersBlockState("enabled")
+    }
+
+    function populateReplacers() {
+        Controller.populateReplacers()
     }
 
     function propsAndFuncsPattern() {
@@ -319,14 +375,19 @@ Rectangle {
             getLayerIndex,
             setLayerIndex,
             setLayersBlockState,
+            setLayerTransparency,
             switchState,
             manualLayerChoose,
             switchRendering,
+            switchSmoothing,
             populateSettings,
             getState,
             setState,
             renamingLayer,
-            replacingLayer
+            replacingLayer,
+            removeReplacers,
+            moveLayer,
+            populateReplacers
         }
     }
 }

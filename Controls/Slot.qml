@@ -4,19 +4,20 @@ Rectangle {
     id: slot
     property int w: 240
     property int slotIndex: index
-    width: window.width / 1280 * w
-    height: childrenRect.height + window.width * 0.01
+    width: biggerSide * w
+    height: column.height + biggerSide * 13
     color: window.style.currentTheme.whiteVeil
     radius: strictStyle ? 0 : width / 24
     Column {
-        y: window.width * 0.005
-        spacing: window.width * 0.005
+        id: column
+        y: biggerSide * 6.5
+        spacing: biggerSide * 6.5
         anchors.horizontalCenter: parent.horizontalCenter
         Rectangle {
             id: mainContainer
             x: (parent.width - width) / 2
-            width: window.width / 1280 * (w - 10)
-            height: overlayFolder.y + overlayFolder.height + window.width * 0.005
+            width: biggerSide * (w - 10)
+            height: overlayFolder.y + overlayFolder.height + biggerSide * 6.5
             color: window.style.currentTheme.darkGlass
             radius: strictStyle ? 0 : width / 24
             state: "closed"
@@ -115,9 +116,9 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.Wrap
-                width: parent.width - (imageContainer.x + imageContainer.width) - window.width * 0.01
+                width: parent.width - (imageContainer.x + imageContainer.width) - biggerSide * 13
                 height: parent.width * 0.425
-                x: imageContainer.x + imageContainer.width + window.width * 0.005
+                x: imageContainer.x + imageContainer.width + biggerSide * 6.5
                 y: parent.width * (0.5 - 0.4625)
                 Behavior on opacity { NumberAnimation { duration: strictStyle ? 0 : 150 } }
             }
@@ -138,7 +139,7 @@ Rectangle {
                 elide: state === "down" ? Text.ElideNone : Text.ElideLeft
                 text: path
                 w: 230
-                y: imageContainer.y + imageContainer.height + window.width * 0.005
+                y: imageContainer.y + imageContainer.height + biggerSide * 6.5
             }
         }
         Column {
@@ -146,7 +147,7 @@ Rectangle {
             property bool inProcess: opening.running || collapsing.running
             width: childrenRect.width
             height: 0
-            spacing: window.width * 0.005
+            spacing: biggerSide * 6.5
             clip: true
             state: "collapsed"
             states: [

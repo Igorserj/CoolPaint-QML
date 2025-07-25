@@ -2,9 +2,8 @@ import QtQuick 2.15
 
 Rectangle {
     id: buttonSwitch
-    property int w: 220
-    width: window.width / 1280 * w
-    height: window.width / 1280 * w / 7.3
+    width: biggerSide * w / 240 * 215
+    height: biggerSide * w / 240 * 215 / 7.3
     state: "enabled"
     states: [
         State {
@@ -73,7 +72,7 @@ Rectangle {
             font.family: "Helvetica"
             font.bold: true
             color: window.style.currentTheme.pinkWhiteAccent
-            font.pixelSize: window.width / 1280 * w / 7.3 / 40 * 12
+            font.pixelSize: biggerSide * w / 7.3 / 40 * 12
             x: strictStyle ? 0 : parent.radius / 3
             y: strictStyle ? 0 : parent.radius / 3
             verticalAlignment: Text.AlignVCenter
@@ -83,7 +82,7 @@ Rectangle {
         id: area
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: controlsAction()//clickAction()
+        onClicked: controlsAction()
     }
 
     function controlsAction() {
@@ -93,7 +92,7 @@ Rectangle {
         clickAction()
         if (!doNotLog.includes(category)) {
             logAction()
-            modelFunctions.autoSave()
+            window.modelFunctions.autoSave()
         }
     }
     function logAction() {
@@ -110,6 +109,6 @@ Rectangle {
                           })
         console.log(Object.entries(actionsLog.get(actionsLog.count-1).prevValue), Object.entries(actionsLog.get(actionsLog.count-1).value))
         stepIndex += 1
-        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+        actionsLog.historyBlockModelGeneration()
     }
 }

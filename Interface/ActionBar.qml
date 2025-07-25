@@ -11,16 +11,21 @@ Item {
             delegate: Controls {
                 enabled: (name === "Undo" && stepIndex === -1) ? false : (name === "Redo" && stepIndex === actionsLog.count - 1) ? false : true
                 function controlsAction() {
-                    if (name === "History") {
+                    switch (name) {
+                    case "History":
                         name = "Properties"
                         history()
-                    } else if (name === "Properties") {
+                        break
+                    case "Properties":
                         name = "History"
                         history()
-                    } else if (name === "Undo") {
+                        break
+                    case "Undo":
                         undo()
-                    } else if (name === "Redo") {
+                        break
+                    case "Redo":
                         redo()
+                        break
                     }
                 }
             }
@@ -40,7 +45,6 @@ Item {
                 }
             }
             if (result) {
-                console.log("Starts with", str, subStr)
                 break
             }
         }
@@ -50,7 +54,6 @@ Item {
     function undo() {
         if (stepIndex !== -1) {
             projectSaved = false
-            console.log(actionsLog.get(stepIndex).name)
             const item = actionsLog.get(stepIndex)
             if (includes({
                              str: actionsLog.get(stepIndex).name,
@@ -69,7 +72,7 @@ Item {
                 leftPanelFunctions.layerRecovery(item.index, item.prevValue)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['Set value of', 'Set state of', 'Reset value of']
+                                    subStrs: ['Set value of', 'Set state of', 'Reset value of', 'Renamed layer']
                                 })) {
                 leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.prevValue.val, item.name)
             } else if (includes({
@@ -86,11 +89,6 @@ Item {
                 }
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['Renamed layer']
-                                })) {
-                leftPanelFunctions.renamingLayer(item.index, item.prevValue.val)
-            } else if (includes({
-                                    str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Set blending mode']
                                 })) {
                 leftPanelFunctions.setBlendingMode(item.index, item.subIndex, item.valIndex, item.prevValue.val)
@@ -100,8 +98,22 @@ Item {
                                 })) {
                 leftPanelFunctions.removeLayer(item.index, false)
                 leftPanelFunctions.layerRecovery(item.index, item.prevValue)
+            } else if (includes({
+                                    str: actionsLog.get(stepIndex).name,
+                                    subStrs: ['Moved layer']
+                                })) {
+                if (item.value.val < item.prevValue.val) {
+                    leftPanelFunctions.moveLayer(item.value.val,
+                                                 item.prevValue.val+1,
+                                                 false)
+                } else {
+                    leftPanelFunctions.moveLayer(item.value.val-1,
+                                                 item.prevValue.val,
+                                                 false)
+                }
             }
             setStepIndex(getStepIndex() - 1)
+            rightPanelFunctions.addReplacerToHistory()
         } else {
             const notificationText = "Reached limit"
             popUpFunctions.openNotification(notificationText, notificationText.length * 100)
@@ -135,7 +147,7 @@ Item {
                 leftPanelFunctions.removeLayer(item.index, false)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['Set value of', 'Set state of', 'Reset value of']
+                                    subStrs: ['Set value of', 'Set state of', 'Reset value of', 'Renamed layer']
                                 })) {
                 leftPanelFunctions.setValue(item.index, item.subIndex, item.propIndex, item.valIndex, item.value.val, item.name)
             } else if (includes({
@@ -157,15 +169,16 @@ Item {
                 leftPanelFunctions.setBlendingMode(item.index, item.subIndex, item.valIndex, item.value.val)
             } else if (includes({
                                     str: actionsLog.get(stepIndex).name,
-                                    subStrs: ['Renamed layer']
-                                })) {
-                leftPanelFunctions.renamingLayer(item.index, item.value.val)
-            } else if (includes({
-                                    str: actionsLog.get(stepIndex).name,
                                     subStrs: ['Replaced effect']
                                 })) {
                 leftPanelFunctions.replacingLayer(item.index, item.value.val)
+            } else if (includes({
+                                    str: actionsLog.get(stepIndex).name,
+                                    subStrs: ['Moved layer']
+                                })) {
+                leftPanelFunctions.moveLayer(item.prevValue.val, item.value.val, false)
             }
+            rightPanelFunctions.addReplacerToHistory()
         } else {
             const notificationText = "Reached limit"
             popUpFunctions.openNotification(notificationText, notificationText.length * 100)

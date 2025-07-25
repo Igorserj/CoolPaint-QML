@@ -22,7 +22,7 @@ public:
     Q_INVOKABLE bool remove(const QString &dirPath, const int &cacheSize);
     Q_INVOKABLE void removeFile(const QString &filePath);
     Q_INVOKABLE QList<QString> sort(const QList<QString> &files);
-    Q_INVOKABLE void removeThumbsWithoutProject(const QList<QString> &filePathes, const QString &dirPath);
+    Q_INVOKABLE QList<QString> removeThumbsWithoutProject(const QList<QString> &filePathes, const QString &dirPath);
     Q_INVOKABLE bool createDirectory(const QString &dirPath);
     Q_INVOKABLE QVariant getTemporaryFiles(const QString &dirPath);
     Q_INVOKABLE QString getMetadata(const QString &filePath);

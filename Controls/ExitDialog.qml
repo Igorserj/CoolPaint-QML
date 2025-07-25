@@ -3,8 +3,8 @@ import QtQuick 2.15
 Rectangle {
     id: exitDialog
     color: window.style.currentTheme.darkGlass
-    width: window.width / 1280 * 240
-    height: window.width / 1280 * 80
+    width: biggerSide * 240
+    height: biggerSide * 80
     enabled: false
     radius: strictStyle ? 0 : height / 4
     state: "hidden"
@@ -31,9 +31,16 @@ Rectangle {
             }
         }
     ]
+    MouseArea {
+        anchors.fill: acrylicBackground
+    }
     AcrylicBackground {
         id: acrylicBackground
         background: ui
+        width: window.width
+        height: window.height
+        x: -(window.width - parent.width) / 2
+        y: -(window.height - parent.height) / 2
         z: -1
     }
     MouseArea {

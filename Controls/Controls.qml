@@ -13,7 +13,7 @@ Item {
     property alias header: overlayControls.header
     property alias empty: overlayControls.empty
     property alias insertButton: insertButton
-    property alias insertDropdown: insertDropdown
+    property alias insertDropdown: overlayControls.insertDropdown
     property alias textBlock: overlayControls.textBlock
     property alias textField: overlayControls.textField
     property alias slot: overlayControls.slot
@@ -36,17 +36,10 @@ Item {
         InsertButton {}
     }
     Component {
-        id: insertDropdown
-        InsertDropdown {
-            function clickAction() {controlsAction({name, type, index, val1, val2})}
-        }
-    }
-    Component {
         id: pageChooser
         PageChooser {
             w: wdth
             text: name
-            // function clickAction() {controlsAction({name, type, index, val1, val2})}
         }
     }
     function controlsAction(item) {}

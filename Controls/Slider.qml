@@ -4,8 +4,10 @@ Rectangle {
     id: slider
     property double prevVal: -1
     property bool isReleased: true
-    width: window.width / 1280 * 220
-    height: window.width / 1280 * 30
+    property real sliderSpeed: 250
+    readonly property real val: val1
+    width: biggerSide * w / 240 * 215
+    height: biggerSide * (w / 8)
     state: "enabled"
     states: [
         State {
@@ -31,6 +33,9 @@ Rectangle {
             }
         }
     ]
+    onValChanged: sliderUpdating()
+    Component.onCompleted: sliderUpdating()
+
     Behavior on color {
         ColorAnimation {
             duration: strictStyle ? 0 : 200
@@ -44,22 +49,31 @@ Rectangle {
         }
     }
     Rectangle {
+        id: pill
         color: window.style.currentTheme.lightDark
         border.width: 1
         border.color: window.style.currentTheme.pinkWhite
         radius: parent.radius
         height: parent.height
-        width: pillWidth()
+        Behavior on width {
+            PropertyAnimation {
+                target: pill
+                property: "width"
+                duration: strictStyle ? 0 : sliderSpeed
+                easing.type: "OutCirc"
+            }
+        }
     }
     MouseArea {
         id: area
         anchors.fill: parent
         hoverEnabled: true
-        onMouseXChanged: if (containsPress) clickAction()
+        onMouseXChanged: if (containsPress) pressAction()
         onReleased: {
+            clickAction(name, type, index, [val1, val2], false)
             if (!doNotLog.includes(category) && prevVal !== val1) {
                 logAction()
-                modelFunctions.autoSave()
+                window.modelFunctions.autoSave()
             }
             isReleased = true
         }
@@ -79,19 +93,20 @@ Rectangle {
                               valIndex: 0
                           })
         stepIndex += 1
-        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+        actionsLog.historyBlockModelGeneration()
         prevVal = parseFloat(val1)
     }
-    function clickAction() {
+    function pressAction() {
         if (isReleased) prevVal = parseFloat(val1)
         isReleased = false
         val1 = (area.mouseX / width) * (max1 - min1) + min1
         updateVal(val1)
     }
-    function pillWidth() {
+    function sliderUpdating() {
         const newWidth = (val1 - min1) / (max1 - min1) * parent.width
-        if (newWidth < height) return height
-        else if (newWidth > width) return width
-        else return newWidth
+        sliderSpeed = Math.abs(pill.width - newWidth) / parent.width * 250
+        if (newWidth < height) pill.width = height
+        else if (newWidth > width) pill.width = width
+        else pill.width = newWidth
     }
 }

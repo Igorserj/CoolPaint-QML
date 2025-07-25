@@ -5,8 +5,8 @@ WorkerScript.onMessage = function(message) {
     const pageNo = message.pageNo
 
     blockModel.clear()
-    blockModel.append({block: []})
-    blockModel.append({block: []})
+    blockModel.append({ block: [] })
+    blockModel.append({ block: [] })
     blockModel.get(0).block.append({
                                        wdth: 240,
                                        type: "header",

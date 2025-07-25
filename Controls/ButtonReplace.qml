@@ -4,8 +4,8 @@ Rectangle {
     id: button
     property alias area: area
     property int w: 240
-    width: window.width / 1280 * w
-    height: window.width / 1280 * w / 20
+    width: biggerSide * w
+    height: biggerSide * w / 20
     color: window.style.currentTheme.darkGlass
     radius: strictStyle ? 0 : width / 24
     state: "enabled"
@@ -17,7 +17,7 @@ Rectangle {
                 target: button
                 color: window.style.currentTheme.darkGlass
                 radius: strictStyle ? 0 : width / 24
-                width: window.width / 1280 * w
+                width: biggerSide * w
                 height: window.height * 0.001
             }
             PropertyChanges {
@@ -41,12 +41,11 @@ Rectangle {
                 target: button
                 color: window.style.currentTheme.darkGlassAccent
                 radius: strictStyle ? 0 : width / 4
-                width: window.width / 1280 * w
-                height: window.width / 1280 * w / 20
+                width: biggerSide * w
+                height: biggerSide * w / 20
             }
             PropertyChanges {
                 target: area
-                // y: 0
                 height: button.height + window.height * 0.005
             }
         }
@@ -72,7 +71,6 @@ Rectangle {
     }
     MouseArea {
         id: area
-        // anchors.fill: parent
         y: (parent.height - height) / 2
         width: parent.width
         height: parent.height + window.height * 0.005

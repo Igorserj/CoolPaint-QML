@@ -9,8 +9,11 @@ ListModel {
         val1: 1.
         val2: 0
         min1: 0.
+        min2: 0.
         max1: 5.
+        max2: 5.
         bval1: 1.
+        bval2: 0.
         isOverlay: false
     }
     ListElement {
@@ -21,8 +24,11 @@ ListModel {
         val1: 0
         val2: 0
         min1: 0
+        min2: 0
         max1: 1
+        max2: 1
         bval1: 0
+        bval2: 0.
         isOverlay: false
     }
     ListElement {
@@ -33,8 +39,11 @@ ListModel {
         val1: 0
         val2: 0
         min1: 0
+        min2: 0
         max1: 1
+        max2: 1
         bval1: 0
+        bval2: 0.
         isOverlay: false
     }
     ListElement {
@@ -45,8 +54,11 @@ ListModel {
         val1: 1
         val2: 0
         min1: 0
+        min2: 0
         max1: 1
+        max2: 0
         bval1: 1
+        bval2: 0.
         isOverlay: false
     }
 }

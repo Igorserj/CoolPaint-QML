@@ -6,6 +6,7 @@ uniform vec2 u_resolution;
 uniform sampler2D src;
 uniform float u_radius;  // Blur radius
 uniform float amount;
+uniform float transparency;
 
 float gaussian(float x, float sigma) {
     float PI = 3.14159265359;
@@ -16,6 +17,7 @@ void main() {
     float u_sigma = 0.01;
     vec2 st = gl_FragCoord.xy/u_resolution;
     vec4 tex = texture2D(src, vec2(st.x, 1.-st.y));
+    vec4 tex1 = tex;
     st.y = 1.-st.y;
     vec2 texel = 1.0/u_resolution;
 
@@ -35,6 +37,6 @@ void main() {
         }
     }
 
-    tex = tex + (tex - color / weightSum) * amount;
-    gl_FragColor = vec4(tex);
+    tex1 = tex1 + (tex1 - color / weightSum) * amount;
+    gl_FragColor = tex * transparency + tex1 * (1.-transparency);
 }

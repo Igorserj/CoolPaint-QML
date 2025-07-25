@@ -3,10 +3,11 @@ import QtQuick 2.15
 Rectangle {
     id: block
     property string text: ""
+    property int w: 240
     property int blockIndex: index
     color: window.style.currentTheme.darkGlass
-    width: window.width / 1280 * 240
-    height: window.width / 1280 * 160
+    width: biggerSide * w
+    height: biggerSide * w / 1.5
     radius: strictStyle ? 0 : height / 6
     Label {
         width: joystick.width
@@ -103,7 +104,7 @@ Rectangle {
                             updateVal2(bval2)
                         }
                         joystick.updating()
-                        if (logging && !(val1 === vals[0] && val2 === vals[1])) modelFunctions.autoSave()
+                        if (logging && !(val1 === vals[0] && val2 === vals[1])) window.modelFunctions.autoSave()
                     }
                 }
             }
@@ -121,33 +122,37 @@ Rectangle {
     function logActionX(val0) {
         console.log(val1, val0)
         actionsLog.trimModel(stepIndex)
-        actionsLog.append({
-                              block: category,
-                              name: `Reset value of ${name} X`,
-                              prevValue: {val: val1},
-                              value: {val: val0},
-                              index: leftPanelFunctions.getLayerIndex(), // layer number
-                              subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
-                              propIndex: index, // sublayer property number
-                              valIndex: 0
-                          })
-        stepIndex += 1
-        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+        if (val1 !== val0) {
+            actionsLog.append({
+                                  block: category,
+                                  name: `Reset value of ${name} X`,
+                                  prevValue: {val: val1},
+                                  value: {val: val0},
+                                  index: leftPanelFunctions.getLayerIndex(), // layer number
+                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
+                                  propIndex: index, // sublayer property number
+                                  valIndex: 0
+                              })
+            stepIndex += 1
+            actionsLog.historyBlockModelGeneration()
+        }
     }
     function logActionY(val0) {
         console.log(val2, val0)
         actionsLog.trimModel(stepIndex)
-        actionsLog.append({
-                              block: category,
-                              name: `Reset value of ${name} Y`,
-                              prevValue: {val: val2},
-                              value: {val: val0},
-                              index: leftPanelFunctions.getLayerIndex(), // layer number
-                              subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
-                              propIndex: index, // sublayer property number
-                              valIndex: 1
-                          })
-        stepIndex += 1
-        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+        if (val2 !== val0) {
+            actionsLog.append({
+                                  block: category,
+                                  name: `Reset value of ${name} Y`,
+                                  prevValue: {val: val2},
+                                  value: {val: val0},
+                                  index: leftPanelFunctions.getLayerIndex(), // layer number
+                                  subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
+                                  propIndex: index, // sublayer property number
+                                  valIndex: 1
+                              })
+            stepIndex += 1
+            actionsLog.historyBlockModelGeneration()
+        }
     }
 }

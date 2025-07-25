@@ -2,19 +2,21 @@ import QtQuick 2.15
 
 Rectangle {
     property string text: ""
+    property int w: 240
     color: window.style.currentTheme.darkGlass
-    width: window.width / 1280 * 240
-    height: window.width / 1280 * 85
+    width: biggerSide * w
+    height: biggerSide * w / (240 / 85)
     radius: strictStyle ? 0 : height / 4
     Label {
-        width: slider.width - row.width - row.spacing
+        width: slider.width - row.width - row.spacing * 2
         x: parent.width * 0.05
         y: (slider.y - height) / 2
         text: parent.text
     }
     Slider {
         id: slider
-        x: parent.width * 0.05
+        // x: parent.width * 0.05
+        anchors.horizontalCenter: parent.horizontalCenter
         y: parent.height - height - height / 2
     }
     Row {
@@ -23,6 +25,7 @@ Rectangle {
         y: (slider.y - height) / 2
         spacing: parent.width / 40
         ButtonWhite {
+            id: rowButton
             w: 40
             text: val1.toFixed(2)
             function clickAction() {
@@ -43,9 +46,7 @@ Rectangle {
             w: 40
             text: "↺"
             function clickAction() {
-                if (!doNotLog.includes(category)) logAction(bval1)
-                updateAll(bval1)
-                modelFunctions.autoSave()
+                resetAction()
             }
         }
     }
@@ -54,37 +55,38 @@ Rectangle {
         val1 = value
         updateVal(value)
     }
+    function resetAction() {
+        let pi = -1
+        if (typeof(parentIndex) !== "undefined") pi = parentIndex
+        clickAction({
+                        name,
+                        type,
+                        index,
+                        "val1": bval1,
+                        "val2": pi
+                    })
+        if (!doNotLog.includes(category)) logAction(bval1)
+        updateAll(bval1)
+        window.modelFunctions.autoSave()
+    }
     function updateVal(val1) {
-        if (category === "layer") {
-            canvaFunctions.layersModelUpdate('val1', val1, idx, index, typeof(parentIndex) !== 'undefined' ? parentIndex : -1)
-        } else if (category === "view") {
-            if (name === "Scale") {
-                canvaFunctions.setScaling(val1)
-            }
-        } else if (category === "export") {
-            if (name === "Width") {
-                canvaFunctions.setImageSize(val1, -1)
-            } else if (name === "Height") {
-                canvaFunctions.setImageSize(-1, val1)
-            }
-        }
+        clickAction()
     }
     function logAction(val0 = -1) {
-        console.log(val0, val1, leftPanelFunctions.getLayerIndex(), typeof(parentIndex) !== 'undefined' ? parentIndex : -1, index)
         if (val0 !== val1) {
             actionsLog.trimModel(stepIndex)
             actionsLog.append({
                                   block: category,
                                   name: `Reset value of ${name}`,
-                                  prevValue: {val: val1},
-                                  value: {val: val0},
+                                  prevValue: { val: val1 },
+                                  value: { val: val0 },
                                   index: leftPanelFunctions.getLayerIndex(), // layer number
                                   subIndex: typeof(parentIndex) !== 'undefined' ? parentIndex : -1, // sublayer number
                                   propIndex: index, // sublayer property number
                                   valIndex: 0
                               })
             stepIndex += 1
-            actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+            actionsLog.historyBlockModelGeneration()
         }
     }
 }

@@ -11,6 +11,5 @@ void main(void)
     st = fract(st * density);
     float pattern = step(0.5, st.x) * step(0.5, st.y) + step(0.5, 1.-st.x) * step(0.5, 1.-st.y);
     vec3 color = vec3(pattern + 0.8);
-
     gl_FragColor = vec4(color, 1.0);
 }

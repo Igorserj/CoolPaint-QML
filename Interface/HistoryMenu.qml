@@ -9,6 +9,7 @@ Item {
         function blockAction(index) {
             if (type === "filter") {
                 historyBlockModelGeneration(index)
+                addReplacerToHistory()
             }
         }
     }
@@ -16,7 +17,11 @@ Item {
         id: metadataMenuBlock
         y: 0.5 * parent.height + window.height * 0.01
         blockModel: metadataMenuBlockModel
-        function blockAction(index) {}
+        function blockAction(index) {
+            if (type === "filter") {
+                metadataFilterChoose(name)
+            }
+        }
     }
     Component.onCompleted: {
         spacer.upperBlock = historyMenuBlock

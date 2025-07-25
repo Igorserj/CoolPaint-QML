@@ -177,9 +177,10 @@ void FileIO::removeFile(const QString &filePath) {
     QFile::remove(resolvedPath);
 }
 
-void FileIO::removeThumbsWithoutProject(const QList<QString> &filePathes, const QString &dirPath) {
+QList<QString> FileIO::removeThumbsWithoutProject(const QList<QString> &filePathes, const QString &dirPath) {
     QList<QString> fileNames;
     QList<QString> removalFiles;
+    QList<QString> removeProjects;
     QFileInfoList imagesInDir;
     QString resolvedPath = resolveFilePath(dirPath);
     QDir dir(resolvedPath);
@@ -191,13 +192,12 @@ void FileIO::removeThumbsWithoutProject(const QList<QString> &filePathes, const 
 
     for (const QString &filePath : filePathes) {
         QFile file(filePath);
-        if (!file.exists()) {
-            qDebug() << "File does not exist:" << filePath;
-            continue;
-        }
         QFileInfo info(filePath);
         info.refresh(); // Force refresh
         fileNames << info.baseName();
+        if (!file.exists()) {
+            removeProjects << filePath;
+        }
     }
     for (int i = 0; i < imagesInDir.size(); ++i) {
         bool fileExist = false;
@@ -221,6 +221,7 @@ void FileIO::removeThumbsWithoutProject(const QList<QString> &filePathes, const 
             qWarning() << "Failed to remove:" << filePath;
         }
     }
+    return removeProjects;
 }
 
 bool FileIO::createDirectory(const QString &dirPath)

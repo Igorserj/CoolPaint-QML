@@ -5,8 +5,8 @@ Rectangle {
     property real w: 240
     property string text: ""
     color: window.style.currentTheme.darkGlass
-    width: window.width / 1280 * w
-    height: window.width / 1280 * (w / 3.5)
+    width: biggerSide * w
+    height: biggerSide * (w / 3.5)
     radius: strictStyle ? 0 : height / 4
 
     MouseArea {
@@ -31,8 +31,8 @@ Rectangle {
         spacing: parent.width / 40
         Rectangle {
             id: valueRect
-            width: (window.width / 1280) * 0.9 * (w - 40) - row.spacing
-            height: (window.width / 1280) * (w / 8)
+            width: (biggerSide) * 0.9 * (w - 40) - row.spacing
+            height: (biggerSide) * (w / 8)
             color: window.style.currentTheme.pinkWhite
             radius: strictStyle ? 0 : width / 4
             TextInput {
@@ -51,6 +51,7 @@ Rectangle {
         }
         ButtonWhite {
             w: 40
+            y: (valueRect.height - height) / 2
             text: "Apply"
             function clickAction() {
                 apply()
@@ -63,7 +64,7 @@ Rectangle {
         controlsAction({name: label.text, type, index, val1: textEdit.text, val2})
         if (textEdit.text !== prevVal) {
             logAction(prevVal)
-            modelFunctions.autoSave()
+            window.modelFunctions.autoSave()
         }
         textFieldRect.text = `Alias ${textEdit.text}`
         textEdit.text = Qt.binding(() => textFieldRect.text.substring(textFieldRect.text.indexOf(" ") + 1))
@@ -83,6 +84,6 @@ Rectangle {
                               valIndex: 0
                           })
         stepIndex += 1
-        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+        actionsLog.historyBlockModelGeneration()
     }
 }

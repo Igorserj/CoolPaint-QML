@@ -18,5 +18,4 @@ WorkerScript.onMessage = function(message) {
         }
     }
     model.sync()
-    console.log('Nick', Object.entries(model.get(0)))
 }

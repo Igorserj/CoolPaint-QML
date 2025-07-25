@@ -8,29 +8,31 @@ Item {
         blockModel: exportMenuBlockModel
         function blockAction() {
             switch (name) {
-            case "Set source size": {
+            case "Set source size":
                 const sizes = canvaFunctions.getBaseImageDims()
                 exportMenuModel.setProperty(0, "val1", sizes.sourceW)
                 exportMenuModel.setProperty(1, "val1", sizes.sourceH)
                 canvaFunctions.setImageSize(sizes.sourceW, sizes.sourceH)
                 break
-            }
-            case "Apply": {
+            case "Apply":
                 canvaFunctions.reDraw()
                 break
-            }
-            case "Export image": {
+            case "Export image":
                 exportFileDialog.open()
                 break
-            }
-            case "Preserve aspect fit": {
+            case "Preserve aspect fit":
                 canvaFunctions.setPreserveAspect(val[0])
                 break
-            }
-            // case "Close": {
-            //     close()
-            //     break
-            // }
+            case "Width":
+                canvaFunctions.setImageSize(val[0], -1)
+                break
+            case "Height":
+                canvaFunctions.setImageSize(-1, val[0])
+                break
+                // case "Close": {
+                //     close()
+                //     break
+                // }
             }
         }
     }

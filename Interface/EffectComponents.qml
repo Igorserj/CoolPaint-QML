@@ -19,34 +19,31 @@ Item {
                 property var itemList: items
                 property int layerIndex: index
                 property bool overLay: overlay
-                asynchronous: true
+                asynchronous: asyncRender
                 width: parent.width
                 height: parent.height
                 visible: false
                 sourceComponent: Controller.addEffect(name)
                 onLoaded: Controller.setImage(this, img, img3, isRenderable, index, parent.visible)
+                onActiveChanged: console.log('Layer', name, active)
             }
             Image {
                 id: img
                 width: parent.width
                 height: parent.height
-                smooth: smoothing
+                smooth: smoothing || isSmooth
                 x: baseImage.x
                 y: baseImage.y
                 visible: true
                 Component.onCompleted: {
-                    if (index === layersModel.count - 1) {
-                        scale = Qt.binding(() => scaling)
-                        mirror = Qt.binding(() => mirroring)
-                        finalImage = this
-                    }
+                    assignFinalImage(index, this)
                 }
             }
             Image {
                 id: img3
                 width: parent.width
                 height: parent.height
-                smooth: smoothing
+                smooth: smoothing || isSmooth
                 visible: false
                 onSourceChanged: {
                     Controller.reActivateLoader(layersModel, overlayEffectsModel, index)
@@ -67,13 +64,14 @@ Item {
                 property var itemList: items
                 property int layerIndex: idx
                 property bool overLay: overlay
-                asynchronous: true
+                asynchronous: asyncRender
                 width: parent.width
                 height: parent.height
                 visible: false
                 active: (typeof(idx) !== "undefined" && typeof(activated) !== "undefined") && idx < deactivateLayer && activated
                 sourceComponent: Controller.addEffect(name)
                 onLoaded: Controller.setImage(this, img2, undefined, true, index, false)
+                onActiveChanged: console.log('Overlay', name, active)
             }
             Image {
                 id: img2
@@ -84,7 +82,7 @@ Item {
                 y: (baseImage.height - height) / 2
                 visible: false
                 onSourceChanged: {
-                    Controller.reActivateLayer(layersModel, overlayEffectsModel, idx, iteration, finalImage)
+                    reActivateLayer(idx, iteration)
                 }
             }
         }
@@ -96,6 +94,8 @@ Item {
             readonly property point imageRShift: Controller.propertyPopulation("two", itemList, 0)
             readonly property point imageGShift: Controller.propertyPopulation("two", itemList, 1)
             readonly property point imageBShift: Controller.propertyPopulation("two", itemList, 2)
+            readonly property point imageAShift: Controller.propertyPopulation("two", itemList, 3)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorShift.fsh"
@@ -110,6 +110,7 @@ Item {
             readonly property point center: Controller.propertyPopulation("two", itemList, 2)
             readonly property double roundness: Controller.propertyPopulation("one", itemList, 3)
             readonly property double aspect: parent.width / parent.height
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/vignette.fsh"
@@ -121,6 +122,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double strength: Controller.propertyPopulation("one", itemList, 0)
             readonly property real tone: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/saturation.fsh"
@@ -131,8 +133,10 @@ Item {
         ShaderEffect {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double density: Controller.propertyPopulation("one", itemList, 0)
-            readonly property double lowerRange: Controller.propertyPopulation("one", itemList, 1)
-            readonly property double upperRange: Controller.propertyPopulation("one", itemList, 2)
+            readonly property double pattern: Controller.propertyPopulation("one", itemList, 1)
+            readonly property double lowerRange: Controller.propertyPopulation("one", itemList, 2)
+            readonly property double upperRange: Controller.propertyPopulation("one", itemList, 3)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/grain.fsh"
@@ -144,6 +148,8 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double strength: Controller.propertyPopulation("one", itemList, 0)
             readonly property double threshold: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real tone: Controller.propertyPopulation("one", itemList, 2)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/blackAndWhite.fsh"
@@ -155,6 +161,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property point imageShift: Controller.propertyPopulation("two", itemList, 0)
             readonly property int density: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/motionBlur.fsh"
@@ -165,6 +172,7 @@ Item {
         ShaderEffect {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double u_radius: Controller.propertyPopulation("one", itemList, 0)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/gaussianBlur.fsh"
@@ -176,6 +184,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double u_radius: Controller.propertyPopulation("one", itemList, 0)
             readonly property double amount: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/gaussianUnblur.fsh"
@@ -187,6 +196,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double lowerRange: Controller.propertyPopulation("one", itemList, 0)
             readonly property double upperRange: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/toneMap.fsh"
@@ -198,6 +208,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double rows: parseInt(Controller.propertyPopulation("one", itemList, 0))
             readonly property double columns: parseInt(Controller.propertyPopulation("one", itemList, 1))
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/grid.fsh"
@@ -211,6 +222,7 @@ Item {
             readonly property double columns: parseInt(Controller.propertyPopulation("one", itemList, 1))
             readonly property point cellPosition: Controller.propertyPopulation("two", itemList, 2)
             readonly property bool fixedPosition: Controller.propertyPopulation("one", itemList, 3)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/gridSection.fsh"
@@ -223,6 +235,7 @@ Item {
             readonly property double red: Controller.propertyPopulation("one", itemList, 0)
             readonly property double green: Controller.propertyPopulation("one", itemList, 1)
             readonly property double blue: Controller.propertyPopulation("one", itemList, 2)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorCurve.fsh"
@@ -236,6 +249,7 @@ Item {
             readonly property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel, layerIndex, 2))
             readonly property bool sharpMask2: Controller.propertyPopulation("one", itemList, 3)
             readonly property real opacity_level: Controller.propertyPopulationDropdown(layersModel, layerIndex, 4)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             readonly property variant src2: Controller.srcPopulation(overlaysRepeater, overlayEffectsModel.getModel(layerIndex, 0, "index")[0], baseImage, 0)
@@ -249,6 +263,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property int horizontalFlip: Controller.propertyPopulation("one", itemList, 0)
             readonly property int verticalFlip: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/mirror.fsh"
@@ -260,7 +275,8 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property point coordinates: Controller.propertyPopulation("two", itemList, 0)
             readonly property double tolerance: Controller.propertyPopulation("one", itemList, 1)
-            //readonly property double radius: Controller.propertyPopulation("one", itemList, 2)
+            readonly property real mode: Controller.propertyPopulation("one", itemList, 2)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorHighlight.fsh"
@@ -271,6 +287,7 @@ Item {
         ShaderEffect {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double u_radius: Controller.propertyPopulation("one", itemList, 0)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/blur.fsh"
         }
@@ -281,6 +298,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double u_radius: Controller.propertyPopulation("one", itemList, 0)
             readonly property double amount: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/unblur.fsh"
         }
@@ -291,6 +309,8 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double angle: Controller.propertyPopulation("one", itemList, 0)
             readonly property point center: Controller.propertyPopulation("two", itemList, 1)
+            readonly property real axis: Controller.propertyPopulation("one", itemList, 2)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/rotation.fsh"
         }
@@ -300,6 +320,7 @@ Item {
         ShaderEffect {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property double strength: Controller.propertyPopulation("one", itemList, 0)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/negative.fsh"
         }
@@ -314,6 +335,7 @@ Item {
             readonly property bool inversion3: Controller.propertyPopulation("one", itemList, 1)
             readonly property double opacity_str: Controller.propertyPopulation("one", itemList, 2)
             readonly property int overlayMode: parseInt(Controller.propertyPopulationDropdown(layersModel, layerIndex, 3))
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/combinationMask.fsh"
         }
@@ -322,12 +344,13 @@ Item {
         id: colorFill
         ShaderEffect {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
-            readonly property bool auto_determ: Controller.propertyPopulation("one", itemList, 0)
-            readonly property real red: Controller.propertyPopulation("one", itemList, 1)
-            readonly property real green: Controller.propertyPopulation("one", itemList, 2)
-            readonly property real blue: Controller.propertyPopulation("one", itemList, 3)
-            readonly property real alpha: Controller.propertyPopulation("one", itemList, 4)
+            readonly property real red: Controller.propertyPopulation("one", itemList, 0)
+            readonly property real green: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real blue: Controller.propertyPopulation("one", itemList, 2)
+            readonly property real alpha: Controller.propertyPopulation("one", itemList, 3)
+            readonly property bool auto_determ: Controller.propertyPopulation("one", itemList, 4)
             readonly property point coordinates: Controller.propertyPopulation("two", itemList, 5)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorFill.fsh"
@@ -339,6 +362,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property bool encode: Controller.propertyPopulation("one", itemList, 0)
             readonly property real gamma: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/gammaCorrection.fsh"
         }
@@ -348,6 +372,7 @@ Item {
         ShaderEffect {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property real strength: Controller.propertyPopulation("one", itemList, 0)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/contrastCorrection.fsh"
         }
@@ -358,6 +383,7 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property real strength: Controller.propertyPopulation("one", itemList, 0)
             readonly property point pos: Controller.propertyPopulation("two", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/brightnessCorrection.fsh"
         }
@@ -370,6 +396,7 @@ Item {
             readonly property real color_g: Controller.propertyPopulation("one", itemList, 3)
             readonly property real color_b: Controller.propertyPopulation("one", itemList, 4)
             readonly property real color_a: Controller.propertyPopulation("one", itemList, 5)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property bool isOverlay: overLay
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/colorSwap.fsh"
@@ -380,7 +407,7 @@ Item {
         ShaderEffect {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property real strength: Controller.propertyPopulation("one", itemList, 0)
-            // readonly property bool isOverlay: overLay
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/pixelation.fsh"
         }
@@ -391,12 +418,59 @@ Item {
             readonly property point u_resolution: Qt.point(parent.width, parent.height)
             readonly property real strength: Controller.propertyPopulation("one", itemList, 0)
             readonly property real amount: Controller.propertyPopulation("one", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
             readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
             fragmentShader: "qrc:/Effects/depixelation.fsh"
         }
     }
+    Component {
+        id: scaleEffect
+        ShaderEffect {
+            readonly property point u_resolution: Qt.point(parent.width, parent.height)
+            readonly property real magnification: Controller.propertyPopulation("one", itemList, 0)
+            readonly property point position: Controller.propertyPopulation("two", itemList, 1)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
+            readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/scale.fsh"
+        }
+    }
+    Component {
+        id: translate
+        ShaderEffect {
+            readonly property point u_resolution: Qt.point(parent.width, parent.height)
+            readonly property point position: Controller.propertyPopulation("two", itemList, 0)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
+            readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/translate.fsh"
+        }
+    }
+    Component {
+        id: hdr
+        ShaderEffect {
+            readonly property point u_resolution: Qt.point(parent.width, parent.height)
+            readonly property real exposure: Controller.propertyPopulation("one", itemList, 0)
+            readonly property real transparency: layersModel.get(layerIndex).transparency || 0
+            readonly property var src: Controller.srcPopulation(layersRepeater, layerIndex, baseImage)
+            fragmentShader: "qrc:/Effects/hdr.fsh"
+        }
+    }
     function setCanvaFunctions() {
         canvaFunctions.reActivateLayer = reActivateLayer
+        canvaFunctions.resetFinalImage = resetFinalImage
+        canvaFunctions.assignFinalImage = assignFinalImage
+    }
+    function assignFinalImage(index, img) {
+        let item
+        if (typeof(img) !== "undefined") item = img
+        else item = layersRepeater.itemAt(index).children[1]
+        if (index === layersModel.count - 1) {
+            item.scale = Qt.binding(() => scaling)
+            item.mirror = Qt.binding(() => mirroring)
+            finalImage = item
+        }
+    }
+    function resetFinalImage() {
+        finalImage = null
     }
     function reActivateLayer(idx, iteration) {
         Controller.reActivateLayer(layersModel, overlayEffectsModel, idx, iteration, finalImage)

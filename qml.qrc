@@ -112,5 +112,11 @@
         <file>Controls/PageChooser.qml</file>
         <file>Controls/TextField.qml</file>
         <file>Controls/ButtonReplace.qml</file>
+        <file>Effects/threeDFyer.fsh</file>
+        <file>Effects/scale.fsh</file>
+        <file>Effects/translate.fsh</file>
+        <file>Controllers/propertiesMenuController.js</file>
+        <file>Controllers/effectsMenuController.js</file>
+        <file>Effects/hdr.fsh</file>
     </qresource>
 </RCC>

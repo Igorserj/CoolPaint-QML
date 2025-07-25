@@ -2,10 +2,11 @@ import QtQuick 2.15
 
 Rectangle {
     id: switchBlock
+    property int w: 240
     property string text: ""
     property double prevVal: -1
     color: window.style.currentTheme.darkGlass
-    width: window.width / 1280 * 240
+    width: biggerSide * w
     radius: strictStyle ? 0 : height / 4
     state: category === "properties" ? "compact" : "default"
     states: [
@@ -13,12 +14,12 @@ Rectangle {
             name: "default"
             PropertyChanges {
                 target: slider
-                x: slider.parent.width * 0.05
-                y: slider.parent.height - slider.height - switchBlock.height / 8//slider.parent.radius / 2
+                x: (switchBlock.width - slider.width) / 2
+                y: slider.parent.height - slider.height - switchBlock.height / 8
             }
             PropertyChanges {
                 target: switchBlock
-                height: window.width / 1280 * 80
+                height: biggerSide * 80
             }
             PropertyChanges {
                 target: row
@@ -43,7 +44,7 @@ Rectangle {
             }
             PropertyChanges {
                 target: switchBlock
-                height: window.width / 1280 * 40
+                height: biggerSide * 40
             }
             PropertyChanges {
                 target: row
@@ -77,7 +78,7 @@ Rectangle {
                 updateAll(bval1)
                 if (!doNotLog.includes(category) && prevVal !== (val1 === 0 ? 1 : 0)) {
                     logAction()
-                    modelFunctions.autoSave()
+                    window.modelFunctions.autoSave()
                 }
             }
         }
@@ -109,6 +110,6 @@ Rectangle {
                               valIndex: 0
                           })
         stepIndex += 1
-        actionsLog.historyBlockModelGeneration(actionsLog, actionsLog.historyMenuBlockModel)
+        actionsLog.historyBlockModelGeneration()
     }
 }

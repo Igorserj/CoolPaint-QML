@@ -16,15 +16,13 @@ ButtonDark {
             setIterationIndex(-1)
             let i
             if (blockRect.state !== "layerSwap") {
+                manualLayerChoose(idx)
                 setLayerIndex(idx)
+                rightPanelFunctions.propertiesBlockUpdate()
                 blockRect.state = "layerSwap"
             }
             else {
-                for (i = layersModel.count * 2 - 2; i > 0; --i) {
-                    if (layersBlockModel.get(1).block.get(i).type === "buttonReplace") {
-                        layersBlockModel.get(1).block.remove(i)
-                    }
-                }
+                leftPanelFunctions.removeReplacers()
                 blockRect.state = "enabled"
             }
         }
@@ -36,7 +34,7 @@ ButtonDark {
         y: (parent.height - height) / 2
         text: "⨯"
         function clickAction() {
-            removeLayer(index)
+            leftPanelFunctions.removeLayer(index, true)
         }
     }
 }

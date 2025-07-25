@@ -5,17 +5,22 @@ Item {
     property string text: ""
     property alias labelText: labelText
     property alias labelArea: labelArea
-    property bool containsMouse: labelArea.containsMouse
+    readonly property bool containsMouse: labelArea.containsMouse
     property int elide: Text.ElideNone
+    property int elideRedef: elide
     property bool centered: false
     property int w: 30
-    height: window.width / 1280 * w
+    height: biggerSide * w
     width: parent.width * 0.9
     clip: true
     states: [
         State {
             name: "normal"
-            when: !(labelArea.containsMouse && (labelText.contentWidth > label.width)) && !centered
+            when: !(labelArea.containsMouse && ((labelText.contentWidth > label.width)/* || label.elide === Text.ElideRight*/)) && !centered
+            PropertyChanges {
+                target: label
+                elideRedef: label.elide
+            }
             PropertyChanges {
                 target: textAnimation
                 running: false
@@ -39,7 +44,11 @@ Item {
         },
         State {
             name: "wide"
-            when: labelArea.containsMouse && (labelText.contentWidth > label.width)
+            when: (labelArea.containsMouse && ((labelText.contentWidth > label.width)/* || label.elide === Text.ElideRight*/))
+            PropertyChanges {
+                target: label
+                elideRedef: Text.ElideNone
+            }
             PropertyChanges {
                 target: labelText
                 x: 0
@@ -55,12 +64,12 @@ Item {
         x: 0
         y: (label.height - labelText.contentHeight) / 2
         text: parent.text
-        elide: label.elide
-        width: label.elide === 0 ? label.width : contentWidth
+        elide: elideRedef
+        width: elideRedef === 0 || elideRedef === Text.ElideRight ? label.width : contentWidth
         color: window.style.currentTheme.pinkWhiteAccent
         font.bold: true
         font.family: "Helvetica"
-        font.pixelSize: window.width / 1280 * w / 27 * 12
+        font.pixelSize: biggerSide * w / 27 * 12
         verticalAlignment: Text.AlignVCenter
     }
     MouseArea {

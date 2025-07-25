@@ -5,8 +5,8 @@ Rectangle {
     property string name: ""
     property var options: []
     color: window.style.currentTheme.darkGlass
-    width: window.width / 1280 * 240
-    height: window.width / 1280 * 80
+    width: biggerSide * 240
+    height: biggerSide * 80
     enabled: false
     radius: strictStyle ? 0 : height / 4
     state: "hidden"

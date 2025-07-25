@@ -47,6 +47,7 @@ Item {
         ShaderEffect {
             readonly property point u_resolution: Qt.point(window.width, window.height)
             readonly property double u_radius: 4.
+            readonly property real transparency: 0
             readonly property variant src: img
             width: acrylicItem.width
             height: acrylicItem.height

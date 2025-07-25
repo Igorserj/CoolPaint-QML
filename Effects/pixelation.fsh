@@ -5,10 +5,11 @@ precision highp float;
 uniform vec2 u_resolution;
 uniform sampler2D src;
 uniform lowp float strength;
-// uniform bool isOverlay;
+uniform float transparency;
 
 void main() {
     vec2 st = gl_FragCoord.xy / u_resolution.xy;
+    lowp vec4 tex = texture2D(src, vec2(st.x, 1.-st.y));
     vec4 color = vec4(1.0);
     if (strength != 0.) {
         // Pixelation
@@ -22,5 +23,6 @@ void main() {
     } else {
         color = texture2D(src, vec2(st.x, 1.-st.y));
     }
-    gl_FragColor = color;
+    tex = tex * transparency + color * (1.-transparency);
+    gl_FragColor = tex;
 }
