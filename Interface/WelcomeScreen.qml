@@ -171,7 +171,7 @@ Rectangle {
                                 }
                             } else if (moduleIndex === 1 || moduleIndex === 2) {
                                 if (name === "Open project" || doubleClick) {
-                                    const currentFile = val[0].startsWith('file://') ? val[0] : Qt.resolvedUrl(`file://${val[0]}`)
+                                    const currentFile = val[0].startsWith('file:///') ? val[0] : Qt.resolvedUrl(`file:///${val[0]}`)
                                     const data = fileIO.read(currentFile)
                                     if (data !== "") {
                                         popUpFunctions.openedFileHandle(data, currentFile)
@@ -210,7 +210,7 @@ Rectangle {
         welcomeBlockModel.get(moduleIndex).module.get(1).block.remove(index)
         fileIO.removeFile(file)
         fileIO.removeFile(image)
-        removeSavedProject(`file://${file}`)
+        removeSavedProject(`file:///${file}`)
     }
     function updatePopulation() {
         Controller.updatePopulation(welcomeModel, welcomeBlockModel, settingsMenuModel, getState, setState)

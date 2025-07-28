@@ -62,6 +62,7 @@ Item {
         onAccepted: {
             Controller.openDialogAccept(canvaFunctions, currentFile, layersModel, exportMenuModel)
             setCurrentImagePath(currentFile)
+            canvaFunctions.reDraw()
         }
     }
 

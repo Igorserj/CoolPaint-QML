@@ -49,7 +49,7 @@ WorkerScript.onMessage = function(message) {
     }
     function settingsParser(text) {
         const controlsTypes = [/*'joystick',*/ 'slider', 'buttonWhite', 'buttonDark', 'buttonLayers', 'buttonSwitch', /*'header',*/ /*'empty',*/ /*'insertButton',*/ 'insertDropdown']
-        const categoriesList = [/*'layer', 'history', 'export', 'view',*/ 'settings'/*, ''*/]
+        const categoriesList = [/*'layer', 'history', 'export', 'view',*/ 'settings', 'welcome'/*, ''*/]
         const keyValue = [
                            { key: "category", type: "string", list: [], validRange: categoriesList },
                            { key: "name", type: "string", list: [], validRange: [] },
@@ -63,6 +63,7 @@ WorkerScript.onMessage = function(message) {
                            { key: "max2", type: "number", list: [], validRange: [] },
                            { key: "bval2", type: "number", list: [], validRange: [] },
                            { key: "val2", type: "number", list: [], validRange: [] },
+                           { key: "isOverlay", type: "boolean", list: [], validRange: [] },
                            { key: "items", type: "object", list: [
                                    { key: "name", type: "string", list: [], validRange: [] },
                                    { key: "type", type: "string", list: [], validRange: controlsTypes },

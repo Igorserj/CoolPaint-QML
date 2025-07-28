@@ -10,7 +10,7 @@ function welcomeModelPopulation(model, blockModel, additionalModel, getState) {
     if (typeof(saves) !== "undefined") {
         for (save of saves) {
             if (typeof(save) === "string") {
-                saveList.push(save.substring('file://'.length))
+                saveList.push(save.substring('file:///'.length))
             } else {
                 removeProjects.push(save)
             }
@@ -25,7 +25,7 @@ function welcomeModelPopulation(model, blockModel, additionalModel, getState) {
             --i
         } else {
             saves2.push(saves[i].slice())
-            saves[i] = `file://${saves[i]}`
+            saves[i] = `file:///${saves[i]}`
         }
     }
     console.log('removeProjects', removeProjects)
@@ -59,7 +59,7 @@ function welcomeModelPopulation(model, blockModel, additionalModel, getState) {
                                                                  fileName: file.name,
                                                                  name: `Last modified:\n${file.date}\n${file.time}`,
                                                                  path: file.path,
-                                                                 image: Qt.resolvedUrl(`file://${baseDir}/thumbs/${file.name}.png`),
+                                                                 image: Qt.resolvedUrl(`file:///${baseDir}/thumbs/${file.name}.png`),
                                                                  view: "normal,overlay",
                                                                  category: "welcome",
                                                                  isOverlay: false,
@@ -102,7 +102,7 @@ function welcomeModelPopulation(model, blockModel, additionalModel, getState) {
                                                                  fileName: name,
                                                                  name: name,
                                                                  path: save,
-                                                                 image: Qt.resolvedUrl(`file://${baseDir}/thumbs/${name}.png`),
+                                                                 image: Qt.resolvedUrl(`file:///${baseDir}/thumbs/${name}.png`),
                                                                  view: "normal,overlay",
                                                                  category: "welcome",
                                                                  isOverlay: false,
@@ -203,7 +203,7 @@ function updatePopulation(model, blockModel, additionalModel, getState, setState
     blockModel.remove(1, 2)
     if (typeof(saves) !== "undefined") {
         for (save of saves) {
-            saveList.push(save.substring('file://'.length))
+            saveList.push(save.substring('file:///'.length))
         }
         saves = fileIO.sort(saveList);
     }
@@ -222,7 +222,7 @@ function updatePopulation(model, blockModel, additionalModel, getState, setState
                                                              fileName: name,
                                                              name: name,
                                                              path: save,
-                                                             image: Qt.resolvedUrl(`file://${baseDir}/thumbs/${name}.png`),
+                                                             image: Qt.resolvedUrl(`file:///${baseDir}/thumbs/${name}.png`),
                                                              view: "normal,overlay",
                                                              category: "welcome",
                                                              isOverlay: false,
@@ -261,7 +261,7 @@ function updatePopulation(model, blockModel, additionalModel, getState, setState
                                                              fileName: file.name,
                                                              name: `Last modified:\n${file.date}\n${file.time}`,
                                                              path: file.path,
-                                                             image: Qt.resolvedUrl(`file://${baseDir}/thumbs/${file.name}.png`),
+                                                             image: Qt.resolvedUrl(`file:///${baseDir}/thumbs/${file.name}.png`),
                                                              view: "normal,overlay",
                                                              category: "welcome",
                                                              isOverlay: false,
