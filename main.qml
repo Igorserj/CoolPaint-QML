@@ -75,11 +75,11 @@ Window {
         focus: true
         Keys.onPressed: {
             const listOfScanCodes = {
-                "key_z": 52,
-                "key_s": 39,
-                "key_o": 32,
-                "key_q": 24,
-                "key_n": 57
+                "key_z": 44,
+                "key_s": 31,
+                "key_o": 24,
+                "key_q": 16,
+                "key_n": 49
             }
             if (event.modifiers & Qt.ControlModifier) ctrl = true
             if (event.modifiers & Qt.ShiftModifier) shift = true
